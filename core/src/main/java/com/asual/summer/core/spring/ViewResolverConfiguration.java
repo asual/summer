@@ -22,16 +22,13 @@ import java.util.concurrent.ConcurrentMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.core.Ordered;
-import org.springframework.core.PriorityOrdered;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
-public class ViewResolverConfiguration extends ContentNegotiatingViewResolver implements PriorityOrdered {
+public class ViewResolverConfiguration extends ContentNegotiatingViewResolver {
 	
-	private int order = Ordered.HIGHEST_PRECEDENCE;
     private List<ViewResolver> viewResolvers;
     private ConcurrentMap<String, String> mediaTypes = new ConcurrentHashMap<String, String>();
 	private String parameterName = "format";
@@ -81,10 +78,6 @@ public class ViewResolverConfiguration extends ContentNegotiatingViewResolver im
         }
         return view;
     }
-
-	public int getOrder() {
-		return order;
-	}
 	
 	public boolean getFavorPathExtension() {
 		return favorPathExtension;
