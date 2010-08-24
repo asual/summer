@@ -1,6 +1,7 @@
 package com.asual.summer.core.resource;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -11,6 +12,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.ResourceUtils;
 
 /*
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,34 +48,36 @@ public class MessageResource extends AbstractResource {
     
 	public void setWildcardLocations(String[] locations) {
 		
-		List<String> resources = new ArrayList<String>();
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-
+		List<String> basenames = new ArrayList<String>();
 		for (String location : locations) {
 			try {
 				Resource[] wildcard = resolver.getResources(location + "*.properties");
 				if (wildcard != null && wildcard.length > 0) {
 					for (Resource resource : wildcard) {
-						if ("jar".equals(resource.getURL().getProtocol()))  {
-							resources.add(resource.getURL().getFile().split("\\!/")[1]);
+						String resourcePath=null;
+						URL url = resource.getURL();
+						boolean isJar=ResourceUtils.isJarURL(url);
+						if (isJar)  {
+							resourcePath=ResourceUtils.extractJarFileURL(url).getPath();
 						} else {
-							resources.add(0, resource.getURL().getFile().split("/classes/")[1]);
+							resourcePath=url.getFile().split("/classes/")[1];
+						}
+						
+						String basename = resourcePath.replaceAll("/", ".").replaceAll("(_\\w\\w){0,3}\\.properties", "");
+						if (!basenames.contains(basename)) {
+							if(isJar){
+								basenames.add(basename);
+							}else{
+								basenames.add(0, basename);
+							}
 						}
 					}
 				}
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 			}
-		}
-		
-		List<String> basenames = new ArrayList<String>();
-		for (String resource : resources) {
-			String basename = resource.replaceAll("/", ".").replaceAll("(_\\w\\w){0,3}\\.properties", "");
-			if (!basenames.contains(basename)) {
-				basenames.add(basename);
-			}
-		}
-		
+		}		
 		rbms.setBasenames(basenames.toArray(new String[basenames.size()]));
 	}
 	

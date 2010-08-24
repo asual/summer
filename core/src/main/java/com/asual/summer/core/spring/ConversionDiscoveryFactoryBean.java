@@ -16,41 +16,32 @@ package com.asual.summer.core.spring;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.ConverterRegistry;
 import org.springframework.core.convert.support.ConversionServiceFactory;
-import org.springframework.core.convert.support.GenericConversionService;
 
 import com.asual.summer.core.util.BeanUtils;
 
 public class ConversionDiscoveryFactoryBean extends ConversionServiceFactoryBean {
-	
-	private Set<?> converters;
-	private GenericConversionService conversionService;
-	
+
 	@SuppressWarnings("rawtypes")
 	private Map<String, Converter> cachedConverters;
-	
-	public void setConverters(Set<?> converters) {
-		this.converters = converters;
-	}
 
-	public void afterPropertiesSet() {
-		this.conversionService = createConversionService();
-		ConversionServiceFactory.addDefaultConverters(this.conversionService);
-		ConversionServiceFactory.registerConverters(this.converters, this.conversionService);
-	}
-	
 	@SuppressWarnings("rawtypes")
 	public ConversionService getObject() {
-		if (cachedConverters == null) {
-			cachedConverters = BeanUtils.getBeansOfType(Converter.class);
-			ConversionServiceFactory.registerConverters(new LinkedHashSet<Converter>(cachedConverters.values()), this.conversionService);		
+		ConversionService conversionService = super.getObject();
+		if (conversionService instanceof ConverterRegistry) {
+			ConverterRegistry registry = (ConverterRegistry) conversionService;
+			if (cachedConverters == null) {
+				cachedConverters = BeanUtils.getBeansOfType(Converter.class);
+				ConversionServiceFactory.registerConverters(new LinkedHashSet<Converter>(cachedConverters.values()),
+						registry);
+			}
 		}
-		return this.conversionService;
+		return conversionService;
 	}
-	
+
 }

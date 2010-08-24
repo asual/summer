@@ -47,7 +47,7 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 	
 	private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
 
-	public View resolveView(Method handlerMethod) {
+	public View resolveView(Method handlerMethod, NativeWebRequest webRequest) {
 
 		ResponseView viewAnn = AnnotationUtils.findAnnotation(handlerMethod, ResponseView.class);
 		
@@ -58,13 +58,13 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 			
 			if (values.length != 0) {
 				if ("*".equals(values[0])) {
-					return handleViews(BeanUtils.getBeansOfType(AbstractView.class).values());
+					return handleViews(BeanUtils.getBeansOfType(AbstractView.class).values(),webRequest);
 				}
 				List<AbstractView> views = new ArrayList<AbstractView>();
 				for (String value : values) {
 					views.add((AbstractView) BeanUtils.getBean(value));
 				}
-				AbstractView view = handleViews(views);
+				AbstractView view = handleViews(views,webRequest);
 				if (view != null) {
 					return view;
 				} else if (explicit) {
@@ -76,14 +76,12 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 		return null;
 	}
 
-	public AbstractView handleViews(Collection<AbstractView> views) {
+	public AbstractView handleViews(Collection<AbstractView> views, NativeWebRequest request) {
 
-		HttpServletRequest request = RequestUtils.getRequest();
-		
 		for (AbstractView view : views) {
 
 			if (viewResolverConfiguration.getFavorPathExtension()) {
-				String requestUri = urlPathHelper.getRequestUri(request);
+				String requestUri = urlPathHelper.getRequestUri((HttpServletRequest) request.getNativeRequest());
 				String filename = WebUtils.extractFullFilenameFromUrlPath(requestUri);
 				String extension = StringUtils.getFilenameExtension(filename);
 				if (StringUtils.hasText(extension) && extension.equals(((AbstractResponseView) view).getExtension())) {
@@ -119,7 +117,7 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 			Class handlerType, Object returnValue,
 			ExtendedModelMap implicitModel, NativeWebRequest webRequest) {
 		
-		View view = resolveView(handlerMethod);
+		View view = resolveView(handlerMethod, webRequest);
 		
 		if (view != null) {
 			if (returnValue instanceof ModelAndView) {

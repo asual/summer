@@ -28,6 +28,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.ResourceUtils;
 
 public class PropertyResource extends AbstractResource implements BeanFactoryPostProcessor {
 
@@ -67,7 +68,7 @@ public class PropertyResource extends AbstractResource implements BeanFactoryPos
 				Resource[] wildcard = resolver.getResources(location);
 				if (wildcard != null && wildcard.length > 0) {
 					for (Resource resource : wildcard) {
-						if ("jar".equals(resource.getURL().getProtocol()))  {
+						if (ResourceUtils.isJarURL(resource.getURL()))  {
 							resources.add(0, resource);
 						} else {
 							resources.add(resource);
