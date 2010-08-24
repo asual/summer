@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project 
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://maven.apache.org/POM/4.0.0 
+        http://maven.apache.org/maven-v4_0_0.xsd">
+        
+    <name>Summer Sample</name>
+    <artifactId>summer-sample</artifactId>
+    <packaging>war</packaging>
+    <modelVersion>4.0.0</modelVersion>
+    
+    <parent>
+        <groupId>com.asual.summer</groupId>
+        <artifactId>summer-parent</artifactId>
+        <version>1.0.0.M1-SNAPSHOT</version>
+    </parent>
+    
+    <dependencies>
+        <dependency>
+            <groupId>com.asual.summer</groupId>
+            <artifactId>summer-core</artifactId>
+            <version>1.0.0.M1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+   </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.0.0.M1</version>
+                <configuration>
+                    <webAppConfig>
+                        <jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
+                    </webAppConfig>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.glassfish</groupId>
+                <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <app>${project.build.directory}/${project.build.finalName}.war</app>
+                    <autoDelete>true</autoDelete>
+                    <contextRoot>/</contextRoot>
+                    <goalPrefix>glassfish</goalPrefix>
+                    <instanceRoot>${project.build.directory}/glassfish</instanceRoot>
+                    <port>8080</port>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+</project>

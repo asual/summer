@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+    xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:p="http://www.springframework.org/schema/p" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+    
+    <context:component-scan base-package="com.asual.summer.core" />
+
+    <bean class="com.asual.summer.core.resource.MessageResource" p:order="2147483647">
+        <property name="wildcardLocations">
+            <list>
+                <value>classpath*:com/**/*/resources/messages</value>
+                <value>classpath*:net/**/*/resources/messages</value>
+                <value>classpath*:org/**/*/resources/messages</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean class="com.asual.summer.core.resource.PropertyResource" p:order="2147483647">
+        <property name="wildcardLocations">
+            <list>
+                <value>classpath*:META-INF/properties.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="com.asual.summer.core.resource.ScriptResource" p:location="/js/summer-core.js" p:pack="summer" p:order="-2147483645" />
+
+    <bean class="com.asual.summer.core.resource.StylesheetResource" p:location="/css/summer-core.css" p:pack="summer" p:order="-2147483645" />
+    
+    <bean id="annotationModelAndViewResolver" class="com.asual.summer.core.spring.AnnotationModelAndViewResolver" />
+
+	<bean id="conversionDiscoveryFactoryBean" class="com.asual.summer.core.spring.ConversionDiscoveryFactoryBean" />
+
+    <bean id="localValidatorFactoryBean" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="messageInterpolator">
+		    <bean class="com.asual.summer.core.MessageInterpolator" />
+        </property>
+    </bean>
+
+    <bean id="configurableWebBindingInitializer" class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+        <property name="conversionService" ref="conversionDiscoveryFactoryBean" />
+        <property name="validator" ref="localValidatorFactoryBean" />
+    </bean>
+    
+    <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
+    
+    <bean id="annotationMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="webBindingInitializer" ref="configurableWebBindingInitializer" />
+		<property name="customModelAndViewResolver" ref="annotationModelAndViewResolver" />
+    </bean>
+    
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+        <property name="defaultHandler">
+            <bean class="com.asual.summer.core.RootController" />
+        </property>
+    </bean>
+    
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" p:order="2147483646">
+        <property name="urlMap">
+            <map>
+                <entry key="/css**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/font**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/img**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/js**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/res**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/favicon.ico" value-ref="resourceHttpRequestHandler" />
+                <entry key="/robots.txt" value-ref="resourceHttpRequestHandler" />
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="resourceHttpRequestHandler" class="org.springframework.web.servlet.resource.ResourceHttpRequestHandler">
+        <property name="locations">
+            <list>
+                <value>classpath:META-INF/resources/</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="viewResolverConfiguration" class="com.asual.summer.core.spring.ViewResolverConfiguration">
+        <property name="favorParameter" value="true" />
+        <property name="mediaTypes">
+            <map>
+                <entry key="html" value="text/html" />
+            </map>
+        </property>
+        <property name="viewResolvers">
+            <list>
+                <bean class="com.asual.summer.core.spring.ExtendedInternalResourceViewResolver" 
+                    p:viewClass="com.asual.summer.core.view.HTMLView" 
+                    p:prefix="/META-INF/pages" p:suffix=".html" />
+            </list>
+        </property>
+    </bean>
+
+</beans>

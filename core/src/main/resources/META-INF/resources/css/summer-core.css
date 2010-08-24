@@ -1,0 +1,13 @@
+body, input, textarea, select, button {
+    font: 14px 'Helvetica Neue', Arial, sans-serif;
+}
+
+.hidden {
+    display: none;
+}
+
+.error {
+    color: #cc0000;
+    vertical-align: top;
+    line-height: 32px;
+}
