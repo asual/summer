@@ -27,6 +27,15 @@ public class FacesResourceResolver extends ResourceResolver {
     
 	private static String ENCODING = "UTF-8";
 	
+	public URL resolveUrl(String path) {
+    	URL url = getClass().getClassLoader().getResource(path.replaceAll("^/", ""));
+    	try {
+			return new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(url));
+		} catch (Exception e) {
+			return url;
+		}
+    }
+
     private byte[] readTextUrl(URL source, String encoding) throws IOException {
         byte[] result;
         try {
@@ -50,35 +59,38 @@ public class FacesResourceResolver extends ResourceResolver {
         }
         return result;
     }
-    
-	public URL resolveUrl(String path) {
-    	URL url = getClass().getClassLoader().getResource(path.replaceAll("^/", ""));
-    	try {
-			return new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(readTextUrl(url, ENCODING)));
-		} catch (Exception e) {
-			return url;
-		}
-    }
-
-    
-    class FacesStreamHandler extends URLStreamHandler {
+        
+    private class FacesStreamHandler extends URLStreamHandler {
     	
-    	private byte[] src;
+    	private URL orig;
     	
-    	public FacesStreamHandler(byte[] src) {
-    		this.src = src;
+    	public FacesStreamHandler(URL url) {
+    		this.orig = url;
     	}
     	
         protected URLConnection openConnection(URL u) throws IOException {
         	
             return new URLConnection(u) {
             	
+            	private URLConnection openConnection() {
+            		try {
+	            		return orig.openConnection();
+            		} catch (IOException e) {
+            			return null;
+            		}
+            	}
+            	
                 public void connect() throws IOException {
                 
                 }
                 
                 public InputStream getInputStream() throws IOException {
+                	byte[] src = readTextUrl(orig, ENCODING);
                 	return new ByteArrayInputStream(src);
+                }
+                
+                public long getLastModified() {
+					return openConnection().getLastModified();
                 }
                 
             };
