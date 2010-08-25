@@ -19,6 +19,11 @@
     
     <dependencies>
         <dependency>
+            <groupId>com.asual.summer</groupId>
+            <artifactId>summer-el</artifactId>
+            <version>1.0.0.M1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>2.2</version>
@@ -90,11 +95,6 @@
             <groupId>com.sun.faces</groupId>
             <artifactId>jsf-impl</artifactId>
             <version>2.0.3</version>
-        </dependency>
-        <dependency> 
-            <groupId>javax.el</groupId> 
-            <artifactId>el-api</artifactId> 
-            <version>1.0</version> 
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
