@@ -6,6 +6,12 @@
         http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
     version="2.0">
     
+    <ordering>
+        <before>
+            <others/>
+        </before>
+    </ordering>
+
     <component>
         <component-type>summer.faces.Component</component-type>
         <component-class>com.asual.summer.core.faces.Component</component-class>
