@@ -55,20 +55,15 @@ public class MessageResource extends AbstractResource {
 				Resource[] wildcard = resolver.getResources(location + "*.properties");
 				if (wildcard != null && wildcard.length > 0) {
 					for (Resource resource : wildcard) {
-						String resourcePath=null;
 						URL url = resource.getURL();
-						boolean isJar=ResourceUtils.isJarURL(url);
-						if (isJar)  {
-							resourcePath=ResourceUtils.extractJarFileURL(url).getPath();
-						} else {
-							resourcePath=url.getFile().split("/classes/")[1];
-						}
-						
-						String basename = resourcePath.replaceAll("/", ".").replaceAll("(_\\w\\w){0,3}\\.properties", "");
+						boolean isJar = ResourceUtils.isJarURL(url);
+						String basename = url.getFile()
+							.split(isJar ? ResourceUtils.JAR_URL_SEPARATOR : "/classes/")[1].replaceAll("/", ".")
+							.replaceAll("(_\\w\\w){0,3}\\.properties", "");
 						if (!basenames.contains(basename)) {
-							if(isJar){
+							if (isJar) {
 								basenames.add(basename);
-							}else{
+							} else {
 								basenames.add(0, basename);
 							}
 						}
