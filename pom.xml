@@ -147,7 +147,6 @@
         <module>core</module>
         <module>el</module>
         <module>jquery</module>
-        <module>roo</module>
         <module>sample</module>
     </modules>
     
