@@ -20,81 +20,88 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.faces.FacesException;
 import javax.faces.view.facelets.ResourceResolver;
 
 public class FacesResourceResolver extends ResourceResolver {
     
-	private static String ENCODING = "UTF-8";
+	private Map<String, URL> resources = new HashMap<String, URL>();
 	
 	public URL resolveUrl(String path) {
-    	URL url = getClass().getClassLoader().getResource(path.replaceAll("^/", ""));
     	try {
-			return new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(url));
-		} catch (Exception e) {
-			return url;
-		}
-    }
-
-    private byte[] readTextUrl(URL source, String encoding) throws IOException {
-        byte[] result;
-        try {
-            URLConnection urlc = source.openConnection();
-            StringBuffer sb = new StringBuffer(1024);
-            InputStream input = urlc.getInputStream();
-            UnicodeReader reader = new UnicodeReader(input, encoding);
-            try {
-                char[] cbuf = new char[32];
-                int r;
-                while ((r = reader.read(cbuf, 0, 32)) != -1) {
-                    sb.append(cbuf, 0, r);
-                }
-                result = sb.toString().getBytes(reader.getEncoding());
-            } finally {
-                reader.close();
-                input.close();
-            }
+        	URL url = getClass().getClassLoader().getResource(path.replaceAll("^/", ""));
+			if (!resources.containsKey(path) || (resources.containsKey(path) && 
+					resources.get(path).openConnection().getLastModified() != url.openConnection().getLastModified()) ) {
+		    	resources.put(path, new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(url)));
+			}
+			return resources.get(path);
         } catch (IOException e) {
-            throw e;
+            throw new FacesException(e);
         }
-        return result;
     }
         
     private class FacesStreamHandler extends URLStreamHandler {
     	
-    	private URL orig;
+    	private URL resource;
+    	private InputStream inputStream;
+    	private long lastModified;
     	
-    	public FacesStreamHandler(URL url) {
-    		this.orig = url;
+    	public FacesStreamHandler(URL resource) {
+    		this.resource = resource;
     	}
     	
         protected URLConnection openConnection(URL u) throws IOException {
         	
             return new URLConnection(u) {
             	
-            	private URLConnection openConnection() {
-            		try {
-	            		return orig.openConnection();
-            		} catch (IOException e) {
-            			return null;
-            		}
-            	}
-            	
                 public void connect() throws IOException {
-                
                 }
                 
                 public InputStream getInputStream() throws IOException {
-                	byte[] src = readTextUrl(orig, ENCODING);
-                	return new ByteArrayInputStream(src);
+                	
+                    if (inputStream == null || (inputStream != null && lastModified < getLastModified())) {
+                		
+	                    byte[] result;
+	                    try {
+	                        URLConnection urlc = resource.openConnection();
+	                        StringBuffer sb = new StringBuffer(1024);
+	                        InputStream input = urlc.getInputStream();
+	                        UnicodeReader reader = new UnicodeReader(input, "UTF-8");
+	                        try {
+	                            char[] cbuf = new char[32];
+	                            int r;
+	                            while ((r = reader.read(cbuf, 0, 32)) != -1) {
+	                                sb.append(cbuf, 0, r);
+	                            }
+	                            result = sb.toString().getBytes(reader.getEncoding());
+	                        } finally {
+	                            reader.close();
+	                            input.close();
+	                        }
+	                    } catch (IOException e) {
+	                        throw e;
+	                    }
+	                    
+	                    inputStream = new ByteArrayInputStream(result);
+	                    lastModified = getLastModified();
+                	}
+                	
+                    return inputStream;
                 }
                 
                 public long getLastModified() {
-					return openConnection().getLastModified();
+					try {
+						return resource.openConnection().getLastModified();
+					} catch (IOException e) {
+						return 0;
+					}
                 }
                 
             };
         }
     }
-    
+
 }
