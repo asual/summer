@@ -30,8 +30,8 @@
             ${mapUtils.put(cc.attrs, 'ids', stringUtils.wrap(cc.attrs.ids, facesUtils.findComponent(current).clientId, ' '))}
         </ui:repeat>
         <a href="${requestUtils.contextRelative(cc.attrs.href, cc.attrs.dataContextRelative or empty cc.attrs.dataContextRelative)}" 
-            data-render="${cc.attrs.ids.trim()}" 
-            data-method="${empty cc.attrs.dataRender ? '' : (empty cc.attrs.dataMethod ? 'get' : cc.attrs.dataMethod)}"><cs:insertChildren /></a>
+            data-render="${cc.attrs.ids.trim()}" class="${cc.attrs.styleClass}"
+            data-method="${cc.attrs.dataMethod}"><cs:insertChildren /></a>
     </cs:implementation>
     
 </ui:component>

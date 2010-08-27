@@ -30,8 +30,8 @@
             ${mapUtils.put(cc.attrs, 'ids', stringUtils.wrap(cc.attrs.ids, facesUtils.findComponent(current).clientId, ' '))}
         </ui:repeat>
         <button type="${empty cc.attrs.type ? 'submit' : cc.attrs.type}"
-            data-render="${cc.attrs.ids.trim()}" 
-            data-method="${empty cc.attrs.render ? '' : (empty cc.attrs.method ? 'post' : cc.attrs.method)}"><cs:insertChildren /></button>
+            data-render="${cc.attrs.ids.trim()}" class="${cc.attrs.styleClass}"
+            data-method="${cc.attrs.dataMethod}"><cs:insertChildren /></button>
     </cs:implementation>
     
 </ui:component>
