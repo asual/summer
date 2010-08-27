@@ -98,7 +98,10 @@
             <list>
                 <bean class="com.asual.summer.core.spring.ExtendedInternalResourceViewResolver" 
                     p:viewClass="com.asual.summer.core.view.HTMLView" 
-                    p:prefix="/META-INF/pages" p:suffix=".html" />
+                    p:prefix="/META-INF/pages/private" p:suffix=".html" />
+                <bean class="com.asual.summer.core.spring.ExtendedInternalResourceViewResolver" 
+                    p:viewClass="com.asual.summer.core.view.HTMLView" 
+                    p:prefix="/META-INF/pages/public" p:suffix=".html" />
             </list>
         </property>
     </bean>

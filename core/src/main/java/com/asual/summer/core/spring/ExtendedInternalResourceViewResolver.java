@@ -14,6 +14,10 @@
 
 package com.asual.summer.core.spring;
 
+import java.net.URL;
+import java.util.Locale;
+
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 public class ExtendedInternalResourceViewResolver extends InternalResourceViewResolver {
@@ -29,5 +33,19 @@ public class ExtendedInternalResourceViewResolver extends InternalResourceViewRe
 	public String getSuffix() {
 		return super.getSuffix();
 	}
-	
+
+	public View resolveViewName(String viewName, Locale locale) throws Exception {
+		if (!viewName.startsWith("/")) {
+			viewName = "/" + viewName;
+		}
+		if (viewName.endsWith(getSuffix())) {
+			viewName = viewName.substring(0, viewName.length() - getSuffix().length());
+		}
+		String path = getPrefix() + viewName + getSuffix();
+		URL url = getClass().getClassLoader().getResource(path);
+		if (url != null) {
+			return super.resolveViewName(viewName, locale);
+		}
+		return null;
+	}
 }

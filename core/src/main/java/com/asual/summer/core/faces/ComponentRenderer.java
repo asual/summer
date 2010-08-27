@@ -41,7 +41,9 @@ import com.sun.faces.facelets.tag.jsf.ComponentSupport;
 public class ComponentRenderer extends Renderer {
 
     private final Log logger = LogFactory.getLog(getClass());
-    public final static String ATTRIBUTES = "dataEmpty|dataEmptyOption|dataRepeat|dataInclude|dataVar|dataVarStatus|dataBegin|dataEnd|dataPack|dataEscape|dataWrapper";
+
+    public final static String ATTRIBUTES = "idx|com.sun.faces.facelets.APPLIED|" + 
+    	"dataEmpty|dataEmptyOption|dataRepeat|dataInclude|dataVar|dataVarStatus|dataBegin|dataEnd|dataPack|dataEscape|dataWrapper";
     
     private String getComponentTag(UIComponent component) {
     	String componentTag = (String) ((Component) component).getConfig("componentTag");
@@ -98,9 +100,7 @@ public class ComponentRenderer extends Renderer {
 		    			Resource.COMPONENT_RESOURCE_KEY + "|" + 
 		    			UIComponent.BEANINFO_KEY + "|" + 
 		    			UIComponent.FACETS_KEY + "|" + 
-		    			UIComponent.VIEW_LOCATION_KEY + "|" + 
-		    			"com.sun.faces.facelets.APPLIED" + "|" + 
-		    			"idx")) {
+		    			UIComponent.VIEW_LOCATION_KEY)) {
 		            	writeAttribute(writer, component, key, attrs.get(key));
 		        	}
 				}
@@ -120,7 +120,7 @@ public class ComponentRenderer extends Renderer {
     	if (!isComponentWrapper(component)) {
 	        writer.endElement(getComponentTag(component));
     	}
-        writer.write("\n");
+    	writer.write("\n");
     }
     
     protected void writeAttribute(ResponseWriter writer, UIComponent component, String name, Object value) throws IOException {

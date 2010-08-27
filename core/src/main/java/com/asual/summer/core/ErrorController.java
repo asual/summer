@@ -27,7 +27,7 @@ public class ErrorController {
     @RequestMapping("/error")
     @ResponseView("*")
     public ModelAndView error() {
-    	return new ModelAndView("/private/error", new ModelMap("error", RequestUtils.getError()));
+    	return new ModelAndView("/error", new ModelMap("error", RequestUtils.getError()));
     }
 
 }

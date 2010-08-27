@@ -30,7 +30,6 @@ import com.asual.summer.core.util.RequestUtils;
 public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
 	
 	private final static String INDEX = "/index";
-	private final static String PUBLIC = "/public";	
 	
 	private String findViewName(String prefix, String path, String suffix, boolean greedy) {
 
@@ -57,14 +56,14 @@ public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
         		RequestUtils.contextRelative(request.getRequestURI().replaceAll("/+", "/"), false)).replaceFirst("/$", "");
         
         ViewResolverConfiguration viewResolver = BeanUtils.getBeanOfType(ViewResolverConfiguration.class);
-        ExtendedInternalResourceViewResolver resolver = viewResolver.getInternalResourceViewResolver();
+        ExtendedInternalResourceViewResolver resolver = viewResolver.getPublicViewResolver();
         
-        String prefix = resolver.getPrefix().replaceAll("/$", "").concat(PUBLIC);
+        String prefix = resolver.getPrefix().replaceAll("/$", "");
         String suffix = resolver.getSuffix();
         
         String viewName = findViewName(prefix, uri, suffix, false);
         if (viewName != null) {
-            return PUBLIC + viewName;
+            return viewName;
         }
         
         throw new ViewNotFoundException("The view [" + uri + "] does not exist.");

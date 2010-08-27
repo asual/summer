@@ -26,7 +26,7 @@ public class SampleController {
 	@RequestMapping("/hello-world")
 	@ResponseView("json")
     public ModelAndView helloWorld() {
-		return new ModelAndView("/public/index", new ModelMap("message", "Hello world!"));
+		return new ModelAndView("/index", new ModelMap("message", "Hello world!"));
 	}
 	
 }
