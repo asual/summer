@@ -26,7 +26,7 @@
     
         <h:head>
             <link href="/favicon.ico" type="image/x-icon" rel="shortcut icon" 
-                data-rendered="${miscUtils.exists('META-INF/resources/favicon.ico')}" />
+                data-rendered="${resourceUtils.exists('META-INF/resources/favicon.ico')}" />
             <c:forEach var="item" items="${resourceUtils.getStylesheets()}">
 	            <c:forEach var="source" items="${item.locations}">
                     <link href="${source}" rel="stylesheet" media="${item.media}" data-pack="${item.pack}" />

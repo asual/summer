@@ -19,16 +19,17 @@
     xmlns:cs="http://java.sun.com/jsf/composite"
     xmlns:ui="http://java.sun.com/jsf/facelets">
         
-    <cs:interface componentType="summer.faces.Component" componentWrapper="true">
-        <cs:attribute name="dataHead" required="false" />
-        <cs:attribute name="dataWidth" required="false" />
+    <cs:interface componentType="summer.faces.Component" componentTag="${cc.attrs.qName}">
+        <cs:attribute name="dataTemplate" required="true" />
         <cs:attribute name="styleClass" required="false" />
     </cs:interface>
     
     <cs:implementation>
-        <td class="${cc.attrs.styleClass}" style="${empty cc.attrs.dataWidth ? '' : utils.wrap('dataWidth:', cc.attrs.dataWidth, ';')}">
+
+        <ui:decorate template="/META-INF/templates/${cc.attrs.dataTemplate}.xhtml">
             <cs:insertChildren />
-        </td>
+        </ui:decorate>
+        
     </cs:implementation>
     
 </ui:component>

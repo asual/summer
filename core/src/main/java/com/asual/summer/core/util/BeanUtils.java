@@ -19,15 +19,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BeanUtils implements ApplicationContextAware {
+public class BeanUtils implements BeanFactoryPostProcessor {
 	
-	private static ApplicationContext applicationContext;
+	@Autowired
+	private static ConfigurableListableBeanFactory beanFactory;
 	
 	public static <T> T getBeanOfType(Class<T> clazz) {
 		Map<String, T> beans = getBeansOfType(clazz);
@@ -48,7 +49,7 @@ public class BeanUtils implements ApplicationContextAware {
 	}
 	
     public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
-    	return applicationContext.getBeansOfType(clazz);
+    	return beanFactory.getBeansOfType(clazz);
     }
     
     public static <T> T getBeansOfType(ConfigurableListableBeanFactory beanFactory, Class<T> clazz) {
@@ -61,15 +62,16 @@ public class BeanUtils implements ApplicationContextAware {
     }
 
     public static String[] getBeanNames(Class<?> clazz) {
-    	return applicationContext.getBeanNamesForType(clazz);
+    	return beanFactory.getBeanNamesForType(clazz);
     }
     
     public static Object getBean(String name) {
-        return applicationContext.getBean(name);
+        return beanFactory.getBean(name);
     }
 
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		BeanUtils.applicationContext = applicationContext;
+	@Override
+	public void postProcessBeanFactory(
+			ConfigurableListableBeanFactory beanFactory) throws BeansException {
+		BeanUtils.beanFactory = beanFactory;
 	}
 }

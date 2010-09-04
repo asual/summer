@@ -103,6 +103,10 @@ public class ResourceUtils {
 		}
 		return stylesheetResources;
 	}
+    
+    public static boolean exists(String name) {
+    	return BeanUtils.getBeanOfType(MiscUtils.class).getClass().getClassLoader().getResource(name) != null;
+    }
 
 	@SuppressWarnings("unchecked")
 	static <T> List<T> getResources(Class<T> clazz) {

@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jboss.el.lang.EvaluationContext;
 import org.jboss.el.lang.ExpressionBuilder;
 
+import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.compiler.UIInstructions;
 import com.sun.faces.facelets.tag.jsf.ComponentSupport;
@@ -42,8 +43,7 @@ public class ComponentRenderer extends Renderer {
 
     private final Log logger = LogFactory.getLog(getClass());
 
-    public final static String ATTRIBUTES = "idx|com.sun.faces.facelets.APPLIED|" + 
-    	"dataEmpty|dataEmptyOption|dataRepeat|dataInclude|dataVar|dataVarStatus|dataBegin|dataEnd|dataPack|dataEscape|dataWrapper";
+    public final static String ATTRIBUTES = "idx|com.sun.faces.facelets.APPLIED";
     
     private String getComponentTag(UIComponent component) {
     	String componentTag = (String) ((Component) component).getConfig("componentTag");
@@ -95,6 +95,7 @@ public class ComponentRenderer extends Renderer {
 		        Map<String, Object> attrs = component.getAttributes();
 		        for (String key : attrs.keySet()) {
 		    		if (!key.matches(ATTRIBUTES + "|" + 
+		    			FacesDecorator.ATTRIBUTES + "|" + 
 		    			FacesDecorator.QNAME + "|" + 
 		    			ComponentSupport.MARK_CREATED + "|" + 
 		    			Resource.COMPONENT_RESOURCE_KEY + "|" + 
@@ -125,11 +126,13 @@ public class ComponentRenderer extends Renderer {
     
     protected void writeAttribute(ResponseWriter writer, UIComponent component, String name, Object value) throws IOException {
     	
-        if (!"rendered".equalsIgnoreCase(name) && !"styleClass".equalsIgnoreCase(name)) {
+    	if (!"rendered".equalsIgnoreCase(name) && !"styleClass".equalsIgnoreCase(name)) {
         	if ("selected".equalsIgnoreCase(name) || "checked".equalsIgnoreCase(name)) {
         		if ((value instanceof Boolean && (Boolean) value) || (value instanceof String && Boolean.valueOf((String) value))) {
         			writer.writeAttribute(name, name, null);
         		}
+        	} else if ("action".equalsIgnoreCase(name) || "href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
+    			writer.writeAttribute(name, RequestUtils.contextRelative(value.toString(), true), null);
         	} else {
         		writer.writeAttribute(name, value, null);        		
         	}
@@ -187,14 +190,14 @@ public class ComponentRenderer extends Renderer {
         
         compositeRoot.encodeAll(context);
     }
-
-	private Object getExpressionValue(String expr) {
-		return ExpressionBuilder.createNode(expr)
-			.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
-    }
 	
     public boolean getRendersChildren() {
         return true;
+    }
+    
+    private Object getExpressionValue(String expr) {
+		return ExpressionBuilder.createNode(expr)
+			.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
     }
 
 }

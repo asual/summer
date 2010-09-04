@@ -58,30 +58,6 @@ public class ViewResolverConfiguration extends ContentNegotiatingViewResolver {
         super.setViewResolvers(viewResolvers);
     }
 
-    public ExtendedInternalResourceViewResolver getPrivateViewResolver() {
-        for (ViewResolver vr : getViewResolvers()) {
-            if (vr instanceof ExtendedInternalResourceViewResolver) {
-            	ExtendedInternalResourceViewResolver resolver = (ExtendedInternalResourceViewResolver) vr;
-            	if (resolver.getPrefix().endsWith("/private")) {
-	            	return resolver;
-            	}
-            }
-        }
-        return null;
-    }
-    
-    public ExtendedInternalResourceViewResolver getPublicViewResolver() {
-        for (ViewResolver vr : getViewResolvers()) {
-            if (vr instanceof ExtendedInternalResourceViewResolver) {
-            	ExtendedInternalResourceViewResolver resolver = (ExtendedInternalResourceViewResolver) vr;
-            	if (resolver.getPrefix().endsWith("/public")) {
-	            	return resolver;
-            	}
-            }
-        }
-        return null;
-    }
-    
     public View resolveViewName(String viewName, Locale locale) throws Exception {
         View view = super.resolveViewName(viewName, locale);
         if (view == null) {

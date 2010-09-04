@@ -40,9 +40,5 @@ public class MiscUtils {
     public static Locale getLocale() {
     	return LocaleContextHolder.getLocale();
     }
-    
-    public static boolean exists(String name) {
-    	return BeanUtils.getBeanOfType(MiscUtils.class).getClass().getClassLoader().getResource(name) != null;
-    }
-    
+
 }

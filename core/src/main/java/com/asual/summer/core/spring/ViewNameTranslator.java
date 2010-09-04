@@ -15,11 +15,13 @@
 package com.asual.summer.core.spring;
 
 import java.net.URL;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator;
 
 import com.asual.summer.core.ViewNotFoundException;
@@ -54,12 +56,23 @@ public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
 
         String uri = StringUtils.stripFilenameExtension(
         		RequestUtils.contextRelative(request.getRequestURI().replaceAll("/+", "/"), false)).replaceFirst("/$", "");
+
+        ExtendedInternalResourceViewResolver pagesResolver = null;
         
-        ViewResolverConfiguration viewResolver = BeanUtils.getBeanOfType(ViewResolverConfiguration.class);
-        ExtendedInternalResourceViewResolver resolver = viewResolver.getPublicViewResolver();
+        ViewResolverConfiguration viewResolverConfiguraton = BeanUtils.getBeanOfType(ViewResolverConfiguration.class);
+        List<ViewResolver> viewResolvers = viewResolverConfiguraton.getViewResolvers();
         
-        String prefix = resolver.getPrefix().replaceAll("/$", "");
-        String suffix = resolver.getSuffix();
+        for (ViewResolver vr : viewResolvers) {
+            if (vr instanceof ExtendedInternalResourceViewResolver) {
+            	ExtendedInternalResourceViewResolver resolver = (ExtendedInternalResourceViewResolver) vr;
+            	if (resolver.getPrefix().endsWith("/pages")) {
+	            	pagesResolver = resolver;
+            	}
+            }
+        }
+        
+        String prefix = pagesResolver.getPrefix().replaceAll("/$", "");
+        String suffix = pagesResolver.getSuffix();
         
         String viewName = findViewName(prefix, uri, suffix, false);
         if (viewName != null) {

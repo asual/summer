@@ -33,6 +33,8 @@ public final class FacesDecorator implements TagDecorator {
 
     public final static String SUMMER = "http://java.sun.com/jsf/composite/cc";
     public final static String QNAME = "qName";
+    public final static String ATTRIBUTES = "dataEmpty|dataEmptyOption|dataRepeat|dataTemplate|dataValue|dataVar|" + 
+    	"dataVarStatus|dataBegin|dataEnd|dataPack|dataEscape|dataWrapper|dataLabel";
 
     private List<String> headTags = Arrays.asList(new String[] {
         "base", 
@@ -44,7 +46,7 @@ public final class FacesDecorator implements TagDecorator {
 	});
     
     private List<String> bodyTags = Arrays.asList(new String[] {
-	    //"a", 
+	    "a", 
 	    "abbr", 
 	    "address", 
 	    "area", 
@@ -56,7 +58,7 @@ public final class FacesDecorator implements TagDecorator {
 	    "blockquote", 
 	    "body", 
 	    "br", 
-	    //"button", 
+	    "button", 
 	    "canvas", 
 	    "caption", 
 	    "cite", 
@@ -89,11 +91,11 @@ public final class FacesDecorator implements TagDecorator {
 	    "header", 
 	    "hgroup", 
 	    "hr", 
-	    "html", 
+	    //"html", 
 	    "i", 
 	    "iframe", 
-	    //"img", 
-	    //"input", 
+	    "img", 
+	    "input", 
 	    "ins", 
 	    "keygen", 
 	    "kbd", 
@@ -121,7 +123,7 @@ public final class FacesDecorator implements TagDecorator {
 	    "ruby", 
 	    "samp", 
 	    "section", 
-	    //"select", 
+	    "select", 
 	    "small", 
 	    "source", 
 	    "span", 
@@ -132,7 +134,7 @@ public final class FacesDecorator implements TagDecorator {
 	    "table", 
 	    "tbody", 
 	    "td", 
-	    //"textarea", 
+	    "textarea", 
 	    "tfoot", 
 	    "th", 
 	    "thead", 
@@ -156,9 +158,7 @@ public final class FacesDecorator implements TagDecorator {
 		List<TagAttribute> attrs = new ArrayList<TagAttribute>(Arrays.asList(tag.getAttributes().getAll()));
     	if (StringUtils.isEmpty(namespace) && !HtmlDecorator.XhtmlNamespace.equals(namespace)) {
         	String name = qName;
-			if ("html".equals(qName) && location.getPath().indexOf("/template") == -1) {
-				name = "html";
-			} else if (headTags.contains(qName)) {
+			if (headTags.contains(qName)) {
 				name = "outputStylesheet";
 				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
 				tagTargetAttr = new TagAttributeImpl(location, namespace, "target", "target", "head");
@@ -169,23 +169,28 @@ public final class FacesDecorator implements TagDecorator {
     		for (TagAttribute attr : attrs) {
     			if ("target".equals(attr.getQName())) {
     				tagTargetAttr = null;
-    			}
-    			if ("data-include".equals(attr.getQName())) {
+    			} else if ("data-template".equals(attr.getQName())) {
     				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
-    				name = "include";    				
-    			}
-    			if ("data-repeat".equals(attr.getQName())) {
+    				name = "html".equals(qName) ? "html" : "template";
+    			} else if ("data-repeat".equals(attr.getQName())) {
     				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
     				name = "repeat";
-    			}
-    			if ("data-wrapper".equals(attr.getQName()) && !Boolean.valueOf(attr.getValue())) {
+    			} else if ("data-label".equals(attr.getQName()) && !StringUtils.isEmpty(attr.getValue())) {
     				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
-    				name = "tag";
-    			}    			
+    				name = qName;
+    			} else if ("data-wrapper".equals(attr.getQName())) {
+    				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
+    				name =  Boolean.valueOf(attr.getValue()) ? qName : "tag";
+    			} else if ("input".equals(qName) && "type".equals(attr.getQName()) && "hidden".equals(attr.getValue())) {
+    				name = qName;
+    			}
     	    	if (attr.getQName().startsWith("data-") && !attr.getQName().equals("data-rendered")) {
     	    		String replace = convertName(attr.getQName());
-    				attrs.set(attrs.indexOf(attr), new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), replace, replace, attr.getValue()));
-    			}    			
+    	    		if (replace.matches(ATTRIBUTES)) {
+    	    			attrs.set(attrs.indexOf(attr), 
+    	    					new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), replace, replace, attr.getValue()));
+    	    		}
+    			}
     			replaceAttr(attrs, attr, "class", "styleClass");
     			replaceAttr(attrs, attr, "data-rendered", "rendered");
     		}
