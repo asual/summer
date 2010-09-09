@@ -47,7 +47,7 @@ public class JSONView extends AbstractView implements AbstractResponseView {
         
         String callback = (String) request.getParameter("callback");
         if (callback != null) {
-            response.getOutputStream().print(callback + "(");
+            response.getOutputStream().print(callback + " && " + callback + "(");
         }
         
         ObjectMapper mapper = new ObjectMapper();
