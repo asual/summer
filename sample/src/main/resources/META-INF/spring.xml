@@ -4,6 +4,7 @@
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:mvc="http://www.springframework.org/schema/mvc"
     xmlns:p="http://www.springframework.org/schema/p" 
+    xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
 		http://www.springframework.org/schema/beans 
@@ -11,13 +12,29 @@
 		http://www.springframework.org/schema/context 
 		http://www.springframework.org/schema/context/spring-context-3.0.xsd
 		http://www.springframework.org/schema/mvc
-		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
     
     <context:component-scan base-package="com.asual.summer.sample" />
     
-    <!--  
-    <bean class="com.asual.summer.core.source.MessageSource" 
-        p:location="com.asual.summer.sample.messages" />
-    -->
+    <context:spring-configured />
 
+    <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+    
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource">
+            <bean class="com.mchange.v2.c3p0.ComboPooledDataSource">
+                <property name="driverClass" value="${app.db.driverClass}" />
+                <property name="jdbcUrl" value="${app.db.jdbcUrl}" />
+                <property name="user" value="${app.db.user}" />
+                <property name="password" value="${app.db.password}" />
+            </bean>
+        </property>
+    </bean>
+    
+    <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager" />
+    
 </beans>

@@ -1,0 +1,1 @@
+insert into technology (name, value, required) values ('Spring Framework', 'spring-framework', true);

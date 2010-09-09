@@ -140,7 +140,9 @@
     </build>
 
     <modules>
+        <module>ajax</module>
         <module>archetype</module>
+        <module>atmosphere</module>
         <module>core</module>
         <module>el</module>
         <module>jquery</module>

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.asual.summer.core.ResponseView;
+import com.asual.summer.sample.domain.Technology;
 
 @Controller
 public class SampleController {
@@ -29,6 +30,11 @@ public class SampleController {
 	@ResponseView("json")
     public ModelAndView dynamic() {
 		return new ModelAndView("/index", new ModelMap("message", "Dynamic content generated on " + new Date(System.currentTimeMillis()) + "."));
+	}
+	
+	@RequestMapping("/technology")
+    public ModelMap technology() {
+		return new ModelMap(Technology.findTechnologies());
 	}
 	
 }
