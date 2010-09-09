@@ -78,9 +78,7 @@ public class FacesResourceResolver extends ResourceResolver {
 	                            while ((r = reader.read(cbuf, 0, 32)) != -1) {
 	                                sb.append(cbuf, 0, r);
 	                            }
-	                            String str = sb.toString();
-	                            System.out.println("===" + resource.getFile());
-	                            bytes = process(str).getBytes(reader.getEncoding());
+	                            bytes = replaceEntities(sb.toString()).getBytes(reader.getEncoding());
 	                        } finally {
 	                            reader.close();
 	                            input.close();
@@ -103,8 +101,8 @@ public class FacesResourceResolver extends ResourceResolver {
         			}
                 }
                 
-                private String process(String str) {
-                	Matcher m = Pattern.compile("&([^;]*);").matcher(str);
+                private String replaceEntities(String str) {
+                	Matcher m = Pattern.compile("&(\\w*);").matcher(str);
 					StringBuffer sb = new StringBuffer();
 					while (m.find()) {
 						m.appendReplacement(sb, "&#" + entities.get(m.group(1)) + ";");
