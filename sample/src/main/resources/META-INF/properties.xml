@@ -2,10 +2,10 @@
 <properties>
 
     <entry key="app.id">summer-sample</entry>
-    
+    <!--  
     <entry key="app.db.driverClass">org.h2.Driver</entry>
     <entry key="app.db.jdbcUrl">jdbc:h2:mem:sample</entry>
     <entry key="app.db.user">sa</entry>
     <entry key="app.db.password"></entry>
-    
+    -->
 </properties>
