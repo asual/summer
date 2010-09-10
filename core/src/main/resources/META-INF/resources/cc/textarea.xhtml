@@ -32,13 +32,8 @@
         </ui:fragment>
 
         <textarea id="${cc.formId}" name="${cc.formId}" cols="${cc.attrs.cols}" rows="${cc.attrs.rows}">
-            <ui:fragment rendered="${not empty errors.get(cc.formId)}">
-                ${errors.get(cc.formId).value}
-            </ui:fragment>
-            <ui:fragment rendered="${empty errors.get(cc.formId)}">
-                <cs:insertChildren />
-            </ui:fragment>
-        </textarea>
+<ui:fragment rendered="${not empty errors.get(cc.formId)}">${errors.get(cc.formId).value}</ui:fragment>
+<ui:fragment rendered="${empty errors.get(cc.formId)}"><cs:insertChildren /></ui:fragment></textarea>
         
         <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.formId)}"
             value="${errors.get(cc.formId).message}" styleClass="error" />

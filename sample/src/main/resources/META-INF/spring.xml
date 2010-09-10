@@ -21,12 +21,6 @@
     <context:component-scan base-package="com.asual.summer.sample" />
     
     <context:spring-configured />
-
-    <jdbc:embedded-database id="dataSource" type="H2">
-    <!--
-        <jdbc:script location="classpath:import.sql" />
-    -->
-    </jdbc:embedded-database>
     
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" 
         p:entityManagerFactory-ref="entityManagerFactory" />
@@ -35,5 +29,11 @@
         p:dataSource-ref="dataSource" />
     
     <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager" />
+    
+    <jdbc:embedded-database id="dataSource" type="H2" />
+    
+    <jdbc:initialize-database data-source="dataSource">
+        <jdbc:script location="classpath:META-INF/data/import.sql" />
+    </jdbc:initialize-database>
     
 </beans>

@@ -11,8 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ import com.asual.summer.core.util.StringUtils;
 
 @Configurable
 @Entity
-@Table(name="license", uniqueConstraints={@UniqueConstraint(columnNames="name")})
+@Table
 public class License implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,10 +32,12 @@ public class License implements java.io.Serializable {
     @GeneratedValue(strategy=IDENTITY)
     @Column(unique=true, nullable=false)
     private Integer id;
-    
+
+    @NotEmpty
     @Column(unique=true, nullable=false)    
     private String value;
     
+    @NotEmpty
     @Column
     private String name;
     
@@ -70,13 +72,13 @@ public class License implements java.io.Serializable {
     }
     
     public boolean equals(Object obj) {
-        boolean equal = super.equals(obj);
-        if (obj instanceof License) {
-            equal = id.equals(((License) obj).id) && 
-                value.equals(((License) obj).value) &&
-                name.equals(((License) obj).name);
-        }
-        return equal;
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (obj.getClass() != getClass())
+            return false;
+        return value != null && value.equals(((License) obj).value);
     }
     
     @Transactional
@@ -114,20 +116,17 @@ public class License implements java.io.Serializable {
         return em;
     }
     
-    public static License findLicense(Integer id) {
-        if (id == null) {
-        	return null;
-        }
-        return entityManager().find(License.class, id);
+    public static License find(String value) {
+    	return (License) entityManager().createQuery("select o from License o where o.value = ?1").setParameter(1, value).getSingleResult();
     }
     
     @SuppressWarnings("unchecked")
-    public static List<License> findLicenses() {
+    public static List<License> list() {
         return entityManager().createQuery("select o from License o").getResultList();
     }
     
     @SuppressWarnings("unchecked")
-    public static List<License> findLicenses(int firstResult, int maxResults) {
+    public static List<License> list(int firstResult, int maxResults) {
         return entityManager().createQuery("select o from License o").setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
 

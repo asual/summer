@@ -132,7 +132,7 @@ public class ComponentRenderer extends Renderer {
         			writer.writeAttribute(name, name, null);
         		}
         	} else if ("action".equalsIgnoreCase(name) || "href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
-    			writer.writeAttribute(name, RequestUtils.contextRelative(value.toString(), true), null);
+    			writer.writeAttribute(name, RequestUtils.contextRelative(value != null ? value.toString() : "", true), null);
         	} else {
         		writer.writeAttribute(name, value, null);        		
         	}

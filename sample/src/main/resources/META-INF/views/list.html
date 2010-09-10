@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    
+    <title>Technologies</title>
+    
+    <h1>Technologies</h1>
+    
+    <p class="views">
+        View as: <span><a href="/technology" data-render="view">List</a> | <a href="/technology?view=table" data-render="view">Table</a></span> 
+        Download as: <span><a href="/technology.json">JSON</a></span>
+    </p>
+    
+    <div id="view">
+        <div class="table" data-rendered="${'table' eq requestUtils.getParameter('view')}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Version</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody data-repeat="${technologyList}" data-empty="None.">
+                    <tr class="${vs.index mod 2 eq 0 ? 'odd' : 'even'}">
+                        <td><a href="/technology/${item.value}">${item.name}</a></td>
+                        <td>${item.version}</td>
+                        <td>${stringUtils.ellipsis(item.description, 80)}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    	<div class="list" data-rendered="${empty requestUtils.getParameter('view')}">
+            <div data-repeat="${technologyList}" data-empty="None.">
+                <h2><a href="/technology/${item.value}">${item.name}</a></h2>
+                <p class="details">
+                    Version: <span>${item.version}</span> 
+                    Licenses: <span data-repeat="${item.licenses}" data-var="license" data-empty="-">${license.name.concat(vs.last ? '' : ', ')}</span>
+                </p>
+                <p data-rendered="${not empty item.description}">${item.description}</p>
+            </div>
+        </div>
+    </div>
+
+    <p><a href="/technology/add">+ Add a new technology</a></p>
+
+</html>

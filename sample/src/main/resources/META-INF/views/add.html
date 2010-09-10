@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    
+    <title>Add a new technology</title>
+    
+    <p><a href="/technology">&#8592; Back to List</a></p>
+
+    <form action="/technology/save">
+
+        <h1>Add a new technology</h1>
+        
+        <fieldset data-label="General information:">
+            <input type="text" value="${technology.name}" size="48" data-label="Name:" />
+            <input type="text" value="${technology.homepage}" size="48" data-label="Homepage:" />
+            <input type="text" value="${technology.version}" size="16" data-label="Version:" />
+        </fieldset>
+
+        <fieldset data-label="Description:">
+            <textarea cols="60" rows="10">${technology.description}</textarea>
+        </fieldset>
+        
+        <fieldset data-label="Licenses:">
+            <div data-repeat="${licenseList}" data-value="${technology.licenses}">
+                <input type="checkbox" value="${item.value}" data-label="${item.name}" />
+            </div>
+        </fieldset>
+
+        <fieldset data-label="Status:">
+            <select data-repeat="${statusList}" data-value="${technology.status}" 
+                data-empty-option="Select a status">
+                <option value="${item.value}">${item.name}</option>
+            </select>
+        </fieldset>
+        
+        <fieldset data-label="Required:">
+            <div data-repeat="${arrayUtils.asList('true,false')}" data-value="${empty technology ? true : technology.required}">
+                <input type="radio" value="${item}" data-label="${item ? 'Yes' : 'No'}" />
+            </div>
+        </fieldset>
+        
+        <button>Save</button>
+        
+    </form>
+	
+</html>

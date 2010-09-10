@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    
+    <title>${technology.name}</title>
+    <p><a href="/technology">&#8592; Back to List</a></p>
+
+    <div class="view">
+
+        <h1>${technology.name}</h1>
+
+        <p class="views">
+            Download as: <span><a href="/technology/${technology.value}.json">JSON</a></span>
+        </p>
+
+        <p>${technology.description}</p>
+        
+        <p>
+            Version: <span>${technology.version}</span><br />
+            Homepage: <a href="${technology.homepage}">${technology.homepage}</a><br />
+            Licenses: <span data-repeat="${technology.licenses}" data-empty="-">${item.name.concat(vs.last ? '' : ', ')}</span>
+        </p>
+    
+        <p><a href="/technology/${technology.value}/edit">&#177; Edit this technology</a></p>
+        
+    </div>
+</html>

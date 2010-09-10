@@ -2,6 +2,7 @@ package com.asual.summer.sample.domain;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -18,18 +19,18 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.asual.summer.core.util.StringUtils;
 
 @Configurable
 @Entity
-@Table(name="technology", uniqueConstraints={@UniqueConstraint(columnNames="name")})
+@Table
 public class Technology implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -42,6 +43,7 @@ public class Technology implements java.io.Serializable {
     @Column(unique=true, nullable=false)
     private Integer id;
     
+    @NotEmpty
     @Column(unique=true, nullable=false)
     private String value;
     
@@ -161,6 +163,16 @@ public class Technology implements java.io.Serializable {
     public void setImage(Image image) {
         this.image = image;
     }
+
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (obj.getClass() != getClass())
+            return false;
+        return value != null && value.equals(((Technology) obj).value);
+    }
     
     @Transactional
     public void persist() {
@@ -197,21 +209,68 @@ public class Technology implements java.io.Serializable {
         return em;
     }
     
-    public static Technology findTechnology(Integer id) {
-        if (id == null) {
-        	return null;
-        }
-        return entityManager().find(Technology.class, id);
+    public static Technology find(String value) {
+    	return (Technology) entityManager().createQuery("select o from Technology o where o.value = ?1").setParameter(1, value).getSingleResult();
     }
     
     @SuppressWarnings("unchecked")
-    public static List<Technology> findTechnologies() {
+    public static List<Technology> list() {
         return entityManager().createQuery("select o from Technology o").getResultList();
     }
     
     @SuppressWarnings("unchecked")
-    public static List<Technology> findTechnologies(int firstResult, int maxResults) {
+    public static List<Technology> list(int firstResult, int maxResults) {
         return entityManager().createQuery("select o from Technology o").setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
-    }
+    } 
+    
+    public static class Image implements java.io.Serializable {
+
+    	private static final long serialVersionUID = 1L;
+
+        private String value;
+        private String contentType;
+        private byte[] bytes;
+        
+        public Image(MultipartFile file) throws IOException {
+        	value = file.getOriginalFilename();
+        	contentType = file.getContentType();
+        	bytes = file.getBytes();
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+        
+        public String getContentType() {
+            return contentType;
+        }
+        
+        public void setContentType(String contentType) {
+            this.contentType = contentType;
+        }
+        
+        public byte[] getBytes() { 
+            return bytes; 
+        }
+        
+        public void setBytes(byte[] bytes) {
+            this.bytes = bytes;
+        }
+        
+        public boolean equals(Object obj) {
+            if (obj == null)
+                return false;
+            if (obj == this)
+                return true;
+            if (obj.getClass() != getClass())
+                return false;
+            return bytes != null && bytes.equals(((Image) obj).bytes);
+        }
+        
+    }    
     
 }

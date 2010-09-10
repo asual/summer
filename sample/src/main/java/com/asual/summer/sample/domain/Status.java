@@ -11,8 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ import com.asual.summer.core.util.StringUtils;
 
 @Configurable
 @Entity
-@Table(name="status", uniqueConstraints={@UniqueConstraint(columnNames="name")})
+@Table
 public class Status implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,9 +33,11 @@ public class Status implements java.io.Serializable {
     @Column(unique=true, nullable=false)
     private Integer id;
     
+    @NotEmpty
     @Column(unique=true, nullable=false)
     private String value;
     
+    @NotEmpty
     @Column
     private String name;
     
@@ -70,13 +72,13 @@ public class Status implements java.io.Serializable {
     }
     
     public boolean equals(Object obj) {
-        boolean equal = super.equals(obj);
-        if (obj instanceof Status) {
-            equal = id.equals(((Status) obj).id) && 
-                name.equals(((Status) obj).name) && 
-                value.equals(((Status) obj).value);
-        }
-        return equal;
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (obj.getClass() != getClass())
+            return false;
+        return value != null && value.equals(((Status) obj).value);
     }
     
     @Transactional
@@ -114,18 +116,17 @@ public class Status implements java.io.Serializable {
         return em;
     }
     
-    public static Status findStatus(Integer id) {
-        if (id == null) return null;
-        return entityManager().find(Status.class, id);
+    public static Status find(String value) {
+    	return (Status) entityManager().createQuery("select o from Status o where o.value = ?1").setParameter(1, value).getSingleResult();
     }
     
     @SuppressWarnings("unchecked")
-    public static List<Status> findStatuses() {
+    public static List<Status> list() {
         return entityManager().createQuery("select o from Status o").getResultList();
     }
     
     @SuppressWarnings("unchecked")
-    public static List<Status> findStatuses(int firstResult, int maxResults) {
+    public static List<Status> list(int firstResult, int maxResults) {
         return entityManager().createQuery("select o from Status o").setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
