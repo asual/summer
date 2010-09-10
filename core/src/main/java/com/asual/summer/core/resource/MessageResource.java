@@ -59,7 +59,7 @@ public class MessageResource extends AbstractResource {
 						boolean isJar = ResourceUtils.isJarURL(url);
 						String basename = url.getFile()
 							.split(isJar ? ResourceUtils.JAR_URL_SEPARATOR : "/classes/")[1].replaceAll("/", ".")
-							.replaceAll("(_\\w\\w){0,3}\\.properties", "");
+							.replaceAll("(_\\w+){0,3}\\.properties", "");
 						if (!basenames.contains(basename)) {
 							if (isJar) {
 								basenames.add(basename);
