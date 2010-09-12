@@ -48,4 +48,5 @@ public class ExtendedInternalResourceViewResolver extends InternalResourceViewRe
 		}
 		return null;
 	}
+	
 }

@@ -22,7 +22,7 @@
     <cs:interface componentType="summer.faces.Component" componentWrapper="true" />
     
     <cs:implementation>
-        <meta charset="utf-8" />
+        <meta charset="${miscUtils.getEncoding()}" />
         <h:outputStylesheet qName="title" target="head"><cs:insertChildren /></h:outputStylesheet>
     </cs:implementation>
     

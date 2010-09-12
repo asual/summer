@@ -5,9 +5,9 @@
     
     <h1>Technologies</h1>
     
-    <p class="views">
-        View as: <span><a href="/technology" data-render="view">List</a> | <a href="/technology?view=table" data-render="view">Table</a></span> 
-        Download as: <span><a href="/technology.json">JSON</a></span>
+    <p id="options" class="views">
+        View as: <span><a href="/technology" data-ajax="view">List</a> | <a href="/technology?view=table" data-ajax="options view">Table</a></span> 
+        Download as: <span><a href="/technology.json">JSON</a> | <a href="/technology?format=xml">XML</a></span>
     </p>
     
     <div id="view">
@@ -34,7 +34,7 @@
                 <h2><a href="/technology/${item.value}">${item.name}</a></h2>
                 <p class="details">
                     Version: <span>${item.version}</span> 
-                    Licenses: <span data-repeat="${item.licenses}" data-var="license" data-empty="-">${license.name.concat(vs.last ? '' : ', ')}</span>
+                    Licenses: <span data-repeat="${item.license}" data-var="license" data-empty="-">${license.name.concat(vs.last ? '' : ', ')}</span>
                 </p>
                 <p data-rendered="${not empty item.description}">${item.description}</p>
             </div>

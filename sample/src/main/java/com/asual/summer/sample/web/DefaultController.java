@@ -7,10 +7,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.asual.summer.core.ResponseView;
+import com.asual.summer.core.ResponseFormat;
 
 @Controller
-public class SampleController {
+public class DefaultController {
 	
 	/**
 	 * An optional controller method that creates a simple model for the index page of the sample.
@@ -26,7 +26,7 @@ public class SampleController {
 	 * @return A simple model with a corresponding view path.
 	 */
 	@RequestMapping("/dynamic")
-	@ResponseView("json")
+	@ResponseFormat({"json","xml"})
     public ModelAndView dynamic() {
 		return new ModelAndView("/index", new ModelMap("message", "Dynamic content generated on " + new Date(System.currentTimeMillis()) + "."));
 	}

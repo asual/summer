@@ -29,9 +29,11 @@ import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
 
+@Component("html")
 public class HTMLView extends InternalResourceView implements AbstractResponseView {
 
 	private Lifecycle facesLifecycle;
@@ -44,6 +46,18 @@ public class HTMLView extends InternalResourceView implements AbstractResponseVi
     	setExtension(DEFAULT_EXTENSION);
     }
 
+	public String getExtension() {
+		return extension;
+	}
+
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
+	
+    protected boolean isUrlRequired() {
+		return false;
+	}
+	
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
@@ -79,14 +93,6 @@ public class HTMLView extends InternalResourceView implements AbstractResponseVi
 			facesContext.responseComplete();
 			facesContext.release();
 		}
-	}
-
-	public String getExtension() {
-		return extension;
-	}
-
-	public void setExtension(String extension) {
-		this.extension = extension;
 	}
 
 }

@@ -2,10 +2,77 @@ body {
     margin: 0;
     padding: 20px;
 }
+
+footer {
+    font-size: 11px;
+}
+
 h1 {
+    margin: 0 0 20px;
+    padding: 0;
+}
+
+h2 {
     margin: 0;
     padding: 0;
 }
-footer {
-    font-size: 11px;
+
+p, ul {
+    line-height: 20px;
+    margin: 0 0 20px;
+}
+
+div {
+    margin: 0 0 10px;
+}
+
+fieldset {
+        margin: 0 0 15px;
+        padding: 0 20px;
+        border: 1px solid #999;
+}
+
+legend {
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0 0 0 -5px;
+    padding: 0 4px;
+    color: #666;
+}
+
+.fieldset {
+    margin: 0;
+    padding: 15px 0 10px;
+}
+
+.button, .checkbox, .select, .text, .textarea {
+    display: block;
+}
+
+.select label, .text label, .textarea label {
+    display: block;
+    padding: 0 0 4px;
+}
+
+table {
+    width: 100%;
+    margin: 0 0 20px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 0 none;
+}
+
+th {
+    text-align: left;
+    font-weight: normal;
+    border-right: 2px solid #f5f8fb;
+    border-bottom: 2px inset;
+}
+
+th, td {
+    padding: 4px 8px 4px 4px;
+}
+
+.even {
+    background: #dde5f0;
 }

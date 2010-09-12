@@ -35,7 +35,7 @@ import org.springframework.web.servlet.view.AbstractView;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.WebUtils;
 
-import com.asual.summer.core.ResponseView;
+import com.asual.summer.core.ResponseFormat;
 import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.view.AbstractResponseView;
@@ -49,7 +49,7 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 
 	public View resolveView(Method handlerMethod, NativeWebRequest webRequest) {
 
-		ResponseView viewAnn = AnnotationUtils.findAnnotation(handlerMethod, ResponseView.class);
+		ResponseFormat viewAnn = AnnotationUtils.findAnnotation(handlerMethod, ResponseFormat.class);
 		
 		if (viewAnn != null) {
 			
@@ -106,7 +106,7 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 						return view;
 					}
 				}
-			}			
+			}
 		}
 		
 		return null;

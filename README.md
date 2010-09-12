@@ -9,7 +9,7 @@ application. It's designed for modularity and extensibility.
 
 You can create and run a blank Summer project by using the following commands:
 
-    mvn archetype:generate -DarchetypeCatalog=http://www.asual.com/nexus/content/repositories/snapshots/archetype-catalog.xml
+    mvn archetype:generate -DarchetypeCatalog=http://www.asual.com/maven/content/groups/public/archetype-catalog.xml
     cd sample
     mvn eclipse:eclipse -DdownloadSources=true
     mvn jetty:run
@@ -22,7 +22,7 @@ In order to use Summer you need the following records to your Maven 2 POM file:
         <repository>
             <id>com.asual.repositories.releases</id>
             <name>Asual Releases Repository</name>
-            <url>http://www.asual.com/nexus/content/repositories/releases</url>
+            <url>http://www.asual.com/maven/content/groups/public</url>
         </repository>
     </repositories>
     

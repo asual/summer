@@ -21,15 +21,15 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.WebUtils;
+
+import com.asual.summer.core.RequestFilter;
 
 @Component
 public class RequestUtils {
 
     public static HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        return RequestFilter.getRequest();
     }
 
 	public static String getRequestURI() {
@@ -94,11 +94,11 @@ public class RequestUtils {
 		return ("GET".equalsIgnoreCase(method) || "POST".equalsIgnoreCase(method));
 	}
 	
-    public static boolean isFirefox() {
+    public static boolean isMozilla() {
         return Pattern.compile("Mozilla").matcher(getUserAgent()).find() && !Pattern.compile("compatible|WebKit").matcher(getUserAgent()).find();
     }
     
-    public static boolean isInternetExplorer() {
+    public static boolean isMSIE() {
         return Pattern.compile("MSIE").matcher(getUserAgent()).find() && !Pattern.compile("Opera").matcher(getUserAgent()).find();
     }
     
@@ -106,12 +106,12 @@ public class RequestUtils {
         return Pattern.compile("Opera").matcher(getUserAgent()).find();
     }
     
-    public static boolean isSafari() {
+    public static boolean isWebKit() {
         return Pattern.compile("WebKit").matcher(getUserAgent()).find();
     }
     
-    public static boolean isSafariMobile() {
-        return Pattern.compile("iPhone|iPad").matcher(getUserAgent()).find();
+    public static boolean isMobile() {
+        return Pattern.compile("Android|iPhone").matcher(getUserAgent()).find();
     }
     
     public static void setAttribute(String name, Object value) {

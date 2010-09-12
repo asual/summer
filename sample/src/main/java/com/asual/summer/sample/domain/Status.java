@@ -2,6 +2,7 @@ package com.asual.summer.sample.domain;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ import com.asual.summer.core.util.StringUtils;
 @Configurable
 @Entity
 @Table
-public class Status implements java.io.Serializable {
+public class Status implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -63,7 +64,7 @@ public class Status implements java.io.Serializable {
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         if (name != null) {
             value = StringUtils.toURIPath(name);
@@ -71,17 +72,30 @@ public class Status implements java.io.Serializable {
         this.name = name;
     }
     
-    public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
-        if (obj == this)
-            return true;
-        if (obj.getClass() != getClass())
-            return false;
-        return value != null && value.equals(((Status) obj).value);
-    }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
     
-    @Transactional
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Status other = (Status) obj;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
+
+	@Transactional
     public void persist() {
         entityManager.persist(this);
     }

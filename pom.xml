@@ -64,11 +64,24 @@
             <url>https://repository.jboss.org/nexus/content/repositories/public</url>
         </repository>
         <repository>
+            <id>org.codehaus.repository</id>
+            <name>Codehaus Repository</name>
+            <url>http://repository.codehaus.org</url>
+        </repository>
+        <repository>
             <id>com.asual.repositories.public</id>
             <name>Asual Public Repository</name>
             <url>http://www.asual.com/maven/content/groups/public</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>net.java.download.glassfish</id>
+            <name>GlassFish Plugin Repository</name>
+            <url>http://download.java.net/maven/glassfish</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>

@@ -19,29 +19,29 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.JsonGenerator.Feature;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.AbstractView;
 
 import com.asual.summer.core.util.MiscUtils;
+import com.asual.summer.core.util.StringUtils;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.mapper.Mapper;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 
-@Component("json")
-public class JSONView extends AbstractView implements AbstractResponseView {
+@Component("xml")
+public class XMLView extends AbstractView implements AbstractResponseView {
 
-    private static final String DEFAULT_CONTENT_TYPE = "application/json";
-    private static final String DEFAULT_EXTENSION = "json";
+    private static final String DEFAULT_CONTENT_TYPE = "application/xml";
+    private static final String DEFAULT_EXTENSION = "xml";
 
     private String extension;
 
-    public JSONView() {
+    public XMLView() {
         super();
         setContentType(DEFAULT_CONTENT_TYPE);
         setExtension(DEFAULT_EXTENSION);
     }
-
+    
 	public String getExtension() {
 		return extension;
 	}
@@ -55,24 +55,31 @@ public class JSONView extends AbstractView implements AbstractResponseView {
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         
+    	XStream xstream = new XStream() {
+		    protected MapperWrapper wrapMapper(MapperWrapper next) {
+		        return new PackageStrippingMapper(next);
+		    }
+		};
+		
+		byte[] bytes = xstream.toXML(model).getBytes(MiscUtils.getEncoding());
+		
         response.setContentType(getContentType());
         response.setCharacterEncoding(MiscUtils.getEncoding());
-        
-        String callback = (String) request.getParameter("callback");
-        if (callback != null) {
-            response.getOutputStream().print(callback + " && " + callback + "(");
+		response.setContentLength(bytes.length);
+		response.getOutputStream().write(bytes);
+		
+	} 
+    
+    private static class PackageStrippingMapper extends MapperWrapper {
+    	
+        public PackageStrippingMapper(Mapper wrapped) {
+            super(wrapped);
         }
         
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(Feature.AUTO_CLOSE_TARGET, false);
-        mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
-        mapper.getSerializationConfig().setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-        mapper.writeValue(response.getOutputStream(), model);        
-        
-        if (callback != null) {
-            response.getOutputStream().print(");");
+        @SuppressWarnings("rawtypes")
+        public String serializedClass(Class type) {
+        	return StringUtils.toCamelCase(type.getSimpleName());
         }
-        
     }
 
 }

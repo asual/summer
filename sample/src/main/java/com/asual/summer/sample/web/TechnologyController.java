@@ -1,6 +1,6 @@
 package com.asual.summer.sample.web;
 
-import java.util.List;
+import java.util.Arrays;
 
 import javax.validation.Valid;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.asual.summer.core.ResponseView;
+import com.asual.summer.core.ResponseFormat;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
@@ -23,25 +23,29 @@ import com.asual.summer.sample.domain.Technology;
 public class TechnologyController {
     
     @RequestMapping
-    @ResponseView("json")
+    @ResponseFormat({"json", "xml"})
     public ModelAndView list() {
         return new ModelAndView("/list", new ModelMap(Technology.list()));
     }
 
     @RequestMapping("/add")
     public ModelAndView add() {
-        return new ModelAndView("/add");
+    	ModelMap model = new ModelMap();
+    	model.addAllAttributes(Arrays.asList(new Object[] {License.list(), Status.list()}));
+        return new ModelAndView("/add", model);
     }
     
     @RequestMapping("/{value}")
-    @ResponseView("json")
+    @ResponseFormat({"json", "xml"})
     public ModelAndView view(@PathVariable("value") String value) {
         return new ModelAndView("/view", new ModelMap(Technology.find(value)));
     }
     
     @RequestMapping("/{value}/edit")
     public ModelAndView edit(@PathVariable("value") String value) {
-        return new ModelAndView("/edit", new ModelMap(Technology.find(value)));
+    	ModelMap model = new ModelMap();
+    	model.addAllAttributes(Arrays.asList(new Object[] {Technology.find(value), License.list(), Status.list()}));
+        return new ModelAndView("/edit", model);
     }
     
     @RequestMapping(value="/save", method={RequestMethod.POST})
@@ -61,14 +65,5 @@ public class TechnologyController {
     	technology.remove();
         return new ModelAndView(new RedirectView("/technology", true));
     }
-
-    @ModelAttribute
-    public List<License> getLicenseList() {
-        return License.list();
-    }
-    
-    @ModelAttribute
-    public List<Status> getStatusList() {
-        return Status.list();
-    }    
+   
 }

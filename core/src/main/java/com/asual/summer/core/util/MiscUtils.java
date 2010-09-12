@@ -40,5 +40,8 @@ public class MiscUtils {
     public static Locale getLocale() {
     	return LocaleContextHolder.getLocale();
     }
-
+    
+    public static String getEncoding() {
+    	return "UTF-8";
+    }
 }

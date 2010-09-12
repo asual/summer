@@ -34,7 +34,7 @@ public final class FacesDecorator implements TagDecorator {
     public final static String SUMMER = "http://java.sun.com/jsf/composite/cc";
     public final static String QNAME = "qName";
     public final static String ATTRIBUTES = "dataEmpty|dataEmptyOption|dataRepeat|dataTemplate|dataValue|dataVar|" + 
-    	"dataVarStatus|dataBegin|dataEnd|dataPack|dataEscape|dataWrapper|dataLabel";
+    	"dataVarStatus|dataBegin|dataEnd|dataPack|dataEscape|dataWrapper|dataLabel|dataBrowser";
 
     private List<String> headTags = Arrays.asList(new String[] {
         "base", 
@@ -175,12 +175,12 @@ public final class FacesDecorator implements TagDecorator {
     			} else if ("data-repeat".equals(attr.getQName())) {
     				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
     				name = "repeat";
-    			} else if ("data-label".equals(attr.getQName()) && !StringUtils.isEmpty(attr.getValue())) {
-    				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
-    				name = qName;
     			} else if ("data-wrapper".equals(attr.getQName())) {
     				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
     				name =  Boolean.valueOf(attr.getValue()) ? qName : "tag";
+    			} else if ("data-label".equals(attr.getQName()) && !StringUtils.isEmpty(attr.getValue())) {
+    				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
+    				name = qName;
     			} else if ("input".equals(qName) && "type".equals(attr.getQName()) && "hidden".equals(attr.getValue())) {
     				name = qName;
     			}

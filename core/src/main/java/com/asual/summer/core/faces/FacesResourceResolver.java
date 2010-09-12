@@ -20,7 +20,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +31,9 @@ import javax.faces.FacesException;
 import javax.faces.application.ProjectStage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.ResourceResolver;
+
+import com.asual.summer.core.util.RequestUtils;
+import com.asual.summer.core.util.StringUtils;
 
 public class FacesResourceResolver extends ResourceResolver {
     
@@ -78,7 +83,10 @@ public class FacesResourceResolver extends ResourceResolver {
 	                            while ((r = reader.read(cbuf, 0, 32)) != -1) {
 	                                sb.append(cbuf, 0, r);
 	                            }
-	                            bytes = replaceEntities(sb.toString()).getBytes(reader.getEncoding());
+	                            String str = sb.toString();
+	                            str = addDataBrowser(str);
+	                            str = replaceEntities(str);
+	                            bytes = str.getBytes(reader.getEncoding());
 	                        } finally {
 	                            reader.close();
 	                            input.close();
@@ -99,6 +107,23 @@ public class FacesResourceResolver extends ResourceResolver {
         			} catch (IOException e) {
         				return -1;
         			}
+                }
+                
+                private String addDataBrowser(String str) {
+                	List<String> data = new ArrayList<String>();
+                	if (RequestUtils.isMozilla()) {
+                		data.add("mozilla");
+                	} else if (RequestUtils.isMSIE()) {
+                		data.add("msie");                		
+                	} else if (RequestUtils.isOpera()) {
+                		data.add("opera");                		
+                	} else if (RequestUtils.isWebKit()) {
+                		data.add("webkit");                		
+                	}
+                	if (RequestUtils.isMobile()) {
+                		data.add("mobile");
+                	}
+                	return str.replaceFirst("<html([^>]*)>", "<html data-browser=\"" + StringUtils.join(data, " ") + "\"$1>");
                 }
                 
                 private String replaceEntities(String str) {

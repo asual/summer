@@ -25,7 +25,7 @@ import com.asual.summer.core.util.RequestUtils;
 public class ErrorController {
     
     @RequestMapping("/error")
-    @ResponseView("*")
+    @ResponseFormat("*")
     public ModelAndView error() {
     	return new ModelAndView("/error", new ModelMap("error", RequestUtils.getError()));
     }

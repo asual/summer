@@ -2,6 +2,7 @@ package com.asual.summer.sample.domain;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ import com.asual.summer.core.util.StringUtils;
 @Configurable
 @Entity
 @Table
-public class License implements java.io.Serializable {
+public class License implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -71,16 +72,29 @@ public class License implements java.io.Serializable {
         this.name = name;
     }
     
-    public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
-        if (obj == this)
-            return true;
-        if (obj.getClass() != getClass())
-            return false;
-        return value != null && value.equals(((License) obj).value);
-    }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		return result;
+	}
     
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		License other = (License) obj;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		return true;
+	}
+	
     @Transactional
     public void persist() {
         entityManager.persist(this);
@@ -107,8 +121,8 @@ public class License implements java.io.Serializable {
     public void flush() {
         entityManager.flush();
     }
-
-    public static final EntityManager entityManager() {
+	
+	public static final EntityManager entityManager() {
         EntityManager em = new License().entityManager;
         if (em == null) {
         	throw new IllegalStateException("Entity manager has not been injected.");

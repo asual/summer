@@ -20,7 +20,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -30,16 +29,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.asual.summer.core.util.MiscUtils;
 import com.asual.summer.core.util.ObjectUtils;
+import com.asual.summer.core.util.RequestUtils;
 
 public class RequestFilter extends OncePerRequestFilter {
 
 	private static final Log logger = LogFactory.getLog(RequestFilter.class);
-	private static String ENCODING = "UTF-8";
 	
-    class Request extends HttpServletRequestWrapper {
+	private static final ThreadLocal<HttpServletRequest> requestHolder = new NamedThreadLocal<HttpServletRequest>("request");
+    
+	static class Request extends HttpServletRequestWrapper {
         
         public Request(HttpServletRequest request) {
             super(request);
@@ -58,11 +61,11 @@ public class RequestFilter extends OncePerRequestFilter {
         public String encode(String input) {
             if (input != null && !"".equalsIgnoreCase(input.trim())) {
                 try {
-                	String encoding = ENCODING;
-                    String s1 = new String(input.getBytes(encoding), encoding);
-                    String s2 = new String(input.getBytes("ISO-8859-1"), encoding);
-                    if (s1.length() > s2.length()) {
-                        return s2;
+                	String encoding = MiscUtils.getEncoding();
+                    String utf8 = new String(input.getBytes(encoding), encoding);
+                    String western = new String(input.getBytes("ISO-8859-1"), encoding);
+                    if (utf8.length() > western.length()) {
+                        return western;
                     } else {
                         return input;
                     }
@@ -141,23 +144,42 @@ public class RequestFilter extends OncePerRequestFilter {
         }
         
         public String getCharacterEncoding() {
-        	return ENCODING;
+        	return MiscUtils.getEncoding();
+        }
+        
+    	// TODO: Remove when https://bugs.webkit.org/show_bug.cgi?id=27267 gets fixed.
+        public String getHeader(String name) {
+        	if ("Accept".equals(name) && RequestUtils.isWebKit()) {
+    			return "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        	}
+        	return super.getHeader(name);
         }
     }
     
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
     		FilterChain filterChain) throws ServletException, IOException {        
         
+    	long time = System.currentTimeMillis();
+    	
+    	requestHolder.set(new Request(request));
+    	
         if (request.getCharacterEncoding() == null) {
-            request.setCharacterEncoding(ENCODING);
+            request.setCharacterEncoding(MiscUtils.getEncoding());
         }
-
-        String userAgent = request.getHeader("User-Agent");
-        if (userAgent != null && Pattern.compile("MSIE").matcher(userAgent).find()) {
+        
+        if (RequestUtils.isMSIE()) {
         	response.setHeader("X-UA-Compatible", "IE=8");
         }
         
-        filterChain.doFilter(new Request(request), response);
+        filterChain.doFilter(requestHolder.get(), response);
+        
+        logger.debug("The request for '" + request.getRequestURI() + "' took " + (System.currentTimeMillis() - time) + "ms.");
+        
+        requestHolder.set(null);
+    }
+    
+    public static HttpServletRequest getRequest() {
+    	return requestHolder.get();
     }
     
 }

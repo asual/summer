@@ -3,7 +3,7 @@
     
     <title>Add a new technology</title>
     
-    <p><a href="/technology">&#8592; Back to List</a></p>
+    <p><a href="/technology">&larr; Back to List</a></p>
 
     <form action="/technology/save">
 
@@ -20,7 +20,7 @@
         </fieldset>
         
         <fieldset data-label="Licenses:">
-            <div data-repeat="${licenseList}" data-value="${technology.licenses}">
+            <div data-repeat="${licenseList}" data-value="${technology.license}">
                 <input type="checkbox" value="${item.value}" data-label="${item.name}" />
             </div>
         </fieldset>
