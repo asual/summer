@@ -164,23 +164,26 @@ public class RequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
     		FilterChain filterChain) throws ServletException, IOException {        
         
-    	long time = System.currentTimeMillis();
-    	
-    	requestHolder.set(new Request(request));
-    	
-        if (request.getCharacterEncoding() == null) {
-            request.setCharacterEncoding(StringUtils.getEncoding());
-        }
+    	try {
+    		
+	    	long time = System.currentTimeMillis();
+	    	requestHolder.set(new Request(request));
+	    	
+	        if (request.getCharacterEncoding() == null) {
+	            request.setCharacterEncoding(StringUtils.getEncoding());
+	        }
+	        
+	        if (RequestUtils.isMSIE()) {
+	        	response.setHeader("X-UA-Compatible", "IE=8");
+	        }
+	        
+	        filterChain.doFilter(requestHolder.get(), response);
+	        logger.debug("The request for '" + request.getRequestURI() + "' took " + (System.currentTimeMillis() - time) + "ms.");
         
-        if (RequestUtils.isMSIE()) {
-        	response.setHeader("X-UA-Compatible", "IE=8");
-        }
+    	} finally {
         
-        filterChain.doFilter(requestHolder.get(), response);
-        
-        logger.debug("The request for '" + request.getRequestURI() + "' took " + (System.currentTimeMillis() - time) + "ms.");
-        
-        requestHolder.set(null);
+	        requestHolder.set(null);
+    	}
     }
     
     public static HttpServletRequest getRequest() {
