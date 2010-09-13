@@ -34,7 +34,7 @@
                 <h2><a href="/technology/${item.value}">${item.name}</a></h2>
                 <p class="details">
                     Version: <span>${item.version}</span> 
-                    Licenses: <span data-repeat="${item.license}" data-var="license" data-empty="-">${license.name.concat(vs.last ? '' : ', ')}</span>
+                    Licenses: <span data-repeat="${item.licenses}" data-var="license" data-empty="-">${license.name.concat(vs.last ? '' : ', ')}</span>
                 </p>
                 <p data-rendered="${not empty item.description}">${item.description}</p>
             </div>

@@ -21,6 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.asual.summer.core.util.RequestUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Controller
 public class ErrorController {
     

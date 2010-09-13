@@ -14,6 +14,11 @@
 
 package com.asual.summer.core.resource;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class StylesheetResource extends AbstractResource {
 
 	private String media;

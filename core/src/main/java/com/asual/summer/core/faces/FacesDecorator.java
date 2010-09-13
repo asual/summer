@@ -29,6 +29,11 @@ import com.sun.faces.facelets.tag.TagAttributesImpl;
 import com.sun.faces.facelets.tag.jsf.html.HtmlDecorator;
 import com.sun.faces.facelets.tag.jsf.html.HtmlLibrary;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public final class FacesDecorator implements TagDecorator {
 
     public final static String SUMMER = "http://java.sun.com/jsf/composite/cc";

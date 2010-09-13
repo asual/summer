@@ -30,6 +30,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ * @author Rostislav Georgiev
+ *
+ */
 public class PropertyResource extends AbstractResource implements BeanFactoryPostProcessor {
 
     private ExtendedPropertyPlaceholderConfigurer eppc;

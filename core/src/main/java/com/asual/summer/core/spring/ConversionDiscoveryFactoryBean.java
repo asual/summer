@@ -25,6 +25,11 @@ import org.springframework.core.convert.support.ConversionServiceFactory;
 
 import com.asual.summer.core.util.BeanUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class ConversionDiscoveryFactoryBean extends ConversionServiceFactoryBean {
 
 	@SuppressWarnings("rawtypes")

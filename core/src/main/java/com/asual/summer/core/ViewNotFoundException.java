@@ -14,6 +14,11 @@
 
 package com.asual.summer.core;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class ViewNotFoundException extends RuntimeException {
     
     private static final long serialVersionUID = 1L;

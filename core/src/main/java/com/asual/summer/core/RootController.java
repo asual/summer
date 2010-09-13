@@ -16,6 +16,11 @@ package com.asual.summer.core;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class RootController {
     
     @RequestMapping("/")

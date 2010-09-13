@@ -27,6 +27,11 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class ViewResolverConfiguration extends ContentNegotiatingViewResolver {
 	
     private List<ViewResolver> viewResolvers;

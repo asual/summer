@@ -33,8 +33,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Component("html")
-public class HTMLView extends InternalResourceView implements AbstractResponseView {
+public class HTMLView extends InternalResourceView implements ResponseView {
 
 	private Lifecycle facesLifecycle;
     private static final String DEFAULT_EXTENSION = "html";

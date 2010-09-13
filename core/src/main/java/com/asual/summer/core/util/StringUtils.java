@@ -22,6 +22,11 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.WordUtils;
 import org.springframework.stereotype.Component;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Component
 public class StringUtils {
 
@@ -87,7 +92,7 @@ public class StringUtils {
 
 	public static String encode(String value) {
 	    try {
-	        return URLEncoder.encode(value, ENCODING);
+	        return URLEncoder.encode(value, getEncoding());
 	    } catch (Exception e) {
 	    	return value;
 	    }
@@ -95,9 +100,13 @@ public class StringUtils {
 
 	public static String decode(String value) {
 	    try {
-	        return URLDecoder.decode(value, ENCODING);
+	        return URLDecoder.decode(value, getEncoding());
 	    } catch (Exception e) {
 	    	return value;
 	    }
+	}
+
+	public static String getEncoding() {
+		return ENCODING;
 	}     
 }

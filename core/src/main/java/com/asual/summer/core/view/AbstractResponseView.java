@@ -14,9 +14,36 @@
 
 package com.asual.summer.core.view;
 
-public interface AbstractResponseView {
+import java.util.HashMap;
+import java.util.Map;
 
-	public String getExtension();
-	public void setExtension(String extension);
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.view.AbstractView;
+
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
+public abstract class AbstractResponseView extends AbstractView implements ResponseView {
+
+	private String extension;
 	
+	public String getExtension() {
+		return extension;
+	}
+	
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
+    
+	protected Object filterModel(Map<String, Object> model) {
+		Map<String, Object> result = new HashMap<String, Object>(model.size());
+		for (Map.Entry<String, Object> entry : model.entrySet()) {
+			if (!(entry.getValue() instanceof BindingResult)) {
+				result.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return result;
+	}	
 }

@@ -14,6 +14,11 @@
 
 package com.asual.summer.core.resource;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class ScriptResource extends AbstractResource {
 	
 	private String pack;

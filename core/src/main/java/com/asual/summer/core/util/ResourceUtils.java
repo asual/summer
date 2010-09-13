@@ -28,6 +28,11 @@ import com.asual.summer.core.resource.PropertyResource;
 import com.asual.summer.core.resource.ScriptResource;
 import com.asual.summer.core.resource.StylesheetResource;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Component
 public class ResourceUtils {
 

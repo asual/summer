@@ -20,6 +20,11 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Component
 public class MapUtils {
 

@@ -31,6 +31,11 @@ import com.sun.faces.renderkit.Attribute;
 import com.sun.faces.renderkit.AttributeManager;
 import com.sun.faces.renderkit.RenderKitUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class HeadRenderer extends Renderer {
     
     private static final Attribute[] HEAD_ATTRIBUTES = 

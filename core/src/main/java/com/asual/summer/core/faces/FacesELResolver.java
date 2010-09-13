@@ -24,6 +24,11 @@ import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ResourceUtils;
 import com.asual.summer.core.util.StringUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class FacesELResolver extends SpringBeanFacesELResolver {
 
 	public Object getValue(ELContext elContext, Object base, Object property) throws ELException {

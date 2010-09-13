@@ -38,8 +38,14 @@ import org.springframework.web.util.WebUtils;
 import com.asual.summer.core.ResponseFormat;
 import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.RequestUtils;
-import com.asual.summer.core.view.AbstractResponseView;
+import com.asual.summer.core.view.ResponseView;
 
+/**
+ * 
+ * @author Rostislav Georgiev
+ * @author Rostislav Hristov
+ *
+ */
 public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 
 	@Autowired
@@ -58,13 +64,13 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 			
 			if (values.length != 0) {
 				if ("*".equals(values[0])) {
-					return handleViews(BeanUtils.getBeansOfType(AbstractView.class).values(),webRequest);
+					return handleViews(BeanUtils.getBeansOfType(AbstractView.class).values(), webRequest);
 				}
 				List<AbstractView> views = new ArrayList<AbstractView>();
 				for (String value : values) {
 					views.add((AbstractView) BeanUtils.getBean(value));
 				}
-				AbstractView view = handleViews(views,webRequest);
+				AbstractView view = handleViews(views, webRequest);
 				if (view != null) {
 					return view;
 				} else if (explicit) {
@@ -84,7 +90,7 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 				String requestUri = urlPathHelper.getRequestUri((HttpServletRequest) request.getNativeRequest());
 				String filename = WebUtils.extractFullFilenameFromUrlPath(requestUri);
 				String extension = StringUtils.getFilenameExtension(filename);
-				if (StringUtils.hasText(extension) && extension.equals(((AbstractResponseView) view).getExtension())) {
+				if (StringUtils.hasText(extension) && extension.equals(((ResponseView) view).getExtension())) {
 					return view;
 				}
 			}
@@ -92,7 +98,7 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 			if (viewResolverConfiguration.getFavorParameter()) {
 				if (request.getParameter(viewResolverConfiguration.getParameterName()) != null) {
 					String parameterValue = request.getParameter(viewResolverConfiguration.getParameterName());
-					if (StringUtils.hasText(parameterValue) && parameterValue.equals(((AbstractResponseView) view).getExtension())) {
+					if (StringUtils.hasText(parameterValue) && parameterValue.equals(((ResponseView) view).getExtension())) {
 						return view;
 					}
 				}

@@ -28,6 +28,11 @@ import com.asual.summer.core.ViewNotFoundException;
 import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.RequestUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Component("viewNameTranslator")
 public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
 	

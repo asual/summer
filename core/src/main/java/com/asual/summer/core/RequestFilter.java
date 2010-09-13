@@ -32,10 +32,15 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.asual.summer.core.util.MiscUtils;
 import com.asual.summer.core.util.ObjectUtils;
 import com.asual.summer.core.util.RequestUtils;
+import com.asual.summer.core.util.StringUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class RequestFilter extends OncePerRequestFilter {
 
 	private static final Log logger = LogFactory.getLog(RequestFilter.class);
@@ -61,7 +66,7 @@ public class RequestFilter extends OncePerRequestFilter {
         public String encode(String input) {
             if (input != null && !"".equalsIgnoreCase(input.trim())) {
                 try {
-                	String encoding = MiscUtils.getEncoding();
+                	String encoding = StringUtils.getEncoding();
                     String utf8 = new String(input.getBytes(encoding), encoding);
                     String western = new String(input.getBytes("ISO-8859-1"), encoding);
                     if (utf8.length() > western.length()) {
@@ -144,7 +149,7 @@ public class RequestFilter extends OncePerRequestFilter {
         }
         
         public String getCharacterEncoding() {
-        	return MiscUtils.getEncoding();
+        	return StringUtils.getEncoding();
         }
         
     	// TODO: Remove when https://bugs.webkit.org/show_bug.cgi?id=27267 gets fixed.
@@ -164,7 +169,7 @@ public class RequestFilter extends OncePerRequestFilter {
     	requestHolder.set(new Request(request));
     	
         if (request.getCharacterEncoding() == null) {
-            request.setCharacterEncoding(MiscUtils.getEncoding());
+            request.setCharacterEncoding(StringUtils.getEncoding());
         }
         
         if (RequestUtils.isMSIE()) {

@@ -25,6 +25,11 @@ import org.springframework.web.util.WebUtils;
 
 import com.asual.summer.core.RequestFilter;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Component
 public class RequestUtils {
 

@@ -15,6 +15,7 @@
 package com.asual.summer.core.faces;
 
 import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,11 @@ import javax.faces.render.Renderer;
 
 import com.asual.summer.core.util.RequestUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @ListenerFor(systemEventClass=PostAddToViewEvent.class)
 public class StylesheetRenderer extends Renderer implements ComponentSystemEventListener {
     

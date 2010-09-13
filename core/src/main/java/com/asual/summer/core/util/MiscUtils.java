@@ -23,6 +23,11 @@ import javax.servlet.ServletContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Component
 public class MiscUtils {
 	
@@ -39,9 +44,5 @@ public class MiscUtils {
     
     public static Locale getLocale() {
     	return LocaleContextHolder.getLocale();
-    }
-    
-    public static String getEncoding() {
-    	return "UTF-8";
     }
 }

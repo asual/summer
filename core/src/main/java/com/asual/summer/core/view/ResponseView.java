@@ -12,27 +12,16 @@
  * limitations under the License.
  */
 
-package com.asual.summer.core;
-
-import java.util.Locale;
-
-import org.springframework.context.i18n.LocaleContextHolder;
-
-import com.asual.summer.core.util.ResourceUtils;
+package com.asual.summer.core.view;
 
 /**
  * 
  * @author Rostislav Hristov
  *
  */
-public class MessageInterpolator implements javax.validation.MessageInterpolator {
+public interface ResponseView {
 
-    public String interpolate(String message, Context context) {
-        return interpolate(message, context, LocaleContextHolder.getLocale());
-    }
-
-    public String interpolate(String message, Context context, Locale locale) {
-    	return ResourceUtils.getMessage(message, locale);
-    }
-    
+	public String getExtension();
+	public void setExtension(String extension);
+	
 }

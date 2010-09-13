@@ -32,6 +32,11 @@ import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.el.TagValueExpression;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class Component extends UINamingContainer {
 
     public static final String COMPONENT_TYPE = "summer.faces.Component";

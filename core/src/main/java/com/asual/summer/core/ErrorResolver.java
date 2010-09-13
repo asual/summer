@@ -38,6 +38,11 @@ import com.asual.summer.core.util.ArrayUtils;
 import com.asual.summer.core.util.ObjectUtils;
 import com.asual.summer.core.util.ResourceUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Component
 public class ErrorResolver implements HandlerExceptionResolver {
 
@@ -82,6 +87,8 @@ public class ErrorResolver implements HandlerExceptionResolver {
 		        } catch (IOException ioe) {
 					logger.error(ioe.getMessage(), ioe);
 				}
+	        } else {
+	        	request.setAttribute(ERRORS, errors);
 	        }
 	    }
 	    

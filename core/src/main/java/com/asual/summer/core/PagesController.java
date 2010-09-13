@@ -17,8 +17,13 @@ package com.asual.summer.core;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 @Controller
-public class ViewController {
+public class PagesController {
     
     @RequestMapping("/**/*")
     public void view() {}

@@ -39,6 +39,11 @@ import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.compiler.UIInstructions;
 import com.sun.faces.facelets.tag.jsf.ComponentSupport;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class ComponentRenderer extends Renderer {
 
     private final Log logger = LogFactory.getLog(getClass());
