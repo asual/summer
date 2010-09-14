@@ -30,24 +30,24 @@ import org.springframework.util.ReflectionUtils;
 @Component
 public class ClassUtils {
     
-	public static boolean instanceOf(Object obj, String className) {
+	public static boolean isInstance(String clazz, Object obj) {
     	try {
-			return Class.forName(className).isInstance(obj);
+			return Class.forName(clazz).isInstance(obj);
 		} catch (ClassNotFoundException e) {
 			return false;
 		}
     }
 
-    public static Object instance(String className, Object[] parameters) throws SecurityException, ClassNotFoundException {
+    public static Object newInstance(String clazz, Object[] parameters) throws SecurityException, ClassNotFoundException {
     	Class<?>[] classParameters = new Class[parameters == null ? 0 : parameters.length];
     	for (int i = 0; i < classParameters.length; i++) {
     		classParameters[i] = parameters[i].getClass();
     	}
     	Object instance = null;
     	try {
-    		instance = Class.forName(className).getConstructor(classParameters).newInstance(parameters == null ? new Object[] {} : parameters.length);
+    		instance = Class.forName(clazz).getConstructor(classParameters).newInstance(parameters == null ? new Object[] {} : parameters.length);
     	} catch (Exception e) {
-    		Constructor<?>[] constructors = Class.forName(className).getConstructors();
+    		Constructor<?>[] constructors = Class.forName(clazz).getConstructors();
     		for (Constructor<?> constructor : constructors) {
     			Class<?>[] types = constructor.getParameterTypes();
     			if (types.length == parameters.length) {
@@ -73,7 +73,7 @@ public class ClassUtils {
     	return instance;
     }
 
-    public static Object invoke(Object target, final String methodName, final Object[] parameters) {
+    public static Object invokeMethod(Object target, final String methodName, final Object[] parameters) {
         if (target != null) {
             final List<Method> matches = new ArrayList<Method>();
             ReflectionUtils.doWithMethods(target.getClass(), new ReflectionUtils.MethodCallback() {
@@ -112,4 +112,5 @@ public class ClassUtils {
         }
         return null;
     }
+    
 }

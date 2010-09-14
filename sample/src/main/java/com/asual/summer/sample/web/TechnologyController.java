@@ -84,5 +84,5 @@ public class TechnologyController {
     	technology.remove();
         return new ModelAndView(new RedirectView("/technology", true));
     }
-   
+    
 }
