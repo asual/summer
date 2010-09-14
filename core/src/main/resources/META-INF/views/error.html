@@ -2,11 +2,11 @@
 <html
     xmlns:c="http://java.sun.com/jsp/jstl/core">
     
-    <title>${objectUtils.instanceOf(error, 'com.asual.summer.core.ViewNotFoundException') ? messages.page.notfound : messages.page.error}</title>
+    <title>${classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException') ? messages.page.notfound : messages.page.error}</title>
 
-    <h1>${objectUtils.instanceOf(error, 'com.asual.summer.core.ViewNotFoundException') ? messages.page.notfound : messages.page.error}</h1>
+    <h1>${classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException') ? messages.page.notfound : messages.page.error}</h1>
     
     <p 
-        data-rendered="${objectUtils.instanceOf(error, 'java.lang.Throwable') and !objectUtils.instanceOf(error, 'com.asual.summer.core.ViewNotFoundException')}">${error}</p>
+        data-rendered="${classUtils.isInstance(error, 'java.lang.Throwable') and !classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException')}">${error}</p>
     
 </html>
