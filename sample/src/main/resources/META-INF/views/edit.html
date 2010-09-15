@@ -23,20 +23,20 @@
         
         <fieldset data-label="Licenses:">
             <div data-repeat="${licenseList}" data-value="${technology.licenses}">
-                <input type="checkbox" value="${item.value}" data-label="${item.name}" />
+                <input type="checkbox" value="${repeatVar.value}" data-label="${item.name}" />
             </div>
         </fieldset>
 
         <fieldset data-label="Status:">
             <select data-repeat="${statusList}" data-value="${technology.status}" 
                 data-empty-option="Select a status">
-                <option value="${item.value}">${item.name}</option>
+                <option value="${repeatVar.value}">${item.name}</option>
             </select>
         </fieldset>
         
         <fieldset data-label="Required:">
             <div data-repeat="${arrayUtils.asList('true,false')}" data-value="${technology.required}">
-                <input type="radio" value="${item}" data-label="${item ? 'Yes' : 'No'}" />
+                <input type="radio" value="${repeatVar}" data-label="${repeatVar ? 'Yes' : 'No'}" />
             </div>
         </fieldset>
         

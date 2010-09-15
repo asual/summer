@@ -51,15 +51,15 @@
             <ui:repeat value="${cc.attrs.dataRepeat}" var="current" varStatus="vs" begin="${empty cc.attrs.dataBegin ? 0 : cc.attrs.dataBegin}" 
                 end="${empty cc.attrs.dataEnd or cc.attrs.dataEnd gt arrayUtils.asList(cc.attrs.dataRepeat).size() ? arrayUtils.asList(cc.attrs.dataRepeat).size() : cc.attrs.dataEnd}">
                 ${mapUtils.put(cc.attrs, 'current', current)}
-                ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'item', current)}
-                ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'vs', vs)}
+                ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'repeatVar', current)}
+                ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'repeatVarStatus', vs)}
                 <cs:insertChildren />
             </ui:repeat>
             <h:outputText value="&lt;/select&gt;" rendered="${cc.attrs.qName.matches('select')}" escape="false" />
             <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.formId)}"
                 value="${errors.get(cc.formId).message}" styleClass="error" />
-            ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'item', null)}
-            ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'vs', null)}
+            ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'repeatVar', null)}
+            ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'repeatVarStatus', null)}
         </ui:fragment>
         
     </cs:implementation>

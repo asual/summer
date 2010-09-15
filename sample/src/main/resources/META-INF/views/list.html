@@ -22,21 +22,25 @@
                 </thead>
                 <tbody data-repeat="${technologyList}" data-empty="None.">
                     <tr class="${vs.index mod 2 eq 0 ? 'odd' : 'even'}">
-                        <td><a href="/technology/${item.value}">${item.name}</a></td>
-                        <td>${item.version}</td>
-                        <td>${stringUtils.ellipsis(item.description, 80)}</td>
+                        <td><a href="/technology/${repeatVar.value}">${repeatVar.name}</a></td>
+                        <td>${repeatVar.version}</td>
+                        <td>${stringUtils.ellipsis(repeatVar.description, 80)}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     	<div class="list" data-rendered="${empty requestUtils.getParameter('view')}">
             <div data-repeat="${technologyList}" data-empty="None.">
-                <h2><a href="/technology/${item.value}">${item.name}</a></h2>
+                <h2><a href="/technology/${repeatVar.value}">${repeatVar.name}</a></h2>
                 <p class="details">
-                    Version: <span>${item.version}</span> 
-                    Licenses: <span data-repeat="${item.licenses}" data-var="license" data-empty="-">${license.name.concat(vs.last ? '' : ', ')}</span>
+                    Version: 
+                    <span>${repeatVar.version}</span> 
+                    Licenses: 
+                    <span data-repeat="${repeatVar.licenses}" data-var="licenseVar" data-var="licenseVarStatus" data-empty="-">
+                        ${licenseVar.name.concat(licenseVarStatus.last ? '' : ', ')}
+                    </span>
                 </p>
-                <p data-rendered="${not empty item.description}">${item.description}</p>
+                <p data-rendered="${not empty repeatVar.description}">${repeatVar.description}</p>
             </div>
         </div>
     </div>

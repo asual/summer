@@ -13,7 +13,7 @@
         <p>
             Version: <span>${technology.version}</span><br />
             Homepage: <a href="${technology.homepage}">${technology.homepage}</a><br />
-            License: <span data-repeat="${technology.licenses}" data-empty="-">${item.name.concat(vs.last ? '' : ', ')}</span>
+            License: <span data-repeat="${technology.licenses}" data-empty="-">${repeatVar.name.concat(vs.last ? '' : ', ')}</span>
         </p>
     
         <p><a href="/technology/${technology.value}/edit">&plusmn; Edit this technology</a></p>

@@ -7,4 +7,34 @@
         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
     version="3.0">
 
+    <servlet>
+        <servlet-name>atmosphere</servlet-name>
+        <servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>com.asual.summer.sample.websocket</param-value>
+        </init-param>
+        <init-param>
+            <param-name>org.atmosphere.useWebSocket</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>org.atmosphere.useNative</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>org.atmosphere.cpr.broadcastFilterClasses</param-name>
+            <param-value>org.atmosphere.client.JavascriptClientFilter</param-value>
+        </init-param>
+        <!-- Uncomment if you want to use Servlet 2.5 Async Support
+        <async-supported>true</async-supported>
+        -->        
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>atmosphere</servlet-name>
+        <url-pattern>/websocket/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>
