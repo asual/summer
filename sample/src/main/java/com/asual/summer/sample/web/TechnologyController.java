@@ -50,7 +50,7 @@ public class TechnologyController {
     @RequestMapping("/add")
     public ModelAndView add() {
     	ModelMap model = new ModelMap();
-    	model.addAllAttributes(Arrays.asList(new Object[] {License.list(), Status.list()}));
+    	model.addAllAttributes(Arrays.asList(new Technology(), License.list(), Status.list()));
         return new ModelAndView("/add", model);
     }
     
@@ -63,7 +63,7 @@ public class TechnologyController {
     @RequestMapping("/{value}/edit")
     public ModelAndView edit(@PathVariable("value") String value) {
     	ModelMap model = new ModelMap();
-    	model.addAllAttributes(Arrays.asList(new Object[] {Technology.find(value), License.list(), Status.list()}));
+    	model.addAllAttributes(Arrays.asList(Technology.find(value), License.list(), Status.list()));
         return new ModelAndView("/edit", model);
     }
     

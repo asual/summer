@@ -27,11 +27,13 @@
     <cs:implementation>
         <form action="${empty cc.attrs.action ? requestUtils.getRequestURI() : requestUtils.contextRelative(cc.attrs.action, cc.attrs.dataContextRelative or empty cc.attrs.dataContextRelative)}" 
             method="${requestUtils.isMethodBrowserSupported(cc.attrs.method) ? cc.attrs.method : 'post'}" enctype="${empty cc.attrs.enctype ? 'application/x-www-form-urlencoded' : cc.attrs.enctype}">
-            <input type="hidden" name="form" value="${requestUtils.getRequestURI()}" />
+            <cs:insertChildren />
+            <ui:fragment rendered="${cc.attrs.method ne 'get' and cc.attrs.method ne 'GET'}">
+                <input type="hidden" name="form" value="${requestUtils.getRequestURI()}" />
+            </ui:fragment>
             <ui:fragment rendered="${not empty cc.attrs.method and not requestUtils.isMethodBrowserSupported(cc.attrs.method)}">
                 <input type="hidden" name="_method" value="${cc.attrs.method}" />
             </ui:fragment>
-            <cs:insertChildren />
         </form>
     </cs:implementation>
 

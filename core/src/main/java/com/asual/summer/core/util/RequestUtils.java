@@ -116,7 +116,7 @@ public class RequestUtils {
     }
     
     public static boolean isMobile() {
-        return Pattern.compile("Android|iPhone").matcher(getUserAgent()).find();
+        return Pattern.compile(" Mobile/").matcher(getUserAgent()).find();
     }
     
     public static void setAttribute(String name, Object value) {

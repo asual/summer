@@ -50,11 +50,9 @@
     <bean id="configurableWebBindingInitializer" class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
         <property name="conversionService" ref="conversionDiscoveryFactoryBean" />
         <property name="validator" ref="localValidatorFactoryBean" />
-        <!--  
 		<property name="propertyEditorRegistrar">
         	<bean class="com.asual.summer.core.spring.ResourceEditorRegistrarFactoryBean" />
         </property>
-        -->
     </bean>
     
     <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />

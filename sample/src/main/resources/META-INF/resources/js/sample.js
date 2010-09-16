@@ -5,7 +5,7 @@
         setTimeout(function() {
 	        $.atmosphere.subscribe(
 	        	location.protocol + '//' + location.host + '/websocket/clock', function callback(response) {
-	            if (response.status == 200 && response.state != 'connected' && response.state != 'closed') {
+	            if (response.status == 200 && response.responseBody && response.state != 'connected' && response.state != 'closed') {
 	                $('span', clock).html(response.responseBody);
 	            }
 	        }, $.atmosphere.request = {

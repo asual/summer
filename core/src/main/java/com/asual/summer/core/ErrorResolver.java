@@ -36,6 +36,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.asual.summer.core.util.ArrayUtils;
 import com.asual.summer.core.util.ObjectUtils;
+import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ResourceUtils;
 
 /**
@@ -79,7 +80,7 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	        response.setHeader("Warning", StringUtils.join(pairs, ";"));
 
-	        String form = request.getParameter("form");
+	        String form = RequestUtils.isGetRequest() ? request.getRequestURI() : request.getParameter("form");
 	        if (form != null) {
 		        try {
 					return new ModelAndView(new RedirectView(form, false), 

@@ -26,10 +26,14 @@ div {
     margin: 0 0 10px;
 }
 
+form {
+    margin: 0 0 20px;
+}
+
 fieldset {
-        margin: 0 0 15px;
-        padding: 0 20px;
-        border: 1px solid #999;
+    margin: 0 0 15px;
+    padding: 0 20px;
+    border: 1px solid #999;
 }
 
 legend {

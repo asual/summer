@@ -131,7 +131,7 @@ public class FacesResourceResolver extends ResourceResolver {
                 	if (RequestUtils.isMobile()) {
                 		data.add("mobile");
                 	}
-                	return str.replaceFirst("<html([^>]*)>", "<html data-browser=\"" + StringUtils.join(data, " ") + "\"$1>");
+                	return str.replaceFirst("<html([^>]*)>", "<html data-client=\"" + StringUtils.join(data, " ") + "\"$1>");
                 }
                 
                 private String replaceEntities(String str) {

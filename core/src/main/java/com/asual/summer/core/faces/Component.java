@@ -89,7 +89,11 @@ public class Component extends UINamingContainer {
     }
     
     public String getFormId() {
-    	String id = getClientId();
+    	String id = (String) getAttributes().get("id");
+    	if (!StringUtils.isEmpty(id) && !id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
+    		return id;
+    	}
+    	id = getClientId();
     	if (id == null || id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
 	    	try {
         		ValueExpression value = bindings.get("value");
@@ -98,7 +102,7 @@ public class Component extends UINamingContainer {
         	    	FacesContext context = FacesContext.getCurrentInstance();
         	    	return getExprId(getRepeatComponent().getBindings().get("dataValue").getExpressionString()) + 
         	    		UINamingContainer.getSeparatorChar(context) + value.getValue(context.getELContext());
-            	} catch(Exception e) {
+            	} catch (Exception e) {
             		if (dataValue != null) {
                 		return getExprId(dataValue.getExpressionString());
             		}
@@ -107,7 +111,7 @@ public class Component extends UINamingContainer {
             		}
             		return getExprId(value.getExpressionString());
             	}
-	    	} catch(Exception e) {
+	    	} catch (Exception e) {
 	        	return id;
 	    	}
     	}
@@ -115,9 +119,13 @@ public class Component extends UINamingContainer {
     }
     
     public String getFormName() {
+    	String name = (String) getAttributes().get("name");
+    	if (!StringUtils.isEmpty(name)) {
+    		return name;
+    	}
     	try {
 	    	return getExprId(getRepeatComponent().getBindings().get("dataValue").getExpressionString());
-    	} catch(Exception e) {
+    	} catch (Exception e) {
         	return getFormId();
     	}
     }
