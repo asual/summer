@@ -106,11 +106,11 @@
                 value="${errors.get(cc.formId).message}" styleClass="error" />
         </ui:fragment>
 
-        <ui:fragment rendered="${empty cc.attrs.type or cc.attrs.type eq 'text'}">
+        <ui:fragment rendered="${empty cc.attrs.type or cc.attrs.type eq 'text' or cc.attrs.type eq 'email' or cc.attrs.type eq 'search'}">
             <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
                 <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
             </ui:fragment>
-            <input id="${cc.formId}" name="${cc.formId}" size="${cc.attrs.size}" type="text" 
+            <input id="${cc.formId}" name="${cc.formId}" size="${cc.attrs.size}" type="${empty cc.attrs.type ? 'text' : cc.attrs.type}" 
                 value="${empty errors.get(cc.formId) ? cc.attrs.value : errors.get(cc.formId).value}" />
             <h:outputText rendered="${not empty cc.formId and not empty errors.get(cc.formId)}"
                 value="${errors.get(cc.formId).message}" styleClass="error" />
