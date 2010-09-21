@@ -25,9 +25,9 @@
     </cs:interface>
     
     <cs:implementation>
-        <option value="${cc.attrs.value}" selected="${(cc.match or cc.attrs.selected) ? 'selected' : ''}">
+        ${cc.renderer.beginElement(cc, 'option')}
             <cs:insertChildren />
-        </option>
+        ${cc.renderer.endElement(cc, 'option')}
     </cs:implementation>
     
 </ui:component>

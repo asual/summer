@@ -53,7 +53,7 @@ legend {
     display: block;
 }
 
-.select label, .text label, .textarea label {
+.file label, .select label, .text label, .textarea label {
     display: block;
     padding: 0 0 4px;
 }

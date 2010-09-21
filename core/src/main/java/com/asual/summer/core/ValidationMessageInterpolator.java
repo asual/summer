@@ -16,6 +16,8 @@ package com.asual.summer.core;
 
 import java.util.Locale;
 
+import javax.validation.MessageInterpolator;
+
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import com.asual.summer.core.util.ResourceUtils;
@@ -25,7 +27,7 @@ import com.asual.summer.core.util.ResourceUtils;
  * @author Rostislav Hristov
  *
  */
-public class MessageInterpolator implements javax.validation.MessageInterpolator {
+public class ValidationMessageInterpolator implements MessageInterpolator {
 
     public String interpolate(String message, Context context) {
         return interpolate(message, context, LocaleContextHolder.getLocale());

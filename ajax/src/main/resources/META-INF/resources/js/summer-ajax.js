@@ -1,16 +1,15 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
- * 
- * Copyright 2009-2010 Rostislav Hristov, Asual DZZD. All rights reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This product is owned by Asual DZZD. All rights in the product including copyrights, licensing rights, 
- * patents, trademarks, engineering rights, moral rights, and any other intellectual property rights 
- * belong to Asual DZZD. These rights are not transferred as part of this agreement. 
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * No part of the product may be reproduced, published, transmitted electronically, mechanically or 
- * otherwise, transcribed, stored in a retrieval system or translated into any language in any form, by 
- * any means, for any purpose other than the purchaser's personal use, without the express written 
- * permission of Asual DZZD.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 (function($) {
@@ -23,7 +22,7 @@
             
         	$('*', scope).filter('[data-ajax]').each(function() {
 
-                var url, data, event,
+                var url, event, data,
 	                o = $(this), 
 	                ids = o.attr('data-ajax'),
 	                method = o.attr('data-ajax-method'),
@@ -35,10 +34,23 @@
 	            } else if (o.is('button')) {
 	                var form = o.parents('form');
 	                url = form.attr('action');
-	                data = form.serialize();
 	                event = 'click';
+	                data = form.serialize();
+	            } else if (o.is('input, select, textarea')) {
+	                var form = o.parents('form');
+	                url = form.attr('action');
+	                event = 'blur';
+	                data = form.serialize();	            	
 	            }
-            
+	            
+	            if (o.attr('data-ajax-url')) {
+	            	url = o.attr('data-ajax-url');
+	            }
+	            
+	            if (o.attr('data-ajax-event')) {
+	            	event = o.attr('data-ajax-event');
+	            }
+	            
             	o.bind(event, function() {
             		
                     $.ajax({

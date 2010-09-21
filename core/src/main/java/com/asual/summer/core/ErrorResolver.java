@@ -20,10 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
@@ -38,6 +38,7 @@ import com.asual.summer.core.util.ArrayUtils;
 import com.asual.summer.core.util.ObjectUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ResourceUtils;
+import com.asual.summer.core.util.StringUtils;
 
 /**
  * 
@@ -80,17 +81,32 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	        response.setHeader("Warning", StringUtils.join(pairs, ";"));
 
-	        String form = RequestUtils.isGetRequest() ? request.getRequestURI() : request.getParameter("form");
+	        String errorsAttr = null;
+	        int errorsAttrLength = 0;
+	        String form = (String) RequestUtils.getParameter("form");
+
 	        if (form != null) {
 		        try {
-					return new ModelAndView(new RedirectView(form, false), 
-							new ModelMap(ERRORS, ObjectUtils.serializeToBase64(new Object[] {errors, target})));
+			        errorsAttr = ObjectUtils.serializeToBase64(new Object[] {errors, target});
+			        errorsAttrLength = errorsAttr.getBytes(StringUtils.getEncoding()).length;
 		        } catch (IOException ioe) {
 					logger.error(ioe.getMessage(), ioe);
 				}
+		        if (errorsAttr != null && errorsAttrLength < 4096) {
+					return new ModelAndView(new RedirectView(form, false), new ModelMap(ERRORS, errorsAttr));
+		        }
 	        } else {
-	        	request.setAttribute(ERRORS, errors);
+	        	form = RequestUtils.getRequestURI();
 	        }
+	        
+        	try {
+	        	request.setAttribute(ERRORS, errors);
+				RequestUtils.getRequest().getServletContext().getRequestDispatcher(form).forward(request, response);
+			} catch (ServletException se) {
+				logger.error(se.getMessage(), se);
+			} catch (IOException ioe) {
+				logger.error(ioe.getMessage(), ioe);
+			}
 	    }
 	    
 		return null;

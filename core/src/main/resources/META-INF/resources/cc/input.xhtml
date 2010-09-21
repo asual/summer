@@ -30,55 +30,16 @@
     </cs:interface>
     
     <cs:implementation>
-
-        <ui:remove>
-            
-            <!-- TODO: Implement all input types -->
-            
-            button
-            checkbox
-            color
-            date 
-            datetime 
-            datetime-local 
-            email 
-            file
-            hidden
-            image
-            month 
-            number 
-            password
-            radio
-            range 
-            reset
-            search
-            submit
-            tel
-            text
-            time 
-            url
-            week
         
-        </ui:remove>
-        
-        <ui:fragment rendered="${cc.attrs.type eq 'hidden'}">
-            <input id="${cc.formId}" name="${cc.formId}" value="${cc.attrs.value}" type="hidden" />
-        </ui:fragment>
-        
-        <ui:fragment rendered="${cc.attrs.type eq 'submit'}">
-            <input id="${cc.formId}" name="${cc.formId}" value="${cc.attrs.value}" type="submit" />
-        </ui:fragment>
-        
-        <ui:fragment rendered="${cc.attrs.type eq 'reset'}">
-            <input id="${cc.formId}" name="${cc.formId}" value="${cc.attrs.value}" type="reset" />
+        <ui:fragment rendered="${not empty cc.attrs.type and cc.attrs.type.matches('hidden|submit|reset')}">
+            ${cc.renderer.beginElement(cc, 'input')}
         </ui:fragment>
                 
-        <ui:fragment rendered="${cc.attrs.type eq 'checkbox'}">
+        <ui:fragment rendered="${not empty cc.attrs.type and cc.attrs.type.matches('checkbox|radio')}">
             <ui:fragment rendered="${cc.attrs.dataFalse}">
                 <input id="_${cc.formId}" name="_${cc.formName}" value="${cc.attrs.dataFalse}" type="hidden" />
             </ui:fragment>
-            <input id="${cc.formId}" name="${cc.formName}" value="${cc.attrs.value}" 
-                checked="${(cc.match or cc.attrs.checked) ? 'checked' : ''}" type="checkbox" />
+            ${cc.renderer.beginElement(cc, 'input', true)}
             <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
                 <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
             </ui:fragment>
@@ -86,32 +47,11 @@
                 value="${errors.get(cc.formName).message}" styleClass="error" />
         </ui:fragment>
         
-        <ui:fragment rendered="${cc.attrs.type eq 'radio'}">
-            <input id="${cc.formId}" name="${cc.formName}" value="${cc.attrs.value}" 
-                checked="${(cc.match or cc.attrs.checked) ? 'checked' : ''}" type="radio" />
+        <ui:fragment rendered="${empty cc.attrs.type or not cc.attrs.type.matches('hidden|submit|reset|checkbox|radio')}">
             <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
                 <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
             </ui:fragment>
-            <h:outputText rendered="${not empty cc.formName and not empty errors.get(cc.formName)}"
-                value="${errors.get(cc.formName).message}" styleClass="error" />
-        </ui:fragment>
-        
-        <ui:fragment rendered="${cc.attrs.type eq 'file'}">
-            <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
-                <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
-            </ui:fragment>
-            <input id="${cc.formId}" name="${cc.formId}" size="${cc.attrs.size}" type="file" 
-                value="${empty errors.get(cc.formId) ? cc.attrs.value : errors.get(cc.formId).value}" />
-            <h:outputText rendered="${not empty cc.formId and not empty errors.get(cc.formId)}"
-                value="${errors.get(cc.formId).message}" styleClass="error" />
-        </ui:fragment>
-
-        <ui:fragment rendered="${empty cc.attrs.type or cc.attrs.type eq 'text' or cc.attrs.type eq 'email' or cc.attrs.type eq 'search'}">
-            <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
-                <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
-            </ui:fragment>
-            <input id="${cc.formId}" name="${cc.formId}" size="${cc.attrs.size}" type="${empty cc.attrs.type ? 'text' : cc.attrs.type}" 
-                value="${empty errors.get(cc.formId) ? cc.attrs.value : errors.get(cc.formId).value}" />
+            ${cc.renderer.beginElement(cc, 'input')}
             <h:outputText rendered="${not empty cc.formId and not empty errors.get(cc.formId)}"
                 value="${errors.get(cc.formId).message}" styleClass="error" />
         </ui:fragment>

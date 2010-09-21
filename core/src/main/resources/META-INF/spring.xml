@@ -43,7 +43,7 @@
 
     <bean id="localValidatorFactoryBean" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="messageInterpolator">
-		    <bean class="com.asual.summer.core.MessageInterpolator" />
+		    <bean class="com.asual.summer.core.ValidationMessageInterpolator" />
         </property>
     </bean>
 
@@ -108,5 +108,9 @@
             </list>
         </property>
     </bean>
-
+    
+    <bean id="multipartResolver" class="com.asual.summer.core.spring.RequestMultipartResolver">
+        <property name="maxUploadSize" value="${app.maxUploadSize}" />
+    </bean>
+    
 </beans>

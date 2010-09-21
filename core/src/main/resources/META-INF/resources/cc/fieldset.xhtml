@@ -25,12 +25,12 @@
     </cs:interface>
     
     <cs:implementation>
-        <fieldset>
+        ${cc.renderer.beginElement(cc, 'fieldset')}
             <legend>${cc.attrs.dataLabel}</legend>
             <div class="fieldset">
                 <cs:insertChildren />
             </div>
-        </fieldset>
+        ${cc.renderer.endElement(cc, 'fieldset')}
     </cs:implementation>
 
 </ui:component>

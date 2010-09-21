@@ -5,7 +5,7 @@
     
     <p><a href="/technology/${technology.value}">&larr; Back to Details</a></p>
     
-    <form action="/technology/update" method="put">
+    <form action="/technology/${technology.value}" method="put" enctype="multipart/form-data">
     
         <h1>${technology.name}</h1>
         
@@ -15,6 +15,10 @@
             <input type="text" value="${technology.name}" size="48" data-label="Name:" />
             <input type="text" value="${technology.homepage}" size="48" data-label="Homepage:" />
             <input type="text" value="${technology.version}" size="16" data-label="Version:" />
+            <input type="file" value="${technology.image}" data-label="Image:" />
+            <p data-rendered="${not empty technology.image}">
+                <img src="/technology/${technology.value}/image" />
+            </p>
         </fieldset>
 
         <fieldset data-label="Description:">

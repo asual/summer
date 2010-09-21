@@ -14,8 +14,10 @@
 
 package com.asual.summer.sample.web;
 
+import java.io.IOException;
 import java.util.Arrays;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,7 @@ import com.asual.summer.core.ResponseFormat;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
+import com.asual.summer.sample.domain.Technology.Image;
 
 /**
  * 
@@ -40,24 +43,35 @@ import com.asual.summer.sample.domain.Technology;
 @Controller
 @RequestMapping("/technology")
 public class TechnologyController {
-    
-    @RequestMapping
+	
+    @RequestMapping(method=RequestMethod.GET)
     @ResponseFormat({"json", "xml"})
     public ModelAndView list() {
         return new ModelAndView("/list", new ModelMap(Technology.list()));
     }
-
-    @RequestMapping("/add")
-    public ModelAndView add() {
-    	ModelMap model = new ModelMap();
-    	model.addAllAttributes(Arrays.asList(new Technology(), License.list(), Status.list()));
-        return new ModelAndView("/add", model);
+    
+    @RequestMapping(method=RequestMethod.POST)
+    public ModelAndView persist(@Valid @ModelAttribute Technology technology) {
+    	technology.persist();
+        return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
     }
     
-    @RequestMapping("/{value}")
+    @RequestMapping(value="/{value}", method=RequestMethod.GET)
     @ResponseFormat("*")
     public ModelAndView view(@PathVariable("value") String value) {
         return new ModelAndView("/view", new ModelMap(Technology.find(value)));
+    }
+
+    @RequestMapping(value="/{value}", method=RequestMethod.PUT)
+    public ModelAndView merge(@Valid @ModelAttribute Technology technology) {
+    	technology.merge();
+        return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
+    }
+    
+    @RequestMapping(value="/{value}", method=RequestMethod.DELETE)
+    public ModelAndView remove(@Valid @ModelAttribute Technology technology) {
+    	technology.remove();
+        return new ModelAndView(new RedirectView("/technology", true));
     }
     
     @RequestMapping("/{value}/edit")
@@ -66,23 +80,26 @@ public class TechnologyController {
     	model.addAllAttributes(Arrays.asList(Technology.find(value), License.list(), Status.list()));
         return new ModelAndView("/edit", model);
     }
-    
-    @RequestMapping(value="/save", method={RequestMethod.POST})
-    public ModelAndView save(@Valid @ModelAttribute Technology technology) {
-    	technology.persist();
-        return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
+
+    @RequestMapping("/{value}/image")
+    public void image(@PathVariable("value") String value, HttpServletResponse response) throws IOException {
+		Image image = Technology.find(value).getImage();
+		if (image != null) {
+			response.setContentLength(image.getBytes().length);
+			response.setContentType(image.getContentType());
+			response.getOutputStream().write(image.getBytes());
+		} else {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		}
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
     }
     
-    @RequestMapping(value="/update", method={RequestMethod.PUT})
-    public ModelAndView update(@Valid @ModelAttribute Technology technology) {
-    	technology.merge();
-        return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
-    }
-    
-    @RequestMapping(value="/delete", method={RequestMethod.DELETE})
-    public ModelAndView delete(@Valid @ModelAttribute Technology technology) {
-    	technology.remove();
-        return new ModelAndView(new RedirectView("/technology", true));
+    @RequestMapping("/add")
+    public ModelAndView add() {
+    	ModelMap model = new ModelMap();
+    	model.addAllAttributes(Arrays.asList(new Technology(), License.list(), Status.list()));
+        return new ModelAndView("/add", model);
     }
     
 }

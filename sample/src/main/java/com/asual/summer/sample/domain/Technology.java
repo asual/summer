@@ -64,7 +64,6 @@ public class Technology implements Serializable {
     @Column(unique=true, nullable=false)
     private Integer id;
     
-    @NotEmpty
     @Column(unique=true, nullable=false)
     private String value;
     

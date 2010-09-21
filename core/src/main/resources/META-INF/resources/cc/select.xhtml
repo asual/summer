@@ -32,9 +32,9 @@
             <label for="${cc.formId}" title="${cc.attrs.dataTitle}">${cc.attrs.dataLabel}</label>
         </ui:fragment>
         
-        <select id="${cc.formId}" name="${cc.formId}">
+        ${cc.renderer.beginElement(cc, 'select')}
             <cs:insertChildren />
-        </select>
+        ${cc.renderer.endElement(cc, 'select')}
 
         <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.formId)}"
             value="${errors.get(cc.formId).message}" styleClass="error" />

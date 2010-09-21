@@ -16,6 +16,7 @@ package com.asual.summer.core.faces;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jboss.el.lang.EvaluationContext;
 import org.jboss.el.lang.ExpressionBuilder;
 
+import com.asual.summer.core.ErrorResolver;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.compiler.UIInstructions;
@@ -99,14 +101,7 @@ public class ComponentRenderer extends Renderer {
 		        
 		        Map<String, Object> attrs = component.getAttributes();
 		        for (String key : attrs.keySet()) {
-		    		if (!key.matches(ATTRIBUTES + "|" + 
-		    			FacesDecorator.ATTRIBUTES + "|" + 
-		    			FacesDecorator.QNAME + "|" + 
-		    			ComponentSupport.MARK_CREATED + "|" + 
-		    			Resource.COMPONENT_RESOURCE_KEY + "|" + 
-		    			UIComponent.BEANINFO_KEY + "|" + 
-		    			UIComponent.FACETS_KEY + "|" + 
-		    			UIComponent.VIEW_LOCATION_KEY)) {
+		    		if (shouldWriteAttribute(key)) {
 		            	writeAttribute(writer, component, key, attrs.get(key));
 		        	}
 				}
@@ -127,6 +122,73 @@ public class ComponentRenderer extends Renderer {
 	        writer.endElement(getComponentTag(component));
     	}
     	writer.write("\n");
+    }
+    
+    public void beginElement(Component component, String name) throws IOException {
+    	beginElement(component, name, false);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public void beginElement(Component component, String name, boolean nameAttr) throws IOException {
+        
+    	ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
+        writer.write("<");
+        writer.write(name);
+
+        Map<String, Object> attrs = new HashMap<String, Object>();
+        attrs.putAll(component.getAttributes());
+
+        if ("form".equals(name)) {
+
+        	attrs.put("action", StringUtils.isEmpty(getAttrValue(component, "action")) ? RequestUtils.getRequestURI() : 
+        		RequestUtils.contextRelative(getAttrValue(component, "action"), Boolean.valueOf(getAttrValue(component, "dataContextRelative"))));
+        	attrs.put("method", RequestUtils.isMethodBrowserSupported(getAttrValue(component, "method")) ? getAttrValue(component, "method") : "post");
+        	attrs.put("enctype", StringUtils.isEmpty(getAttrValue(component, "enctype")) ? "application/x-www-form-urlencoded" : getAttrValue(component, "enctype"));
+        	
+        } else if ("input".equals(name)) {
+        	
+        	attrs.put("id", component.getFormId());
+			if (nameAttr) {
+	        	attrs.put("name", component.getFormName());
+	        	if (component.isMatch() || Boolean.valueOf(getAttrValue(component, "checked"))) {
+	        		attrs.put("checked", "checked");
+	        	}
+			} else {
+	        	attrs.put("name", component.getFormId());
+			}
+			Map<String, Map<String, Object>> errors = 
+				(Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
+        	attrs.put("value", errors != null && errors.get(component.getFormId()) != null ? 
+        			errors.get(component.getFormId()).get("value") : getAttrValue(component, "value"));
+			
+        } else if ("option".equals(name)) {
+        	
+        	attrs.put("value", getAttrValue(component, "value"));
+        	if (component.isMatch() || Boolean.valueOf(getAttrValue(component, "checked"))) {
+        		attrs.put("selected", "selected");
+        	}
+        	
+        } else if ("select".equals(name) || "textarea".equals(name)) {
+        	
+        	attrs.put("id", component.getFormId());
+        	attrs.put("name", component.getFormId());
+        	
+        }
+        
+        for (String key : attrs.keySet()) {
+    		if (shouldWriteAttribute(key)) {
+    			writer.write(" " + key + "=\"" + attrs.get(key) + "\"");
+    		}
+        }
+        
+        writer.write(">");
+    }
+    
+    public void endElement(Component component, String name) throws IOException {
+        ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
+        writer.write("</");
+        writer.write(name);
+        writer.write(">\n");
     }
     
     protected void writeAttribute(ResponseWriter writer, UIComponent component, String name, Object value) throws IOException {
@@ -204,5 +266,30 @@ public class ComponentRenderer extends Renderer {
 		return ExpressionBuilder.createNode(expr)
 			.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
     }
-
+    
+    private String getAttrValue(Component component, String key) {
+    	Object value = component.getAttributes().get(key);
+    	if (value == null) {
+    		ValueExpression expr = component.getBindings().get(key);
+    		if (expr != null) {
+	    		value = expr.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
+    		}
+    	}
+    	if (value != null) {
+    		return value.toString();
+    	}
+    	return "";
+    }    
+    
+    private boolean shouldWriteAttribute(String key) {
+		return !key.matches(ATTRIBUTES + "|" + 
+    			FacesDecorator.ATTRIBUTES + "|" + 
+    			FacesDecorator.QNAME + "|" + 
+    			ComponentSupport.MARK_CREATED + "|" + 
+    			Resource.COMPONENT_RESOURCE_KEY + "|" + 
+    			UIComponent.BEANINFO_KEY + "|" + 
+    			UIComponent.FACETS_KEY + "|" + 
+    			UIComponent.VIEW_LOCATION_KEY);
+    }
+    
 }

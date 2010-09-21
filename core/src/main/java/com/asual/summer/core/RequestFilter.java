@@ -19,18 +19,23 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.NamedThreadLocal;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartResolver;
 
 import com.asual.summer.core.util.ObjectUtils;
 import com.asual.summer.core.util.RequestUtils;
@@ -47,130 +52,137 @@ public class RequestFilter extends OncePerRequestFilter {
 	
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new NamedThreadLocal<HttpServletRequest>("request");
     
-	static class Request extends HttpServletRequestWrapper {
-        
-        public Request(HttpServletRequest request) {
-            super(request);
-            String errors = request.getParameter(ErrorResolver.ERRORS);
-            if (errors != null) {
-            	try {
-            		Object[] o = (Object[]) ObjectUtils.deserializeFromBase64(errors);
-            		request.setAttribute(ErrorResolver.ERRORS, o[0]);
-            		request.setAttribute(ErrorResolver.ERRORS_TARGET, o[1]);
-    			} catch (Exception e) {
-    				logger.error(e.getMessage(), e);
-				}
-            }            
+	static void init(HttpServletRequest request) {
+        String errors = request.getParameter(ErrorResolver.ERRORS);
+        if (errors != null) {
+        	try {
+        		Object[] o = (Object[]) ObjectUtils.deserializeFromBase64(errors);
+        		request.setAttribute(ErrorResolver.ERRORS, o[0]);
+        		request.setAttribute(ErrorResolver.ERRORS_TARGET, o[1]);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+        } 		
+	}
+	
+	static String getRemoteAddr(HttpServletRequest request) {
+        String result = request.getHeader("X-Forwarded-For");
+        if (result == null) {
+            result = request.getRemoteAddr();
         }
-        
-        public String encode(String input) {
-            if (input != null && !"".equalsIgnoreCase(input.trim())) {
-                try {
-                	String encoding = StringUtils.getEncoding();
-                    String utf8 = new String(input.getBytes(encoding), encoding);
-                    String western = new String(input.getBytes("ISO-8859-1"), encoding);
-                    if (utf8.length() > western.length()) {
-                        return western;
-                    } else {
-                        return input;
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    return input;
-                }
-            }
-            return input;
+        try {
+            result = InetAddress.getByName(result).getHostAddress();
+        } catch (UnknownHostException e) {
         }
-
-        public String getRemoteAddr() {
-            String result = super.getHeader("X-Forwarded-For");
-            if (result == null) {
-                result = super.getRemoteAddr();
-            }
-            try {
-                result = InetAddress.getByName(result).getHostAddress();
-            } catch (UnknownHostException e) {
-            }
-            return result;
+        return result;		
+	}
+	
+	static String getRemoteHost(HttpServletRequest request) {
+        String result = request.getHeader("X-Forwarded-For");
+        if (result == null) {
+            result = request.getRemoteHost();
         }
-        
-        public String getRemoteHost() {
-            String result = super.getHeader("X-Forwarded-For");
-            if (result == null) {
-                result = super.getRemoteHost();
-            }
-            try {
-                result = InetAddress.getByName(result).getHostName();
-            } catch (UnknownHostException e) {
-            }
-            return result;
+        try {
+            result = InetAddress.getByName(result).getHostName();
+        } catch (UnknownHostException e) {
         }
-        
-        public String getServerName() {
-            String result = super.getHeader("X-Forwarded-Host");
-            if (result == null) {
-                result = super.getServerName();
-            }
-            try {
-                result = InetAddress.getByName(result).getHostName();
-            } catch (UnknownHostException e) {
-            }
-            return result;
+        return result;			
+	}
+	
+	static String getServerName(HttpServletRequest request) {
+        String result = request.getHeader("X-Forwarded-Host");
+        if (result == null) {
+            result = request.getServerName();
         }
-        
-        public String getParameter(String paramName) {
-            return encode(super.getParameter(paramName));
+        try {
+            result = InetAddress.getByName(result).getHostName();
+        } catch (UnknownHostException e) {
         }
-        
-        public String[] getParameterValues(String paramName) {
-            String values[] = super.getParameterValues(paramName);
-            if (values != null) {
-                int length = values.length;
-                for (int i = 0; i < length; i++) {
-                    values[i] = encode(values[i]);
-                }
-            }
-            return values;
-        }
-        
-        public Map<String, String[]> getParameterMap() {
-            Map<String, String[]> map = new HashMap<String, String[]>();
-            for (Object name : super.getParameterMap().keySet()) {
-                map.put((String) name, getParameterValues((String) name));
-            }
-            return map;
-        }
-        
-        public String getRequestURI() {
-            return encode(super.getRequestURI().replaceFirst("/$", ""));
-        }
-
-        public String getServletPath() {
-            return encode(super.getServletPath());
-        }
-        
-        public String getCharacterEncoding() {
-        	return StringUtils.getEncoding();
-        }
-        
-    	// TODO: Remove when https://bugs.webkit.org/show_bug.cgi?id=27267 gets fixed.
-        public String getHeader(String name) {
-        	if ("Accept".equals(name) && RequestUtils.isWebKit()) {
-    			return "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-        	}
-        	return super.getHeader(name);
-        }
+        return result;			
+	}
+	
+	static String getParameter(HttpServletRequest request, String paramName) {
+        return encode(request.getParameter(paramName));
     }
     
+	static String[] getParameterValues(HttpServletRequest request, String paramName) {
+        String values[] = request.getParameterValues(paramName);
+        if (values != null) {
+            int length = values.length;
+            for (int i = 0; i < length; i++) {
+                values[i] = encode(values[i]);
+            }
+        }
+        return values;        	
+    }
+	
+    static Map<String, String[]> getParameterMap(HttpServletRequest request) {
+        Map<String, String[]> map = new HashMap<String, String[]>();
+        for (Object name : request.getParameterMap().keySet()) {
+            map.put((String) name, getParameterValues(request, (String) name));
+        }
+        return map;
+    }
+	
+    static String getMethod(HttpServletRequest request, Map<String, String[]> map) {
+    	String method = map.get("_method") != null ? map.get("_method")[0] : null;
+    	if ("POST".equalsIgnoreCase(request.getMethod()) && !StringUtils.isEmpty(method)) {
+    		return method.toUpperCase(Locale.ENGLISH);
+    	}
+        return request.getMethod();
+    }
+    
+    static String getRequestURI(HttpServletRequest request) {
+        return encode(request.getRequestURI().replaceFirst("/$", ""));
+    }
+
+    static String getServletPath(HttpServletRequest request) {
+        return encode(request.getServletPath());
+    }
+    
+	// TODO: Remove when https://bugs.webkit.org/show_bug.cgi?id=27267 gets fixed.
+    static String getHeader(HttpServletRequest request, String name) {
+    	if ("Accept".equals(name) && RequestUtils.isWebKit()) {
+			return "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+    	}
+    	return request.getHeader(name);
+    }
+    
+	static String encode(String input) {
+        if (input != null && !"".equalsIgnoreCase(input.trim())) {
+            try {
+            	String encoding = StringUtils.getEncoding();
+                String utf8 = new String(input.getBytes(encoding), encoding);
+                String western = new String(input.getBytes("ISO-8859-1"), encoding);
+                if (utf8.length() > western.length()) {
+                    return western;
+                } else {
+                    return input;
+                }
+            } catch (UnsupportedEncodingException e) {
+                return input;
+            }
+        }
+        return input;
+	}
+
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
     		FilterChain filterChain) throws ServletException, IOException {        
         
+		HttpServletRequest defaultRequest = new DefaultRequest(request);
+		MultipartResolver multipartResolver = lookupMultipartResolver();
+		
+		if (multipartResolver != null && multipartResolver.isMultipart(request)) {
+			defaultRequest = multipartResolver.resolveMultipart(defaultRequest);
+		}		
+		
     	try {
     		
 	    	long time = System.currentTimeMillis();
-	    	requestHolder.set(new Request(request));
+	    	requestHolder.set(defaultRequest);
 	    	
-	        if (request.getCharacterEncoding() == null) {
-	            request.setCharacterEncoding(StringUtils.getEncoding());
+	        if (defaultRequest.getCharacterEncoding() == null) {
+	        	defaultRequest.setCharacterEncoding(StringUtils.getEncoding());
 	        }
 	        
 	        if (RequestUtils.isMSIE()) {
@@ -178,10 +190,14 @@ public class RequestFilter extends OncePerRequestFilter {
 	        }
 	        
 	        filterChain.doFilter(requestHolder.get(), response);
-	        logger.debug("The request for '" + request.getRequestURI() + "' took " + (System.currentTimeMillis() - time) + "ms.");
+	        logger.debug("The request for '" + defaultRequest.getRequestURI() + "' took " + (System.currentTimeMillis() - time) + "ms.");
         
     	} finally {
         
+			if (defaultRequest instanceof MultipartHttpServletRequest) {
+				multipartResolver.cleanupMultipart((MultipartHttpServletRequest) defaultRequest);
+			}
+			
 	        requestHolder.set(null);
     	}
     }
@@ -190,4 +206,12 @@ public class RequestFilter extends OncePerRequestFilter {
     	return requestHolder.get();
     }
     
+	protected MultipartResolver lookupMultipartResolver() {
+		try {
+			WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+			return wac.getBean("multipartResolver", MultipartResolver.class);
+		} catch (NoSuchBeanDefinitionException e) {
+			return null;
+		}
+	}    
 }

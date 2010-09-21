@@ -17,6 +17,7 @@ package com.asual.summer.core.faces;
 import java.beans.BeanInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.render.Renderer;
 
 import com.asual.summer.core.ErrorResolver;
 import com.asual.summer.core.util.ArrayUtils;
@@ -51,6 +53,10 @@ public class Component extends UINamingContainer {
         return (COMPONENT_FAMILY);
     }
     
+    public Renderer getRenderer() {
+    	return getRenderer(FacesContext.getCurrentInstance());
+    }
+    
     public String getStyleClass() {
         return styleClass;
     }
@@ -65,14 +71,6 @@ public class Component extends UINamingContainer {
 
     public void setEscape(boolean escape) {
         this.escape = escape;
-    }
-    
-    private String getChildrenText() {
-    	List<String> strings = new ArrayList<String>();
-    	for (UIComponent child : getChildren()) {
-    		strings.add(child.toString());
-    	}
-    	return StringUtils.join(strings, "");
     }
     
     public Map<String, ValueExpression> getBindings() {
@@ -160,6 +158,18 @@ public class Component extends UINamingContainer {
     		String value = ((TagValueExpression) binding).getExpressionString().replaceAll("^(\\$|#)\\{|\\}$", "");
     		bindingValues.put(name, value);
 		}
+    }
+    
+    private String getChildrenText() {
+    	List<String> strings = new ArrayList<String>();
+    	Iterator<UIComponent> fac = getFacetsAndChildren();
+    	while (fac.hasNext()) {
+    		UIComponent value = fac.next().findComponent("value");
+        	for (UIComponent child : value.getChildren()) {
+        		strings.add(child.toString());
+        	}
+    	}
+    	return StringUtils.join(strings, "");
     }
     
     private Component getRepeatComponent() {

@@ -5,7 +5,7 @@
     
     <p><a href="/technology">&larr; Back to List</a></p>
 
-    <form action="/technology/save">
+    <form action="/technology" enctype="multipart/form-data">
 
         <h1>Add a new technology</h1>
         
@@ -13,10 +13,11 @@
             <input type="text" value="${technology.name}" size="48" data-label="Name:" />
             <input type="text" value="${technology.homepage}" size="48" data-label="Homepage:" />
             <input type="text" value="${technology.version}" size="16" data-label="Version:" />
+            <input type="file" value="${technology.image}" data-label="Image:" />
         </fieldset>
 
         <fieldset data-label="Description:">
-            <textarea cols="60" rows="10">${technology.description}</textarea>
+            <textarea cols="60" rows="10" data-wrapper="true">${technology.description}</textarea>
         </fieldset>
         
         <fieldset data-label="Licenses:">

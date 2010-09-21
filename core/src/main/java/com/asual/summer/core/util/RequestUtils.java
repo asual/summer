@@ -37,44 +37,47 @@ public class RequestUtils {
         return RequestFilter.getRequest();
     }
 
-	public static String getRequestURI() {
-	    String requestUri = (String) getAttribute(WebUtils.FORWARD_REQUEST_URI_ATTRIBUTE);
-	    if (requestUri != null) {
-	        return requestUri;
-	    }
-	    return getRequest().getRequestURI();
-	}
+    public static String getRequestURI() {
+        String requestUri = (String) getAttribute(WebUtils.FORWARD_REQUEST_URI_ATTRIBUTE);
+        if (requestUri != null) {
+            return requestUri;
+        }
+        return getRequest().getRequestURI();
+    }
 
-	public static String getQueryString() {
-	    String requestURI = (String) getAttribute(WebUtils.FORWARD_REQUEST_URI_ATTRIBUTE);
-	    if (requestURI != null) {
-	        return (String) getAttribute(WebUtils.FORWARD_QUERY_STRING_ATTRIBUTE);
-	    }
-	    return getRequest().getQueryString();
-	}
-	
-    public static Map<String, Object> getParametersMap() {
-        Map<String, Object> normalized = new HashMap<String, Object>();
+    public static String getQueryString() {
+        String requestURI = (String) getAttribute(WebUtils.FORWARD_REQUEST_URI_ATTRIBUTE);
+        if (requestURI != null) {
+            return (String) getAttribute(WebUtils.FORWARD_QUERY_STRING_ATTRIBUTE);
+        }
+        return getRequest().getQueryString();
+    }
+    
+    public static Map<String, Object[]> getParametersMap() {
+        Map<String, Object[]> normalized = new HashMap<String, Object[]>();
         Map<String, String[]> params = getRequest().getParameterMap();
         for (String key : params.keySet()) {
             String[] value = (String[]) params.get(key);
-            if (value.length == 1) {
-                normalized.put(key, ObjectUtils.convert(value[0]));
-            } else {
-                Object[] result = new Object[value.length];
-                for (int i = 0; i < value.length; i++) {
-                    result[i] = ObjectUtils.convert(value[i]);
-                }
-                normalized.put(key, result);
+            Object[] result = new Object[value.length];
+            for (int i = 0; i < value.length; i++) {
+                result[i] = ObjectUtils.convert(value[i]);
             }
+            normalized.put(key, result);
         }
         return normalized;
     }
 
     public static Object getParameter(String name) {
-        return getParametersMap().get(name);
+        if (getParametersMap().get(name) != null) {
+        	return getParametersMap().get(name)[0];
+        }
+        return null;
     }
 
+    public static Object[] getParameterValues(String name) {
+        return getParametersMap().get(name);
+    }
+    
     public static String getHeader(String name) {
         return getRequest().getHeader(name);
     }
@@ -84,21 +87,21 @@ public class RequestUtils {
     }
     
     public static boolean isAjaxRequest() {
-    	return "XMLHttpRequest".equals(getRequest().getHeader("X-Requested-With"));
+        return "XMLHttpRequest".equals(getRequest().getHeader("X-Requested-With"));
     }
         
     public static boolean isGetRequest() {
-    	return "GET".equalsIgnoreCase(getRequest().getMethod());
+        return "GET".equalsIgnoreCase(getRequest().getMethod());
     }
 
     public static boolean isPostRequest() {
-    	return "POST".equalsIgnoreCase(getRequest().getMethod());
+        return "POST".equalsIgnoreCase(getRequest().getMethod());
     }
-	
-	public static boolean isMethodBrowserSupported(String method) {
-		return ("GET".equalsIgnoreCase(method) || "POST".equalsIgnoreCase(method));
-	}
-	
+    
+    public static boolean isMethodBrowserSupported(String method) {
+        return ("GET".equalsIgnoreCase(method) || "POST".equalsIgnoreCase(method));
+    }
+    
     public static boolean isMozilla() {
         return Pattern.compile("Mozilla").matcher(getUserAgent()).find() && !Pattern.compile("compatible|WebKit").matcher(getUserAgent()).find();
     }
@@ -127,24 +130,24 @@ public class RequestUtils {
         return getRequest().getAttribute(name);
     }
 
-	public static String contextRelative(String uri, boolean contextRelative) {
-		if (uri != null) {
-			String contextPath = getRequest().getContextPath();
-	    	if (contextRelative) {
-		    	return uri.startsWith("/") ? contextPath.concat(uri) : uri;
-	    	} else {
-	    		return !"".equals(contextPath) ? uri.replaceFirst("^" + contextPath, "") : uri;
-	    	}
-		}
-		return null;
-	}
+    public static String contextRelative(String uri, boolean contextRelative) {
+        if (uri != null) {
+            String contextPath = getRequest().getContextPath();
+            if (contextRelative) {
+                return uri.startsWith("/") ? contextPath.concat(uri) : uri;
+            } else {
+                return !"".equals(contextPath) ? uri.replaceFirst("^" + contextPath, "") : uri;
+            }
+        }
+        return null;
+    }
 
-	public static Object getError() {
-		return getAttribute("javax.servlet.error.exception");
-	}
+    public static Object getError() {
+        return getAttribute("javax.servlet.error.exception");
+    }
 
-	public static int getErrorCode() {
-		return (Integer) getAttribute("javax.servlet.error.status_code");
-	}
+    public static int getErrorCode() {
+        return (Integer) getAttribute("javax.servlet.error.status_code");
+    }
 
 }
