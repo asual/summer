@@ -12,6 +12,29 @@ body, header, footer, section, p {
     padding: 0;
 }
 
+h1 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: normal;
+    text-shadow: #ccc 0px 1px 0px;
+    font-size: 32px;
+    margin: 40px 0 12px;
+}
+
+h2 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: normal;
+    text-shadow: #fff 0px 1px 0px;
+    font-size: 18px;
+}
+
+a {
+    color: #13539f;
+}
+
+a:hover {
+    color: #333;
+}
+
 header, footer, section {
     width: 860px;
 }
@@ -48,25 +71,6 @@ section p, section ul {
     margin: 0 0 20px;
 }
 
-h1 {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-weight: normal;
-    text-shadow: #ccc 0px 1px 0px;
-    font-size: 32px;
-    margin: 40px 0 12px;
-}
-
-h2 {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-weight: normal;
-    text-shadow: #fff 0px 1px 0px;
-    font-size: 18px;
-}
-
-a {
-    color: #13539f;
-}
-
 form fieldset {
     margin: 0 0 15px;
     padding: 0 20px;
@@ -88,6 +92,11 @@ form fieldset .fieldset {
 
 form div {
     margin: 0 0 10px;
+}
+
+form span {
+    display: block;
+    padding: 2px;
 }
 
 table {
@@ -190,4 +199,8 @@ table .even {
 
 .build {
     color: #666;
+}
+
+.error {
+    padding: 0 4px;    
 }

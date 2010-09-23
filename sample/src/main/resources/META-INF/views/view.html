@@ -7,13 +7,13 @@
 
     <div class="view">
 
+        <p data-rendered="${not empty technology.image}" style="float: left; margin: 4px 24px 84px 0;">
+            <img src="/technology/${technology.value}/image" width="96" height="96" alt="${technology.name}" />
+        </p>
+        
         <h1>${technology.name}</h1>
 
         <p>${technology.description}</p>
-        
-        <p data-rendered="${not empty technology.image}">
-            <img src="/technology/${technology.value}/image" alt="${technology.name}" />
-        </p>
         
         <p>
             Version: <span>${technology.version}</span><br />

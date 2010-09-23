@@ -39,11 +39,6 @@
             <version>1.6.1</version>
         </dependency>
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.2</version>        
-        </dependency>
-        <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
             <version>1.6.9.M2</version>
@@ -107,7 +102,7 @@
             <groupId>org.hibernate.javax.persistence</groupId>
             <artifactId>hibernate-jpa-2.0-api</artifactId>
             <version>1.0.0.Final</version>
-        </dependency>        
+        </dependency>
     </dependencies>
     
     <build>
@@ -153,6 +148,7 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.0.0.M1</version>
                 <configuration>
+                    <jettyConfig>${basedir}/src/test/resources/jetty.xml</jettyConfig>
                     <webAppConfig>
                         <jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
                     </webAppConfig>
@@ -170,7 +166,7 @@
                     <instanceRoot>${project.build.directory}/glassfish</instanceRoot>
                     <port>8080</port>
                 </configuration>
-            </plugin>
+            </plugin>           
         </plugins>
     </build>
     
