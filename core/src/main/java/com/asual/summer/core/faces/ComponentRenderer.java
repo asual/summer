@@ -142,7 +142,7 @@ public class ComponentRenderer extends Renderer {
 
         	attrs.put("action", StringUtils.isEmpty(getAttrValue(component, "action")) ? RequestUtils.getRequestURI() : 
         		RequestUtils.contextRelative(getAttrValue(component, "action"), Boolean.valueOf(getAttrValue(component, "dataContextRelative"))));
-        	attrs.put("method", RequestUtils.isMethodBrowserSupported(getAttrValue(component, "method")) ? getAttrValue(component, "method") : "post");
+        	attrs.put("method", RequestUtils.isMethodBrowserSupported(getAttrValue(component, "method")) ? getAttrValue(component, "method") : "get");
         	attrs.put("enctype", StringUtils.isEmpty(getAttrValue(component, "enctype")) ? "application/x-www-form-urlencoded" : getAttrValue(component, "enctype"));
         	
         } else if ("input".equals(name)) {

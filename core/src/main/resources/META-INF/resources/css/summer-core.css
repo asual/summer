@@ -26,6 +26,4 @@ body, input, textarea, select, button {
 
 .error {
     color: #cc0000;
-    vertical-align: top;
-    line-height: 32px;
 }
