@@ -17,6 +17,7 @@ package com.asual.summer.core.faces;
 import javax.el.ELContext;
 import javax.el.ELException;
 
+import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.jsf.el.SpringBeanFacesELResolver;
 
 import com.asual.summer.core.ErrorResolver;
@@ -31,7 +32,13 @@ import com.asual.summer.core.util.StringUtils;
  */
 public class FacesELResolver extends SpringBeanFacesELResolver {
 
+	private static String MESSAGES = "messages";
+	private static String PROPERTIES = "properties";
+	
+	private static final ThreadLocal<String> keyHolder = new NamedThreadLocal<String>("key");
+
 	public Object getValue(ELContext elContext, Object base, Object property) throws ELException {
+		
 		Object target  = RequestUtils.getAttribute(ErrorResolver.ERRORS_TARGET);
 		if (target != null) {
 			String targetName = StringUtils.toCamelCase(target.getClass().getSimpleName());
@@ -40,40 +47,43 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 				return target;
 			}
 		}
+		
 		Object value = super.getValue(elContext, base, property);
-		String messages = "messages";
-		String properties = "properties";
 		if (value == null) {
 			try {
 				if (property instanceof String) {
 					String prop = (String) property;
-					if (base == null && (messages.equals(prop) || properties.equals(prop))) {
+					if (base == null && (MESSAGES.equals(prop) || PROPERTIES.equals(prop))) {
 						elContext.setPropertyResolved(true);
 						return new String(prop);
 					}
 					if (base instanceof String) {
 						String bs = (String) base;
-						if (messages.equals(bs)) {
+						boolean keyStored = false;
+						if (MESSAGES.equals(bs)) {
 							elContext.setPropertyResolved(true);
 							return ResourceUtils.getMessage(prop);
-						} else if (properties.equals(bs)) {
+						} else if (PROPERTIES.equals(bs)) {
 							elContext.setPropertyResolved(true);
 							return ResourceUtils.getProperty(prop);
-						} else if (bs.startsWith("{") && bs.endsWith("}")) {
+						} else if (bs.startsWith("{") && bs.endsWith("}") || (keyStored = keyHolder.get() != null)) {
 							elContext.setPropertyResolved(true);
-							String key = bs.substring(1, bs.length() - 1) + "." + prop;
-							String message = ResourceUtils.getMessage(key);
+							if (keyStored) {
+								bs = "{" + keyHolder.get() + "}";
+							}
+							keyHolder.set(bs.substring(1, bs.length() - 1) + "." + prop);
+							String message = ResourceUtils.getMessage(keyHolder.get());
 							if (message.startsWith("{") && message.endsWith("}")) {
-								return ResourceUtils.getProperty(key);
+								return ResourceUtils.getProperty(keyHolder.get());
 							} else {
 								return message;
 							}
 						}
 					}
 				}
-			} catch (Exception e) {
-			}
+			} catch (Exception e) {}
 		}
+		keyHolder.set(null);
 		return value;
 	}
 

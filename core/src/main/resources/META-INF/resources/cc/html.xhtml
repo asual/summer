@@ -29,7 +29,7 @@
     <cs:implementation>
         <f:view contentType="text/html;charset=UTF-8" locale="${miscUtils.getLocale()}"><html data-client="${cc.attrs.dataClient}">
             <ui:decorate template="/META-INF/templates/${empty cc.attrs.dataTemplate ? 'template' : cc.attrs.dataTemplate}.xhtml">
-                <cs:insertChildren />
+                <cs:insertChildren />${''}
             </ui:decorate></html>
         </f:view>
     </cs:implementation>

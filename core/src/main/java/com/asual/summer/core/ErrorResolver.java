@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -95,18 +94,9 @@ public class ErrorResolver implements HandlerExceptionResolver {
 		        if (errorsAttr != null && errorsAttrLength < 4096) {
 					return new ModelAndView(new RedirectView(form, false), new ModelMap(ERRORS, errorsAttr));
 		        }
-	        } else {
-	        	form = RequestUtils.getRequestURI();
 	        }
 	        
-        	try {
-	        	request.setAttribute(ERRORS, errors);
-				RequestUtils.getRequest().getServletContext().getRequestDispatcher(form).forward(request, response);
-			} catch (ServletException se) {
-				logger.error(se.getMessage(), se);
-			} catch (IOException ioe) {
-				logger.error(ioe.getMessage(), ioe);
-			}
+        	request.setAttribute(ERRORS, errors);
 	    }
 	    
 		return null;
