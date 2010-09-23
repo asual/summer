@@ -151,7 +151,103 @@
             </plugin>
         </plugins>
     </build>
-
+    
+    <profiles>
+        <profile>
+            <id>manifestEntries</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <configuration>
+                                <archive>
+                                    <manifestEntries>
+                                        <Build-Date>${maven.build.timestamp}</Build-Date>
+                                        <Build-Revision>${maven.build.revision}</Build-Revision>
+                                    </manifestEntries>
+                                </archive>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-war-plugin</artifactId>
+                            <configuration>
+                                <archive>
+                                    <manifestEntries>
+                                        <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+                                        <Build-Revision>${maven.build.revision}</Build-Revision>
+                                    </manifestEntries>
+                                </archive>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <phase>compile</phase>
+                                    <goals>
+                                        <goal>manifest</goal>
+                                    </goals>
+                                    <configuration>
+                                        <warSourceDirectory>${basedir}/target/classes</warSourceDirectory>
+                                        <archive>
+                                            <manifestEntries>
+                                                <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+                                                <Build-Revision>${maven.build.revision}</Build-Revision>
+                                            </manifestEntries>
+                                        </archive>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <tasks>
+                                        <exec executable="${git.executable}" outputproperty="revision" dir="${basedir}">
+                                            <arg value="rev-parse" />
+                                            <arg value="HEAD" />
+                                        </exec>
+                                        <mkdir dir="${project.build.directory}" />
+                                        <echo message="maven.build.revision=${revision}" 
+                                            file="${project.build.directory}/${project.build.properties}" />
+                                    </tasks>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <version>1.0-alpha-2</version>
+                        <executions>
+                            <execution>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <files>
+                                        <file>${project.build.directory}/${project.build.properties}</file>
+                                    </files>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>            
+        </profile>
+    </profiles>
+    
     <modules>
         <module>ajax</module>
         <module>archetype</module>
