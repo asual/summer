@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
     
-    <title>Technologies</title>
+    <title>${messages.page.technology}</title>
     
-    <h1>Technologies</h1>
+    <h1>${messages.page.technology}</h1>
     
     <p id="options" class="views">
         View as: <span><a href="/technology" data-ajax="view">List</a> | <a href="/technology?view=table" data-ajax="options view">Table</a></span> 
@@ -24,7 +24,7 @@
                     <tr class="${vs.index mod 2 eq 0 ? 'odd' : 'even'}">
                         <td><a href="/technology/${repeatVar.value}">${repeatVar.name}</a></td>
                         <td>${repeatVar.version}</td>
-                        <td>${stringUtils.ellipsis(repeatVar.description, 80)}</td>
+                        <td>${stringUtils.ellipsis(repeatVar.description, 100)}</td>
                     </tr>
                 </tbody>
             </table>

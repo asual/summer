@@ -1,4 +1,4 @@
-<ui:composition
+<ui:composition 
     xmlns:ui="http://java.sun.com/jsf/facelets">
     
     <head>
@@ -7,19 +7,16 @@
     </head>
     
     <body>
-        <header>
-            <p><a href="/">${messages.page.heading}</a></p>
-        </header>
-        <section>
+        <section class="welcome">
             <ui:insert />
         </section>
         <footer>
             <p class="copyright">&#169; 2009-2010 Asual DZZD</p>
             <p class="build" data-rendered="${not empty miscUtils.getManifestAttribute('Build-Timestamp')}">
-                Build Timestamp: ${miscUtils.getManifestAttribute('Build-Timestamp')}<br />
+                Build Timestamp: ${miscUtils.getManifestAttribute('Build-Timestamp')}<br /> 
                 Build Revision: ${miscUtils.getManifestAttribute('Build-Revision')}
             </p>
         </footer>
     </body>
-        
+    
 </ui:composition>

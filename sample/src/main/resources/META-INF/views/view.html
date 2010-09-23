@@ -2,6 +2,7 @@
 <html>
     
     <title>${technology.name}</title>
+    
     <p><a href="/technology">&larr; Back to List</a></p>
 
     <div class="view">
@@ -11,7 +12,7 @@
         <p>${technology.description}</p>
         
         <p data-rendered="${not empty technology.image}">
-            <img src="/technology/${technology.value}/image" />
+            <img src="/technology/${technology.value}/image" alt="${technology.name}" />
         </p>
         
         <p>

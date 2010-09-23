@@ -1,42 +1,79 @@
-body {
+html, body {
+    background: #f5f8fb;
+}
+
+body, button, input, select, textarea {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+body, header, footer, section, p {
+    display: block;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+}
+
+header, footer, section {
+    width: 860px;
+}
+
+header {
+    font-weight: normal;
+    font-size: 18px;
+    text-shadow: #fff 0px 1px 0px;
+    margin: 0 auto 20px;
+    padding: 30px 0 10px;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 1px 0 #fff;
+    -moz-box-shadow: 0 1px 0 #fff;
+    -webkit-box-shadow: 0 1px 0 #fff;
+}
+
+header a {
+    color: #000;
+    text-decoration: none;
 }
 
 footer {
+    margin: 0 auto 40px;
     font-size: 11px;
+    line-height: 15px;
 }
 
-h1 {
-    margin: 0 0 20px;
-    padding: 0;
+section {
+    margin: 0 auto 40px;
 }
 
-h2 {
-    margin: 0;
-    padding: 0;
-}
-
-p, ul {
+section p, section ul {
     line-height: 20px;
     margin: 0 0 20px;
 }
 
-div {
-    margin: 0 0 10px;
+h1 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: normal;
+    text-shadow: #ccc 0px 1px 0px;
+    font-size: 32px;
+    margin: 40px 0 12px;
 }
 
-form {
-    margin: 0 0 20px;
+h2 {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: normal;
+    text-shadow: #fff 0px 1px 0px;
+    font-size: 18px;
 }
 
-fieldset {
+a {
+    color: #13539f;
+}
+
+form fieldset {
     margin: 0 0 15px;
     padding: 0 20px;
     border: 1px solid #999;
 }
 
-legend {
+form fieldset legend {
     font-weight: bold;
     font-size: 14px;
     margin: 0 0 0 -5px;
@@ -44,9 +81,89 @@ legend {
     color: #666;
 }
 
-.fieldset {
+form fieldset .fieldset {
     margin: 0;
     padding: 15px 0 10px;
+}
+
+form div {
+    margin: 0 0 10px;
+}
+
+table {
+    margin: 0 0 20px;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 0 none;
+}
+
+table th {
+    text-align: left;
+    font-weight: normal;
+    border-right: 2px solid #f5f8fb;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 1px 0 #fff;
+    -moz-box-shadow: 0 1px 0 #fff;
+    -webkit-box-shadow: 0 1px 0 #fff;
+}
+
+table th, table td {
+    padding: 4px 8px 4px 4px;
+}
+
+table .even {
+    background: #dde5f0;
+}
+
+.welcome h1 {
+    font-weight: normal;
+    text-shadow: #fff 0px 1px 0px;
+    font-size: 40px;
+    margin: 60px 0 40px;
+}
+
+.views {
+    font-size: 12px;
+    margin: 0 0 20px;
+}
+
+.views span {
+    margin: 0 20px 0 0;
+}
+
+.list {
+    margin: 0 0 20px;
+}
+
+.list h2 {
+    margin: 0 0 2px;
+}
+
+.list div {
+    margin: 0 0 20px;
+}
+
+.list .details {
+    font-size: 12px;
+    margin: 0 0 4px;
+}
+
+.list .details span {
+    color: #666;
+    padding: 0 4px 0 0;
+}
+
+.view {
+    margin: 0 0 40px;
+}
+
+.view p {
+    margin: 0 0 20px;
 }
 
 .button, .checkbox, .select, .text, .textarea {
@@ -55,28 +172,22 @@ legend {
 
 .file label, .select label, .text label, .textarea label {
     display: block;
-    padding: 0 0 4px;
+    padding: 2px;
 }
 
-table {
-    width: 100%;
+.button {
+    margin: 20px 0;
+}
+
+.clock {
     margin: 0 0 20px;
-    border-collapse: collapse;
-    border-spacing: 0;
-    border: 0 none;
+    font-size: 14px;
 }
 
-th {
-    text-align: left;
-    font-weight: normal;
-    border-right: 2px solid #f5f8fb;
-    border-bottom: 2px inset;
+.copyright {
+    margin: 0 0 10px;
 }
 
-th, td {
-    padding: 4px 8px 4px 4px;
-}
-
-.even {
-    background: #dde5f0;
+.build {
+    color: #666;
 }

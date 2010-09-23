@@ -5,6 +5,9 @@
     
     <p><a href="/technology/${technology.value}">&larr; Back to Details</a></p>
     
+    <div id="test">Test${requestUtils.getRequest()}</div>
+    <a href="/technology/${technology.value}/edit?image=true" data-ajax="test">Edit</a>
+    
     <form action="/technology/${technology.value}" method="put" enctype="multipart/form-data">
     
         <h1>${technology.name}</h1>
@@ -15,10 +18,14 @@
             <input type="text" value="${technology.name}" size="48" data-label="Name:" />
             <input type="text" value="${technology.homepage}" size="48" data-label="Homepage:" />
             <input type="text" value="${technology.version}" size="16" data-label="Version:" />
-            <input type="file" value="${technology.image}" data-label="Image:" />
-            <p data-rendered="${not empty technology.image}">
-                <img src="/technology/${technology.value}/image" />
-            </p>
+            <div id="file">
+                <span data-rendered="${not (empty technology.image or requestUtils.getParameter('image'))}">
+                    <img src="/technology/${technology.value}/image" alt="${technology.name}" />
+                    <a href="/technology/${technology.value}/edit?image=true" data-ajax="file">Edit</a>
+                </span>
+                <input type="file" value="${technology.image}" data-label="Image:" 
+                    data-rendered="${empty technology.image or requestUtils.getParameter('image')}" />
+            </div>
         </fieldset>
 
         <fieldset data-label="Description:">
