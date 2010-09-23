@@ -55,7 +55,7 @@
             		
                     $.ajax({
                         url: url,
-                        type: method ? method : 'post',
+                        type: method ? method : 'get',
                         data: 'javax.faces.partial.ajax=true&javax.faces.partial.render=' + ids + (data ? '&' + data : ''),
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader('Faces-Request', 'partial/ajax');
@@ -71,10 +71,14 @@
                             regions.trigger('error');
                         },
                         success: function(data, status, xhr) {
-                        	regions.each(function(i) {
-                        		fn($(this).html($(data.getElementsByTagName('update')[i].firstChild.nodeValue).html()));
-                            });
-                        	regions.trigger('success', [data, status, xhr]);
+                        	if (data && data.getElementsByTagName('update').length > 0) {
+	                        	regions.each(function(i) {
+	                        		fn($(this).html($(data.getElementsByTagName('update')[i].firstChild.nodeValue).html()));
+	                            });
+	                        	regions.trigger('success', [data, status, xhr]);
+                        	} else {
+	                        	regions.trigger('error', [data, status, xhr]);                        		
+                        	}
                         }
                     });
                     
