@@ -204,3 +204,8 @@ table .even {
 .error {
     padding: 0 4px;    
 }
+
+.image {
+    float: left; 
+    margin: 4px 24px 84px 0;
+}

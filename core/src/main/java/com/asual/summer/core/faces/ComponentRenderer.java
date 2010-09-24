@@ -140,10 +140,15 @@ public class ComponentRenderer extends Renderer {
 
         if ("form".equals(name)) {
 
-        	attrs.put("action", StringUtils.isEmpty(getAttrValue(component, "action")) ? RequestUtils.getRequestURI() : 
-        		RequestUtils.contextRelative(getAttrValue(component, "action"), Boolean.valueOf(getAttrValue(component, "dataContextRelative"))));
-        	attrs.put("method", RequestUtils.isMethodBrowserSupported(getAttrValue(component, "method")) ? getAttrValue(component, "method") : "get");
-        	attrs.put("enctype", StringUtils.isEmpty(getAttrValue(component, "enctype")) ? "application/x-www-form-urlencoded" : getAttrValue(component, "enctype"));
+        	String action = getAttrValue(component, "action");
+        	attrs.put("action", StringUtils.isEmpty(action) ? RequestUtils.getRequestURI() : 
+        		RequestUtils.contextRelative(action, Boolean.valueOf(getAttrValue(component, "dataContextRelative"))));
+        	
+        	String method = getAttrValue(component, "method");
+        	attrs.put("method", RequestUtils.isMethodBrowserSupported(method) ? (StringUtils.isEmpty(method) ? "get" : method) : "post");
+        	
+        	String enctype = getAttrValue(component, "enctype");
+        	attrs.put("enctype", StringUtils.isEmpty(enctype) ? "application/x-www-form-urlencoded" : enctype);
         	
         } else if ("input".equals(name)) {
         	

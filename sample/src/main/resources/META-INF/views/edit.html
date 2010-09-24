@@ -18,7 +18,7 @@
             <div id="file">
                 <div data-rendered="${not (empty technology.image or requestUtils.getParameter('image'))}">
                     <span><a href="/technology/${technology.value}/edit?image=true" data-ajax="file">Image:</a></span>
-                    <img src="/technology/${technology.value}/image" alt="${technology.name}" />
+                    <img src="/technology/${technology.value}/image" alt="${technology.name}" width="128" height="128" />
                 </div>
                 <input type="file" value="${technology.image}" data-label="Image:" 
                     data-rendered="${empty technology.image or requestUtils.getParameter('image')}" />
