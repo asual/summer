@@ -39,15 +39,6 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 
 	public Object getValue(ELContext elContext, Object base, Object property) throws ELException {
 		
-		Object target  = RequestUtils.getAttribute(ErrorResolver.ERRORS_TARGET);
-		if (target != null) {
-			String targetName = StringUtils.toCamelCase(target.getClass().getSimpleName());
-			if (targetName.equals(property)) {
-				elContext.setPropertyResolved(true);
-				return target;
-			}
-		}
-		
 		Object value = super.getValue(elContext, base, property);
 		if (value == null) {
 			try {
@@ -82,6 +73,16 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 					}
 				}
 			} catch (Exception e) {}
+			
+			Object target = RequestUtils.getAttribute(ErrorResolver.ERRORS_TARGET);
+			if (target != null) {
+				String targetName = StringUtils.toCamelCase(target.getClass().getSimpleName());
+				if (targetName.equals(property)) {
+					elContext.setPropertyResolved(true);
+					return target;
+				}
+			}
+			
 		}
 		keyHolder.set(null);
 		return value;

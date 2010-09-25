@@ -72,7 +72,7 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 		}
 		
 		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-		FacesContext facesContext =  facesContextFactory.getFacesContext(getServletContext(), request, response, facesLifecycle);
+		FacesContext facesContext = facesContextFactory.getFacesContext(getServletContext(), request, response, facesLifecycle);
 
 		Iterator<String> i = model.keySet().iterator();
 		while (i.hasNext()) {

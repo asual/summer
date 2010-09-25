@@ -15,7 +15,7 @@ body, header, footer, section, p {
 h1 {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-weight: normal;
-    text-shadow: #ccc 0px 1px 0px;
+    text-shadow: #fff 0px 1px 0px;
     font-size: 32px;
     margin: 40px 0 12px;
 }
@@ -94,7 +94,7 @@ form div {
     margin: 0 0 10px;
 }
 
-form span {
+form .image span {
     display: block;
     padding: 2px;
 }
@@ -175,6 +175,11 @@ table .even {
     margin: 0 0 20px;
 }
 
+.view .image {
+    float: left; 
+    margin: 4px 24px 84px 0;
+}
+
 .button, .checkbox, .select, .text, .textarea {
     display: block;
 }
@@ -182,6 +187,10 @@ table .even {
 .file label, .select label, .text label, .textarea label {
     display: block;
     padding: 2px;
+}
+
+.add, .edit {
+    clear: both;
 }
 
 .button {
@@ -203,9 +212,4 @@ table .even {
 
 .error {
     padding: 0 4px;    
-}
-
-.image {
-    float: left; 
-    margin: 4px 24px 84px 0;
 }

@@ -89,7 +89,8 @@
             <artifactId>servlet-api</artifactId>
             <version>3.0.20100224</version>
             <scope>provided</scope>
-        </dependency>       
+        </dependency>
+        <!--
         <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
             <artifactId>jstl-api</artifactId>
@@ -112,6 +113,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
     </dependencies>
     
     <build>

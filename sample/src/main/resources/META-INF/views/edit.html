@@ -15,7 +15,7 @@
             <input type="text" value="${technology.name}" size="48" data-label="Name:" />
             <input type="text" value="${technology.homepage}" size="48" data-label="Homepage:" />
             <input type="text" value="${technology.version}" size="16" data-label="Version:" />
-            <div id="file">
+            <div id="file" class="image">
                 <div data-rendered="${not (empty technology.image or requestUtils.getParameter('image'))}">
                     <span><a href="/technology/${technology.value}/edit?image=true" data-ajax="file">Image:</a></span>
                     <img src="/technology/${technology.value}/image" alt="${technology.name}" width="128" height="128" />
