@@ -14,7 +14,6 @@
 
 package com.asual.summer.core;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,18 +22,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
+import com.asual.summer.core.spring.ScopeAwareModelMap.Scope;
 import com.asual.summer.core.util.ArrayUtils;
-import com.asual.summer.core.util.ObjectUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ResourceUtils;
 import com.asual.summer.core.util.StringUtils;
@@ -42,15 +38,17 @@ import com.asual.summer.core.util.StringUtils;
 /**
  * 
  * @author Rostislav Hristov
+ * @author Rostislav Georgiev
  *
  */
 @Component
 public class ErrorResolver implements HandlerExceptionResolver {
 
-    private final Log logger = LogFactory.getLog(getClass());
+//    private final Log logger = LogFactory.getLog(getClass());
 	
 	public static final String ERRORS = "errors";
 	public static final String ERRORS_TARGET = "errorsTarget";
+	
 	
     @SuppressWarnings("unchecked")
     public ModelAndView resolveException(HttpServletRequest request,
@@ -61,7 +59,7 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	    if (e instanceof BindException) {
 	        
 	        BindException be = (BindException) e;
-	        Object target = be.getBindingResult().getTarget();
+	        //Object target = be.getBindingResult().getTarget();
 	        
 	        for (FieldError fe : (List<FieldError>) be.getFieldErrors()) {
 		        Map<String, Object> error = new HashMap<String, Object>();
@@ -80,26 +78,38 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	        response.setHeader("Warning", StringUtils.join(pairs, ";"));
 
-	        String errorsAttr = null;
-	        int errorsAttrLength = 0;
+//	        String errorsAttr = null;
+//	        int errorsAttrLength = 0;
+	        
+	        ModelMap flashMap = (ModelMap) request.getAttribute(Scope.FLASH.getKey());
+	        if(null!=flashMap){
+	            flashMap.mergeAttributes(be.getBindingResult().getModel());
+	        }else {
+	            flashMap=new ModelMap().addAllAttributes(be.getBindingResult().getModel());
+	        }
+	        
+	        if(!flashMap.isEmpty()){
+	            request.setAttribute(Scope.FLASH.getKey(), flashMap);
+	        }
+	        flashMap.addAttribute(ERRORS, errors);
 	        String form = (String) RequestUtils.getParameter("form");
-
+	        
+	        
 	        if (form != null) {
-		        try {
-			        errorsAttr = ObjectUtils.serializeToBase64(new Object[] {errors, target});
-			        errorsAttrLength = errorsAttr.getBytes(StringUtils.getEncoding()).length;
-		        } catch (IOException ioe) {
-					logger.error(ioe.getMessage(), ioe);
-				}
-		        if (errorsAttr != null && errorsAttrLength < 4096) {
-					return new ModelAndView(new RedirectView(form, false), new ModelMap(ERRORS, errorsAttr));
-		        }
+	            return new ModelAndView(resolveViewName(form),flashMap);
 	        }
 	        
         	request.setAttribute(ERRORS, errors);
 	    }
 	    
 		return null;
+    }
+
+    private String resolveViewName(String form) {
+        if(form.endsWith("/")){
+            form=form.substring(0,form.length()-1);
+        }
+        return form.substring(form.lastIndexOf("/"));
     }
     
 }

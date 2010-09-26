@@ -37,7 +37,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
 
-import com.asual.summer.core.util.ObjectUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 
@@ -53,16 +52,17 @@ public class RequestFilter extends OncePerRequestFilter {
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new NamedThreadLocal<HttpServletRequest>("request");
     
 	static void init(HttpServletRequest request) {
-        String errors = request.getParameter(ErrorResolver.ERRORS);
-        if (errors != null) {
-        	try {
-        		Object[] o = (Object[]) ObjectUtils.deserializeFromBase64(errors);
-        		request.setAttribute(ErrorResolver.ERRORS, o[0]);
-        		request.setAttribute(ErrorResolver.ERRORS_TARGET, o[1]);
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-        } 		
+//        String errors = request.getParameter(ErrorResolver.ERRORS);
+//        if (errors != null) {
+//        	try {
+//        		Object[] o = (Object[]) ObjectUtils.deserializeFromBase64(errors);
+//        		request.setAttribute(ErrorResolver.ERRORS, o[0]);
+//        		request.setAttribute(ErrorResolver.ERRORS_TARGET, o[1]);
+//			} catch (Exception e) {
+//				logger.error(e.getMessage(), e);
+//			}
+//        } 		
+	  
 	}
 	
 	static String getRemoteAddr(HttpServletRequest request) {

@@ -57,7 +57,7 @@
     
     <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
     
-    <bean id="annotationMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <bean id="annotationMethodHandlerAdapter" class="com.asual.summer.core.spring.CustomAnnotationMethodHandlerAdapter">
         <property name="webBindingInitializer" ref="configurableWebBindingInitializer" />
 		<property name="customModelAndViewResolver" ref="annotationModelAndViewResolver" />
     </bean>
@@ -65,6 +65,11 @@
     <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
         <property name="defaultHandler">
             <bean class="com.asual.summer.core.RootController" />
+        </property>
+        <property name="interceptors">
+        	<array>
+        		<bean class="com.asual.summer.core.spring.FlashScopeHandlerInterceptor"/>
+        	</array>
         </property>
     </bean>
     
