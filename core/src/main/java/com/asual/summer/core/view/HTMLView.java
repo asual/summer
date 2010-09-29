@@ -14,7 +14,10 @@
 
 package com.asual.summer.core.view;
 
+import java.beans.PropertyDescriptor;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -29,9 +32,15 @@ import javax.faces.lifecycle.LifecycleFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.FatalBeanException;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
+
+import com.asual.summer.core.ErrorResolver;
 
 /**
  * 
@@ -63,6 +72,7 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 		return false;
 	}
 	
+	@SuppressWarnings("unchecked")
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
@@ -73,7 +83,52 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 		
 		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
 		FacesContext facesContext = facesContextFactory.getFacesContext(getServletContext(), request, response, facesLifecycle);
+		
+		Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) request.getSession().getAttribute(ErrorResolver.ERRORS);
+		
+		if (errors != null) {
+			
+			request.setAttribute("errors", errors);
+			
+			BeanWrapper target = PropertyAccessorFactory.forBeanPropertyAccess(
+					model.get(request.getSession().getAttribute(ErrorResolver.OBJECT_NAME)));
+			
+			BeanWrapper source = PropertyAccessorFactory.forBeanPropertyAccess(
+					request.getSession().getAttribute(ErrorResolver.TARGET));
+			
+			PropertyDescriptor[] targetPds = BeanUtils.getPropertyDescriptors(target.getClass());
 
+			for (PropertyDescriptor targetPd : targetPds) {
+				if (targetPd.getWriteMethod() != null) {
+					PropertyDescriptor sourcePd = BeanUtils.getPropertyDescriptor(source.getClass(), targetPd.getName());
+					if (sourcePd != null && sourcePd.getReadMethod() != null) {
+						try {
+							Method readMethod = sourcePd.getReadMethod();
+							if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
+								readMethod.setAccessible(true);
+							}
+							Object value = readMethod.invoke(source);
+							if (value != null) {
+								Method writeMethod = targetPd.getWriteMethod();
+								if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
+									writeMethod.setAccessible(true);
+								}
+								writeMethod.invoke(target, value);
+							}
+						} catch (Throwable ex) {
+							throw new FatalBeanException("Could not copy properties from source to target", ex);
+						}
+					}
+				}
+			}
+			
+			model.put((String) request.getSession().getAttribute(ErrorResolver.OBJECT_NAME), target.getWrappedInstance());
+		}
+		
+		request.getSession().setAttribute(ErrorResolver.ERRORS, null);
+		request.getSession().setAttribute(ErrorResolver.OBJECT_NAME, null);
+		request.getSession().setAttribute(ErrorResolver.TARGET, null);
+		
 		Iterator<String> i = model.keySet().iterator();
 		while (i.hasNext()) {
 			String key = i.next().toString();

@@ -25,7 +25,6 @@ public class DefaultRequest extends HttpServletRequestWrapper {
     
     public DefaultRequest(HttpServletRequest request) {
         super(request);
-        RequestFilter.init(request);
     }
     
     public String getCharacterEncoding() {
@@ -61,7 +60,7 @@ public class DefaultRequest extends HttpServletRequestWrapper {
     }
     
     public String getMethod() {
-    	return RequestFilter.getMethod(getRequest(), getParameterMap());
+    	return RequestFilter.getMethod(getRequest(), super.getMethod(), getParameterMap());
     }
     
     public String getParameter(String paramName) {

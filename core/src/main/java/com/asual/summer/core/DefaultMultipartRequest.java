@@ -34,7 +34,6 @@ public class DefaultMultipartRequest extends DefaultMultipartHttpServletRequest 
 				multipartParameters.get(key)[i] = RequestFilter.encode(multipartParameters.get(key)[i]);
 			}
 		}
-        RequestFilter.init(request);
     }
 	
     public String getCharacterEncoding() {
@@ -70,7 +69,7 @@ public class DefaultMultipartRequest extends DefaultMultipartHttpServletRequest 
     }
     
     public String getMethod() {
-    	return RequestFilter.getMethod(getRequest(), getParameterMap());
+    	return RequestFilter.getMethod(getRequest(), super.getMethod(), getParameterMap());
     }
     
 	protected Map<String, String[]> getMultipartParameters() {

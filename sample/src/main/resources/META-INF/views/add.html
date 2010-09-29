@@ -13,11 +13,20 @@
             <input type="text" value="${technology.name}" size="48" data-label="Name:" />
             <input type="text" value="${technology.homepage}" size="48" data-label="Homepage:" />
             <input type="text" value="${technology.version}" size="16" data-label="Version:" />
-            <input type="file" value="${technology.image}" data-label="Image:" />
+            <div id="file" class="image">
+                <div data-rendered="${not (empty technology.image or requestUtils.getParameter('image'))}">
+                    <span>Image:</span>
+                    <a href="/technology/${technology.value}/add?image=true" data-ajax="file">
+                        <img src="/technology/${technology.value}/image" alt="${technology.name}" width="128" height="128" />
+                    </a>
+                </div>
+                <input type="file" value="${technology.image}" data-label="Image:" 
+                    data-rendered="${empty technology.image or requestUtils.getParameter('image')}" />
+            </div>
         </fieldset>
 
         <fieldset data-label="Description:">
-            <textarea cols="60" rows="10" data-wrapper="true">${technology.description}</textarea>
+            <textarea cols="60" rows="10" data-error="true">${technology.description}</textarea>
         </fieldset>
         
         <fieldset data-label="Licenses:">

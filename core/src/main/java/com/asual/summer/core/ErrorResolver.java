@@ -23,13 +23,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
-import com.asual.summer.core.spring.ScopeAwareModelMap.Scope;
 import com.asual.summer.core.util.ArrayUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ResourceUtils;
@@ -38,78 +37,50 @@ import com.asual.summer.core.util.StringUtils;
 /**
  * 
  * @author Rostislav Hristov
- * @author Rostislav Georgiev
  *
  */
 @Component
 public class ErrorResolver implements HandlerExceptionResolver {
-
-//    private final Log logger = LogFactory.getLog(getClass());
 	
-	public static final String ERRORS = "errors";
-	public static final String ERRORS_TARGET = "errorsTarget";
-	
+	public static final String ERRORS = "com.asual.summer.core.ErrorResolver.ERRORS";
+	public static final String OBJECT_NAME = "com.asual.summer.core.ErrorResolver.OBJECT_NAME";
+	public static final String TARGET = "com.asual.summer.core.ErrorResolver.TARGET";
 	
     @SuppressWarnings("unchecked")
     public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception e) {
         
-    	Map<String, Map<String, Object>> errors = new HashMap<String, Map<String, Object>>();
-    	
 	    if (e instanceof BindException) {
 	        
-	        BindException be = (BindException) e;
-	        //Object target = be.getBindingResult().getTarget();
+	    	Map<String, Map<String, Object>> errors = new HashMap<String, Map<String, Object>>();
 	        
-	        for (FieldError fe : (List<FieldError>) be.getFieldErrors()) {
+	        for (FieldError fe : (List<FieldError>) ((BindException) e).getFieldErrors()) {
 		        Map<String, Object> error = new HashMap<String, Object>();
 		        error.put("message", fe.isBindingFailure() ? 
 	        			ResourceUtils.getMessage(fe.getCodes()[2].replaceFirst("typeMismatch", "conversion")) : 
 	        				ResourceUtils.getMessage("validation." + ArrayUtils.last(fe.getCodes()), fe.getArguments()));
-		        error.put("value", fe.getRejectedValue());
+		        error.put("value", fe.getRejectedValue());		        
 	        	errors.put(fe.getField(), error);
 	        }
 	        
-            List<String> pairs = new ArrayList<String>();
-            for (String key : errors.keySet()) {
-                pairs.add(key + "=" + errors.get(key));
-            }
-
-	        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-	        response.setHeader("Warning", StringUtils.join(pairs, ";"));
-
-//	        String errorsAttr = null;
-//	        int errorsAttrLength = 0;
-	        
-	        ModelMap flashMap = (ModelMap) request.getAttribute(Scope.FLASH.getKey());
-	        if(null!=flashMap){
-	            flashMap.mergeAttributes(be.getBindingResult().getModel());
-	        }else {
-	            flashMap=new ModelMap().addAllAttributes(be.getBindingResult().getModel());
-	        }
-	        
-	        if(!flashMap.isEmpty()){
-	            request.setAttribute(Scope.FLASH.getKey(), flashMap);
-	        }
-	        flashMap.addAttribute(ERRORS, errors);
-	        String form = (String) RequestUtils.getParameter("form");
-	        
-	        
+	        String form = (String) RequestUtils.getParameter("_form");
 	        if (form != null) {
-	            return new ModelAndView(resolveViewName(form),flashMap);
+	        	request.getSession().setAttribute(ERRORS, errors);
+	        	request.getSession().setAttribute(OBJECT_NAME, ((BindException) e).getObjectName());
+	        	request.getSession().setAttribute(TARGET, ((BindException) e).getTarget());
+	        	return new ModelAndView(new RedirectView(form, false));
+	        } else {
+	            List<String> pairs = new ArrayList<String>();
+	            for (String key : errors.keySet()) {
+	                pairs.add(key + "=" + errors.get(key).get("message"));
+	            }
+		        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);	            
+		        response.setHeader("Warning", StringUtils.join(pairs, ";"));	        	
 	        }
 	        
-        	request.setAttribute(ERRORS, errors);
 	    }
 	    
 		return null;
-    }
-
-    private String resolveViewName(String form) {
-        if(form.endsWith("/")){
-            form=form.substring(0,form.length()-1);
-        }
-        return form.substring(form.lastIndexOf("/"));
     }
     
 }

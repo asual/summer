@@ -35,7 +35,6 @@ import org.apache.commons.logging.LogFactory;
 import org.jboss.el.lang.EvaluationContext;
 import org.jboss.el.lang.ExpressionBuilder;
 
-import com.asual.summer.core.ErrorResolver;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.compiler.UIInstructions;
@@ -162,7 +161,7 @@ public class ComponentRenderer extends Renderer {
 	        	attrs.put("name", component.getFormId());
 			}
 			Map<String, Map<String, Object>> errors = 
-				(Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
+				(Map<String, Map<String, Object>>) RequestUtils.getAttribute("errors");
         	attrs.put("value", errors != null && errors.get(component.getFormId()) != null ? 
         			errors.get(component.getFormId()).get("value") : getAttrValue(component, "value"));
 			

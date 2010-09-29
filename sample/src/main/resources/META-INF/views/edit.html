@@ -10,7 +10,6 @@
         <h1>${technology.name}</h1>
         
         <input type="hidden" value="${technology.id}" />
-        <input type="hidden" value="${technology.value}" />
 
         <fieldset data-label="General information:">
             <input type="text" value="${technology.name}" size="48" data-label="Name:" />
@@ -18,8 +17,10 @@
             <input type="text" value="${technology.version}" size="16" data-label="Version:" />
             <div id="file" class="image">
                 <div data-rendered="${not (empty technology.image or requestUtils.getParameter('image'))}">
-                    <span><a href="/technology/${technology.value}/edit?image=true" data-ajax="file">Image:</a></span>
-                    <img src="/technology/${technology.value}/image" alt="${technology.name}" width="128" height="128" />
+                    <span>Image:</span>
+                    <a href="/technology/${technology.value}/edit?image=true" data-ajax="file">
+                        <img src="/technology/${technology.value}/image" alt="${technology.name}" width="128" height="128" />
+                    </a>
                 </div>
                 <input type="file" value="${technology.image}" data-label="Image:" 
                     data-rendered="${empty technology.image or requestUtils.getParameter('image')}" />
@@ -27,7 +28,7 @@
         </fieldset>
 
         <fieldset data-label="Description:">
-            <textarea cols="60" rows="10" data-wrapper="true">${technology.description}</textarea>
+            <textarea cols="60" rows="10" data-error="true">${technology.description}</textarea>
         </fieldset>
         
         <fieldset data-label="Licenses:">

@@ -50,20 +50,6 @@ public class RequestFilter extends OncePerRequestFilter {
 	private static final Log logger = LogFactory.getLog(RequestFilter.class);
 	
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new NamedThreadLocal<HttpServletRequest>("request");
-    
-	static void init(HttpServletRequest request) {
-//        String errors = request.getParameter(ErrorResolver.ERRORS);
-//        if (errors != null) {
-//        	try {
-//        		Object[] o = (Object[]) ObjectUtils.deserializeFromBase64(errors);
-//        		request.setAttribute(ErrorResolver.ERRORS, o[0]);
-//        		request.setAttribute(ErrorResolver.ERRORS_TARGET, o[1]);
-//			} catch (Exception e) {
-//				logger.error(e.getMessage(), e);
-//			}
-//        } 		
-	  
-	}
 	
 	static String getRemoteAddr(HttpServletRequest request) {
         String result = request.getHeader("X-Forwarded-For");
@@ -124,12 +110,12 @@ public class RequestFilter extends OncePerRequestFilter {
         return map;
     }
 	
-    static String getMethod(HttpServletRequest request, Map<String, String[]> map) {
+    static String getMethod(HttpServletRequest request, String requestMethod, Map<String, String[]> map) {
     	String method = map.get("_method") != null ? map.get("_method")[0] : null;
-    	if ("POST".equalsIgnoreCase(request.getMethod()) && !StringUtils.isEmpty(method)) {
+    	if ("POST".equalsIgnoreCase(requestMethod) && !StringUtils.isEmpty(method)) {
     		return method.toUpperCase(Locale.ENGLISH);
     	}
-        return request.getMethod();
+        return requestMethod;
     }
     
     static String getRequestURI(HttpServletRequest request) {

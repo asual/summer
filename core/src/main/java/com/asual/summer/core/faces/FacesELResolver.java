@@ -25,56 +25,56 @@ import com.asual.summer.core.util.ResourceUtils;
 /**
  * 
  * @author Rostislav Hristov
- * 
+ *
  */
 public class FacesELResolver extends SpringBeanFacesELResolver {
 
-    private static String MESSAGES = "messages";
-    private static String PROPERTIES = "properties";
+	private static String MESSAGES = "messages";
+	private static String PROPERTIES = "properties";
+	
+	private static final ThreadLocal<String> keyHolder = new NamedThreadLocal<String>("key");
 
-    private static final ThreadLocal<String> keyHolder = new NamedThreadLocal<String>("key");
-
-    public Object getValue(ELContext elContext, Object base, Object property) throws ELException {
-
-        Object value = super.getValue(elContext, base, property);
-        if (value == null) {
-            try {
-                if (property instanceof String) {
-                    String prop = (String) property;
-                    if (base == null && (MESSAGES.equals(prop) || PROPERTIES.equals(prop))) {
-                        elContext.setPropertyResolved(true);
-                        return new String(prop);
-                    }
-                    if (base instanceof String) {
-                        String bs = (String) base;
-                        boolean keyStored = false;
-                        if (MESSAGES.equals(bs)) {
-                            elContext.setPropertyResolved(true);
-                            return ResourceUtils.getMessage(prop);
-                        } else if (PROPERTIES.equals(bs)) {
-                            elContext.setPropertyResolved(true);
-                            return ResourceUtils.getProperty(prop);
-                        } else if (bs.startsWith("{") && bs.endsWith("}") || (keyStored = keyHolder.get() != null)) {
-                            elContext.setPropertyResolved(true);
-                            if (keyStored) {
-                                bs = "{" + keyHolder.get() + "}";
-                            }
-                            keyHolder.set(bs.substring(1, bs.length() - 1) + "." + prop);
-                            String message = ResourceUtils.getMessage(keyHolder.get());
-                            if (message.startsWith("{") && message.endsWith("}")) {
-                                return ResourceUtils.getProperty(keyHolder.get());
-                            } else {
-                                return message;
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-            }
-
-        }
-        keyHolder.set(null);
-        return value;
-    }
+	public Object getValue(ELContext elContext, Object base, Object property) throws ELException {
+		
+		Object value = super.getValue(elContext, base, property);
+		
+		if (value == null) {
+			try {
+				if (property instanceof String) {
+					String prop = (String) property;
+					if (base == null && (MESSAGES.equals(prop) || PROPERTIES.equals(prop))) {
+						elContext.setPropertyResolved(true);
+						return new String(prop);
+					}
+					if (base instanceof String) {
+						String bs = (String) base;
+						boolean keyStored = false;
+						if (MESSAGES.equals(bs)) {
+							elContext.setPropertyResolved(true);
+							return ResourceUtils.getMessage(prop);
+						} else if (PROPERTIES.equals(bs)) {
+							elContext.setPropertyResolved(true);
+							return ResourceUtils.getProperty(prop);
+						} else if (bs.startsWith("{") && bs.endsWith("}") || (keyStored = keyHolder.get() != null)) {
+							elContext.setPropertyResolved(true);
+							if (keyStored) {
+								bs = "{" + keyHolder.get() + "}";
+							}
+							keyHolder.set(bs.substring(1, bs.length() - 1) + "." + prop);
+							String message = ResourceUtils.getMessage(keyHolder.get());
+							if (message.startsWith("{") && message.endsWith("}")) {
+								return ResourceUtils.getProperty(keyHolder.get());
+							} else {
+								return message;
+							}
+						}
+					}
+				}
+			} catch (Exception e) {}
+		}
+		
+		keyHolder.set(null);
+		return value;
+	}
 
 }

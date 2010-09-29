@@ -111,18 +111,19 @@ table {
     border: 0 none;
 }
 
-table th {
+th {
     text-align: left;
     font-weight: normal;
-    border-right: 2px solid #f5f8fb;
+    padding: 3px 5px;
+    border-right: 5px solid #f5f8fb;
     border-bottom: 1px solid #ccc;
     box-shadow: 0 1px 0 #fff;
     -moz-box-shadow: 0 1px 0 #fff;
     -webkit-box-shadow: 0 1px 0 #fff;
 }
 
-table th, table td {
-    padding: 4px 8px 4px 4px;
+td {
+    padding: 5px;
 }
 
 table .even {
@@ -211,5 +212,7 @@ table .even {
 }
 
 .error {
-    padding: 0 4px;    
+    line-height: 26px;
+    padding: 4px;
+    vertical-align: top;
 }

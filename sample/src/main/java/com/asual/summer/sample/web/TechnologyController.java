@@ -30,8 +30,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.asual.summer.core.ResponseFormat;
-import com.asual.summer.core.spring.ScopeAwareModelMap;
-import com.asual.summer.core.spring.ScopeAwareModelMap.Scope;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
@@ -78,8 +76,8 @@ public class TechnologyController {
     
     @RequestMapping("/{value}/edit")
     public ModelAndView edit(@PathVariable("value") String value) {
-    	ScopeAwareModelMap model = new ScopeAwareModelMap();
-    	model.addAllAttributes(Arrays.asList(Technology.find(value), License.list(), Status.list()),Scope.FLASH);
+    	ModelMap model = new ModelMap();
+    	model.addAllAttributes(Arrays.asList(Technology.find(value), License.list(), Status.list()));
         return new ModelAndView("/edit", model);
     }
 
@@ -99,8 +97,8 @@ public class TechnologyController {
     
     @RequestMapping("/add")
     public ModelAndView add() {
-        ScopeAwareModelMap model = new ScopeAwareModelMap();
-    	model.addAllAttributes(Arrays.asList(new Technology(), License.list(), Status.list()),Scope.FLASH);
+        ModelMap model = new ModelMap();
+    	model.addAllAttributes(Arrays.asList(new Technology(), License.list(), Status.list()));
         return new ModelAndView("/add", model);
     }
     
