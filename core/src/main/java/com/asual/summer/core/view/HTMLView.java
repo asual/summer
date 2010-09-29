@@ -14,10 +14,7 @@
 
 package com.asual.summer.core.view;
 
-import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -33,9 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.FatalBeanException;
-import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
@@ -85,44 +79,14 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 		FacesContext facesContext = facesContextFactory.getFacesContext(getServletContext(), request, response, facesLifecycle);
 		
 		Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) request.getSession().getAttribute(ErrorResolver.ERRORS);
+		String objectName = (String) request.getSession().getAttribute(ErrorResolver.OBJECT_NAME);
+		Object source = request.getSession().getAttribute(ErrorResolver.TARGET);
 		
 		if (errors != null) {
-			
 			request.setAttribute("errors", errors);
-			
-			BeanWrapper target = PropertyAccessorFactory.forBeanPropertyAccess(
-					model.get(request.getSession().getAttribute(ErrorResolver.OBJECT_NAME)));
-			
-			BeanWrapper source = PropertyAccessorFactory.forBeanPropertyAccess(
-					request.getSession().getAttribute(ErrorResolver.TARGET));
-			
-			PropertyDescriptor[] targetPds = BeanUtils.getPropertyDescriptors(target.getClass());
-
-			for (PropertyDescriptor targetPd : targetPds) {
-				if (targetPd.getWriteMethod() != null) {
-					PropertyDescriptor sourcePd = BeanUtils.getPropertyDescriptor(source.getClass(), targetPd.getName());
-					if (sourcePd != null && sourcePd.getReadMethod() != null) {
-						try {
-							Method readMethod = sourcePd.getReadMethod();
-							if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-								readMethod.setAccessible(true);
-							}
-							Object value = readMethod.invoke(source);
-							if (value != null) {
-								Method writeMethod = targetPd.getWriteMethod();
-								if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-									writeMethod.setAccessible(true);
-								}
-								writeMethod.invoke(target, value);
-							}
-						} catch (Throwable ex) {
-							throw new FatalBeanException("Could not copy properties from source to target", ex);
-						}
-					}
-				}
-			}
-			
-			model.put((String) request.getSession().getAttribute(ErrorResolver.OBJECT_NAME), target.getWrappedInstance());
+			Object target = model.get(objectName);
+			BeanUtils.copyProperties(source, target);
+			model.put(objectName, target);
 		}
 		
 		request.getSession().setAttribute(ErrorResolver.ERRORS, null);

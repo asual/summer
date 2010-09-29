@@ -94,6 +94,11 @@ form div {
     margin: 0 0 10px;
 }
 
+form .image img {
+    border: 0;
+    display: block;
+}
+
 form .image span {
     display: block;
     padding: 2px;
@@ -101,11 +106,6 @@ form .image span {
 
 table {
     margin: 0 0 20px;
-    width: 100%;
-}
-
-table {
-    width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
     border: 0 none;
