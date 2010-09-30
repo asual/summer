@@ -73,10 +73,10 @@ public class BeanUtils implements BeanFactoryPostProcessor {
     public static Object getBean(String name) {
         return beanFactory.getBean(name);
     }
-
-	@Override
+    
 	public void postProcessBeanFactory(
 			ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		BeanUtils.beanFactory = beanFactory;
 	}
+	
 }

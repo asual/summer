@@ -47,7 +47,17 @@
                 value="${errors.get(cc.formName).message}" styleClass="error" />
         </ui:fragment>
         
-        <ui:fragment rendered="${empty cc.attrs.type or not cc.attrs.type.matches('hidden|submit|reset|checkbox|radio')}">
+        <ui:fragment rendered="${not empty cc.attrs.type and cc.attrs.type.matches('file')}">111
+            <input id="_${cc.formId}" name="_${cc.formId}" value="" type="hidden" />
+            <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
+                <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
+            </ui:fragment>
+            ${cc.renderer.beginElement(cc, 'input')}
+            <h:outputText rendered="${not empty cc.formId and not empty errors.get(cc.formId)}"
+                value="${errors.get(cc.formId).message}" styleClass="error" />
+        </ui:fragment>
+                
+        <ui:fragment rendered="${empty cc.attrs.type or not cc.attrs.type.matches('hidden|submit|reset|checkbox|radio|file')}">222
             <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
                 <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
             </ui:fragment>

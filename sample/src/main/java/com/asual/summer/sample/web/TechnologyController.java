@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.asual.summer.core.ResponseFormat;
+import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
@@ -64,7 +65,7 @@ public class TechnologyController {
 
     @RequestMapping(value="/{value}", method=RequestMethod.PUT)
     public ModelAndView merge(@Valid @ModelAttribute Technology technology) {
-    	technology.merge();
+    	RequestUtils.mergeProperties(technology, Technology.find(technology.getValue())).merge();
         return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
     }
     
