@@ -144,7 +144,7 @@ public class ComponentRenderer extends Renderer {
         		RequestUtils.contextRelative(action, Boolean.valueOf(getAttrValue(component, "dataContextRelative"))));
         	
         	String method = getAttrValue(component, "method");
-        	attrs.put("method", RequestUtils.isMethodBrowserSupported(method) ? (StringUtils.isEmpty(method) ? "get" : method) : "post");
+        	attrs.put("method", StringUtils.isEmpty(method) ? "get" : (RequestUtils.isMethodBrowserSupported(method) ? method : "post"));
         	
         	String enctype = getAttrValue(component, "enctype");
         	attrs.put("enctype", StringUtils.isEmpty(enctype) ? "application/x-www-form-urlencoded" : enctype);
