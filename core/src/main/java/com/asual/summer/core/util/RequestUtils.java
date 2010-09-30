@@ -139,7 +139,7 @@ public class RequestUtils {
 		PropertyDescriptor[] sourcePds = BeanUtils.getPropertyDescriptors(source.getClass());
 		for (PropertyDescriptor sourcePd : sourcePds) {
 			String name = sourcePd.getName();
-			if (getRequest().getParameter(name) == null && getRequest().getParameter("_" + name) != null) {
+			if (getRequest().getParameter(name) == null && getRequest().getParameter("_" + name) == null) {
 				ignoreList.add(name);
 			}
 		}
