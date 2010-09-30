@@ -186,7 +186,7 @@ public final class FacesDecorator implements TagDecorator {
     			} else if ("data-label".equals(attr.getQName()) && !StringUtils.isEmpty(attr.getValue())) {
     				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
     				name = qName;
-    			} else if ("input".equals(qName) && "type".equals(attr.getQName()) && "hidden".equals(attr.getValue())) {
+    			} else if ("input".equals(qName) && "type".equals(attr.getQName()) && attr.getValue().matches("hidden|reset|submit")) {
     				name = qName;
     			}
     	    	if (attr.getQName().startsWith("data-") && !attr.getQName().equals("data-rendered")) {
