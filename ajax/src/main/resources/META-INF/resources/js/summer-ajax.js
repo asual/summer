@@ -22,27 +22,34 @@
             
         	$('*', scope).filter('[data-ajax]').each(function() {
 
-                var url, event, data,
+                var url, 
+                	event = 'click',
 	                o = $(this), 
+	                re = /^(get|post)$/i,
 	                ids = o.attr('data-ajax'),
+	                data = o.attr('data-ajax-params'),
 	                method = o.attr('data-ajax-method'),
 	                regions = $('#' + ids.replace(/:/g, '\\:').split(' ').join(', #'));
-            
+                
 	            if (o.is('a')) {
 	                url = o.attr('href');
-	                event = 'click';
-	            } else if (o.is('button')) {
+	                method = method ? method : 'get';
+	                if (!re.test(method)) {
+	                	data += (data ? '&' : '') + '_method=' + method;
+	                }
+                } else if (o.is('button, input, select, textarea')) {
 	                var form = o.parents('form');
 	                url = form.attr('action');
-	                event = 'click';
-	                data = form.serialize();
-	            } else if (o.is('input, select, textarea')) {
-	                var form = o.parents('form');
-	                url = form.attr('action');
-	                event = 'blur';
-	                data = form.serialize();	            	
+	                data = (data ? data + '&' : '') + form.serialize();	            	
+	                method = method ? method : (form.attr('method') ? form.attr('method') : 'post');
+	                if (!re.test(method)) {
+	                	data = data.replace(/(^|&)_method=[^&]*(&|$)/, '$1_method=' + method + '$2')
+	                }
+	                if (!o.is('button')) {
+		                event = 'blur';
+	                }
 	            }
-	            
+
 	            if (o.attr('data-ajax-url')) {
 	            	url = o.attr('data-ajax-url');
 	            }
@@ -55,7 +62,7 @@
             		
                     $.ajax({
                         url: url,
-                        type: method ? method : 'get',
+                        type: re.test(method) ? method : 'post',
                         data: 'javax.faces.partial.ajax=true&javax.faces.partial.render=' + ids + (data ? '&' + data : ''),
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader('Faces-Request', 'partial/ajax');
