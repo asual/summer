@@ -139,8 +139,7 @@ public class ComponentRenderer extends Renderer {
         if ("form".equals(name)) {
 
         	String action = getAttrValue(component, "action");
-        	attrs.put("action", StringUtils.isEmpty(action) ? RequestUtils.getRequestURI() : 
-        		RequestUtils.contextRelative(action, Boolean.valueOf(getAttrValue(component, "dataContextRelative"))));
+        	attrs.put("action", StringUtils.isEmpty(action) ? RequestUtils.getRequestURI() : RequestUtils.contextRelative(action, true));
         	
         	String method = getAttrValue(component, "method");
         	attrs.put("method", StringUtils.isEmpty(method) ? "get" : (RequestUtils.isMethodBrowserSupported(method) ? method : "post"));
@@ -160,6 +159,7 @@ public class ComponentRenderer extends Renderer {
 				// TODO: Handle the case where only name is provided instead of an id
 	        	attrs.put("name", component.getFormId());
 			}
+			
 			Map<String, Map<String, Object>> errors = 
 				(Map<String, Map<String, Object>>) RequestUtils.getAttribute("errors");
         	attrs.put("value", errors != null && errors.get(component.getFormId()) != null ? 
