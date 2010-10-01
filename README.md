@@ -1,20 +1,23 @@
-# Summer - An HTML5 Presentation Layer Library for Java
+# Summer - The HTML5 Library for Java
 
-Summer is an HTML5 presentation layer library for modern Java applications. It enforces a 
-set of best practices that will let you produce neat applications with great look and feel. 
-Summer streamlines the development process while preserving the complete control over the 
-application. It's designed for modularity and extensibility.
+Summer is the next generation presentation layer library for Spring MVC. It provides the world's best HTML5 template 
+engine and takes advantage of many Spring 3 features like content negotiation, REST support, resource handling and 
+various others. In addition out of the box it supports a number of Java EE 6 specifications like Servlet 3.0, JPA 2, 
+JSR 303 and EL 2.2.
 
-## Start a Project
+Summer enables the creation of true web modules that package every required static resource. It also makes AJAX 
+really simple by providing partial page rendering capabilities. Support for HTML5 WebSockets is available through the 
+popular Atmosphere framework.
+
+## Quickstart
 
 You can create and run a blank Summer project by using the following commands:
 
     mvn archetype:generate -DarchetypeCatalog=http://www.asual.com/maven/content/groups/public/archetype-catalog.xml
-    cd sample
     mvn eclipse:eclipse -DdownloadSources=true
     mvn jetty:run
     
-## Add the dependencies manually
+## Download artifacts manually
 
 In order to use Summer you need the following records to your Maven 2 POM file:
 
