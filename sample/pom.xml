@@ -165,7 +165,7 @@
                     <instanceRoot>${project.build.directory}/glassfish</instanceRoot>
                     <port>8080</port>
                 </configuration>
-            </plugin>           
+            </plugin>
         </plugins>
     </build>
     
