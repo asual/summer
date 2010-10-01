@@ -14,14 +14,14 @@
     <parent>
         <groupId>com.asual.summer</groupId>
         <artifactId>summer-parent</artifactId>
-        <version>1.0.0.M1-SNAPSHOT</version>
+        <version>1.0.0.M1</version>
     </parent>
     
     <dependencies>
         <dependency>
             <groupId>com.asual.summer</groupId>
             <artifactId>summer-el</artifactId>
-            <version>1.0.0.M1-SNAPSHOT</version>
+            <version>1.0.0.M1</version>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
