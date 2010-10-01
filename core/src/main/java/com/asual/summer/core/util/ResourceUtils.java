@@ -14,9 +14,13 @@
 
 package com.asual.summer.core.util;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.jar.Manifest;
+
+import javax.servlet.ServletContext;
 
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -109,8 +113,19 @@ public class ResourceUtils {
 		return stylesheetResources;
 	}
     
+    public static String getManifestAttribute(String key) {
+        try {
+        	ServletContext servletContext = RequestUtils.getRequest().getSession().getServletContext();
+            Manifest mf = new Manifest();
+			mf.read(new FileInputStream(servletContext.getResource("/META-INF/MANIFEST.MF").getFile()));
+	        return mf.getMainAttributes().getValue(key);
+		} catch (Exception e) {
+			return "";
+		}
+    }
+    
     public static boolean exists(String name) {
-    	return BeanUtils.getBeanOfType(MiscUtils.class).getClass().getClassLoader().getResource(name) != null;
+    	return ResourceUtils.class.getClassLoader().getResource(name) != null;
     }
 
 	@SuppressWarnings("unchecked")

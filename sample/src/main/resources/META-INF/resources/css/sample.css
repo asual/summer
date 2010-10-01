@@ -71,18 +71,22 @@ section p, section ul {
     margin: 0 0 20px;
 }
 
-form fieldset {
+fieldset {
     margin: 0 0 15px;
     padding: 0 20px;
     border: 1px solid #999;
 }
 
-form fieldset legend {
+fieldset legend {
     font-weight: bold;
     font-size: 14px;
     margin: 0 0 0 -5px;
     padding: 0 4px;
     color: #666;
+}
+
+fieldset img {
+    margin: 0 0 10px;
 }
 
 form fieldset .fieldset {
@@ -92,22 +96,6 @@ form fieldset .fieldset {
 
 form div {
     margin: 0 0 10px;
-}
-
-form .image a {
-    display: block;
-    width: 128px;
-    height: 128px;
-    overflow: hidden;
-}
-
-form .image img {
-    border: 0;
-}
-
-form .image span {
-    display: block;
-    padding: 2px;
 }
 
 table {
@@ -183,15 +171,11 @@ table .even {
 }
 
 .view .image {
-    display: block;
-    width: 128px;
-    height: 128px;
-    overflow: hidden;
     float: left; 
     margin: 4px 24px 84px 0;
 }
 
-.button, .checkbox, .select, .text, .textarea {
+.button, .checkbox, .file, .select, .text, .textarea {
     display: block;
 }
 

@@ -13,24 +13,16 @@
             <input type="text" value="${technology.name}" size="48" data-label="Name:" />
             <input type="text" value="${technology.homepage}" size="48" data-label="Homepage:" />
             <input type="text" value="${technology.version}" size="16" data-label="Version:" />
-            <div id="file" class="image">
-                <div data-rendered="${not (empty technology.image or requestUtils.getParameter('image'))}">
-                    <span>Image:</span>
-                    <input type="hidden" value="${technology.imageEdit}" />
-                    <a href="/technology/add?image=true" data-ajax="file">
-                        <img src="data:${technology.image.contentType};base64,${objectUtils.encodeBase64(technology.image.bytes)}" 
-                            alt="${technology.name}" width="128" height="128" />
-                    </a>
-                </div>
-                <div data-rendered="${empty technology.image or requestUtils.getParameter('image')}">
-                    <input type="hidden" value="${!technology.imageEdit}" />
-                    <input type="file" value="${technology.image}" data-label="Image:" />
-                </div>
-            </div>
         </fieldset>
-
+        
         <fieldset data-label="Description:">
             <textarea cols="60" rows="10" data-error="true">${technology.description}</textarea>
+        </fieldset>
+        
+        <fieldset data-label="Image:">
+            <img src="data:${technology.image.contentType};base64,${objectUtils.encodeBase64(technology.image.bytes)}" 
+                alt="${technology.name}" width="128" height="128" data-rendered="${not empty technology.image}" />
+            <input type="file" value="${technology.image}" data-error="true" />
         </fieldset>
         
         <fieldset data-label="Licenses:">
