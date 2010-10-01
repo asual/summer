@@ -120,7 +120,6 @@ public class ComponentRenderer extends Renderer {
     	if (!isComponentWrapper(component)) {
 	        writer.endElement(getComponentTag(component));
     	}
-    	writer.write("\n");
     }
     
     public void beginElement(Component component, String name) throws IOException {
@@ -158,6 +157,7 @@ public class ComponentRenderer extends Renderer {
 	        		attrs.put("checked", "checked");
 	        	}
 			} else {
+				// TODO: Handle the case where only name is provided instead of an id
 	        	attrs.put("name", component.getFormId());
 			}
 			Map<String, Map<String, Object>> errors = 
@@ -192,7 +192,7 @@ public class ComponentRenderer extends Renderer {
         ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
         writer.write("</");
         writer.write(name);
-        writer.write(">\n");
+        writer.write(">");
     }
     
     protected void writeAttribute(ResponseWriter writer, UIComponent component, String name, Object value) throws IOException {

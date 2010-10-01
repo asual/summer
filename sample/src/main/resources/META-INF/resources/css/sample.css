@@ -94,9 +94,15 @@ form div {
     margin: 0 0 10px;
 }
 
+form .image a {
+    display: block;
+    width: 128px;
+    height: 128px;
+    overflow: hidden;
+}
+
 form .image img {
     border: 0;
-    display: block;
 }
 
 form .image span {
@@ -177,6 +183,10 @@ table .even {
 }
 
 .view .image {
+    display: block;
+    width: 128px;
+    height: 128px;
+    overflow: hidden;
     float: left; 
     margin: 4px 24px 84px 0;
 }

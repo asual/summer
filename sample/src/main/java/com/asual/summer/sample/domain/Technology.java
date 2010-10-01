@@ -35,6 +35,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -97,6 +98,9 @@ public class Technology implements Serializable {
 
     @Lob
     private Image image;
+
+    @Transient
+    private boolean imageEdit;
     
     public Technology() {
     }
@@ -184,6 +188,14 @@ public class Technology implements Serializable {
         this.image = image;
     }
     
+    public boolean isImageEdit() {
+        return imageEdit;
+    }
+    
+    public void setImageEdit(boolean imageEdit) {
+        this.imageEdit = imageEdit;
+    }
+    
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -214,6 +226,9 @@ public class Technology implements Serializable {
     
     @Transactional
     public Technology merge() {
+    	if (!imageEdit) {
+    		setImage(find(value).getImage());
+    	}
         Technology merged = entityManager.merge(this);
         entityManager.flush();
         return merged;
@@ -292,6 +307,10 @@ public class Technology implements Serializable {
         
         public void setBytes(byte[] bytes) {
             this.bytes = bytes;
+        }
+        
+        public String getBytesAsString() { 
+            return new String(bytes);
         }
         
 		public int hashCode() {

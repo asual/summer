@@ -14,10 +14,8 @@
 
 package com.asual.summer.sample.web;
 
-import java.io.IOException;
 import java.util.Arrays;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -30,11 +28,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.asual.summer.core.ResponseFormat;
-import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
-import com.asual.summer.sample.domain.Technology.Image;
 
 /**
  * 
@@ -46,7 +42,7 @@ import com.asual.summer.sample.domain.Technology.Image;
 public class TechnologyController {
 	
     @RequestMapping(method=RequestMethod.GET)
-    @ResponseFormat({"json", "xml"})
+    @ResponseFormat("*")
     public ModelAndView list() {
         return new ModelAndView("/list", new ModelMap(Technology.list()));
     }
@@ -58,14 +54,14 @@ public class TechnologyController {
     }
     
     @RequestMapping(value="/{value}", method=RequestMethod.GET)
-    @ResponseFormat("*")
+    @ResponseFormat({"json", "xml"})
     public ModelAndView view(@PathVariable("value") String value) {
         return new ModelAndView("/view", new ModelMap(Technology.find(value)));
     }
 
     @RequestMapping(value="/{value}", method=RequestMethod.PUT)
     public ModelAndView merge(@Valid @ModelAttribute Technology technology) {
-    	RequestUtils.mergeProperties(technology, Technology.find(technology.getValue())).merge();
+    	technology.merge();
         return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
     }
     
@@ -75,32 +71,18 @@ public class TechnologyController {
         return new ModelAndView(new RedirectView("/technology", true));
     }
     
-    @RequestMapping("/{value}/edit")
-    public ModelAndView edit(@PathVariable("value") String value) {
-    	ModelMap model = new ModelMap();
-    	model.addAllAttributes(Arrays.asList(Technology.find(value), License.list(), Status.list()));
-        return new ModelAndView("/edit", model);
-    }
-
-    @RequestMapping("/{value}/image")
-    public void image(@PathVariable("value") String value, HttpServletResponse response) throws IOException {
-		Image image = Technology.find(value).getImage();
-		if (image != null) {
-			response.setContentLength(image.getBytes().length);
-			response.setContentType(image.getContentType());
-			response.getOutputStream().write(image.getBytes());
-		} else {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-		}
-		response.getOutputStream().flush();
-		response.getOutputStream().close();
-    }
-    
     @RequestMapping("/add")
     public ModelAndView add() {
         ModelMap model = new ModelMap();
     	model.addAllAttributes(Arrays.asList(new Technology(), License.list(), Status.list()));
         return new ModelAndView("/add", model);
+    }
+    
+    @RequestMapping("/{value}/edit")
+    public ModelAndView edit(@PathVariable("value") String value) {
+    	ModelMap model = new ModelMap();
+    	model.addAllAttributes(Arrays.asList(Technology.find(value), License.list(), Status.list()));
+        return new ModelAndView("/edit", model);
     }
     
 }

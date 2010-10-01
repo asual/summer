@@ -14,16 +14,12 @@
 
 package com.asual.summer.core.util;
 
-import java.beans.PropertyDescriptor;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
@@ -132,19 +128,6 @@ public class RequestUtils {
 
     public static Object getAttribute(String name) {
         return getRequest().getAttribute(name);
-    }
-    
-    public static <T> T mergeProperties(T source, T target) {
-		List<String> ignoreList = new ArrayList<String>();
-		PropertyDescriptor[] sourcePds = BeanUtils.getPropertyDescriptors(source.getClass());
-		for (PropertyDescriptor sourcePd : sourcePds) {
-			String name = sourcePd.getName();
-			if (getRequest().getParameter(name) == null && getRequest().getParameter("_" + name) == null) {
-				ignoreList.add(name);
-			}
-		}
-        BeanUtils.copyProperties(source, target, ignoreList.toArray(new String[] {}));
-        return target;
     }
     
     public static String contextRelative(String uri, boolean contextRelative) {

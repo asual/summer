@@ -8,7 +8,8 @@
     <div class="view">
 
         <p data-rendered="${not empty technology.image}" class="image">
-            <img src="/technology/${technology.value}/image" alt="${technology.name}" width="128" height="128" />
+            <img src="data:${technology.image.contentType};base64,${objectUtils.encodeBase64(technology.image.bytes)}" 
+                alt="${technology.name}" width="128" height="128" />
         </p>
         
         <h1>${technology.name}</h1>

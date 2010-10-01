@@ -16,12 +16,16 @@
             <div id="file" class="image">
                 <div data-rendered="${not (empty technology.image or requestUtils.getParameter('image'))}">
                     <span>Image:</span>
-                    <a href="/technology/${technology.value}/add?image=true" data-ajax="file">
-                        <img src="/technology/${technology.value}/image" alt="${technology.name}" width="128" height="128" />
+                    <input type="hidden" value="${technology.imageEdit}" />
+                    <a href="/technology/add?image=true" data-ajax="file">
+                        <img src="data:${technology.image.contentType};base64,${objectUtils.encodeBase64(technology.image.bytes)}" 
+                            alt="${technology.name}" width="128" height="128" />
                     </a>
                 </div>
-                <input type="file" value="${technology.image}" data-label="Image:" 
-                    data-rendered="${empty technology.image or requestUtils.getParameter('image')}" />
+                <div data-rendered="${empty technology.image or requestUtils.getParameter('image')}">
+                    <input type="hidden" value="${!technology.imageEdit}" />
+                    <input type="file" value="${technology.image}" data-label="Image:" />
+                </div>
             </div>
         </fieldset>
 

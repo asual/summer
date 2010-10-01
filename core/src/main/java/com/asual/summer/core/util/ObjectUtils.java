@@ -22,6 +22,7 @@ import java.io.ObjectOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,7 +45,7 @@ public class ObjectUtils {
         }
     }
     
-    public static byte[] serialize(Object obj) throws IOException {
+    public static byte[] encode(Object obj) throws IOException {
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	    GZIPOutputStream gz = new GZIPOutputStream(baos);
 	    ObjectOutputStream oos = new ObjectOutputStream(gz);
@@ -52,16 +53,12 @@ public class ObjectUtils {
 	    oos.close();
 	    return baos.toByteArray();
     }
-    
-    public static String serializeToString(Object obj) throws IOException {
-	    return new String(serialize(obj), "ISO-8859-1");
-    }
 
-    public static String serializeToBase64(Object obj) throws IOException {
-	    return new String(Base64Coder.encode(serialize(obj)));
+    public static String encodeBase64(byte[] bytes) throws IOException {
+    	return Base64.encodeBase64String(bytes);
     }
     
-    public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+    public static Object decode(byte[] bytes) throws IOException, ClassNotFoundException {
     	ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
     	GZIPInputStream gz = new GZIPInputStream(bais); 
         ObjectInputStream ois = new ObjectInputStream(gz);
@@ -70,12 +67,8 @@ public class ObjectUtils {
         return obj;
     }
     
-    public static Object deserializeFromString(String str) throws IOException, ClassNotFoundException {
-    	return deserialize(str.getBytes("ISO-8859-1"));
-    }
-    
-    public static Object deserializeFromBase64(String str) throws IOException, ClassNotFoundException {
-    	return deserialize(Base64Coder.decode(str));
+    public static byte[] deserializeFromBase64(String str) throws IOException, ClassNotFoundException {
+    	return Base64.decodeBase64(str);
     }
 
 }

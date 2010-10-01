@@ -148,7 +148,6 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.0.0.M1</version>
                 <configuration>
-                    <jettyConfig>${basedir}/src/test/resources/jetty.xml</jettyConfig>
                     <webAppConfig>
                         <jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
                     </webAppConfig>
