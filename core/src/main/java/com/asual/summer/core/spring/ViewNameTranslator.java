@@ -17,15 +17,16 @@ package com.asual.summer.core.spring;
 import java.net.URL;
 import java.util.List;
 
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator;
 
 import com.asual.summer.core.ViewNotFoundException;
 import com.asual.summer.core.util.BeanUtils;
+import com.asual.summer.core.util.ClassUtils;
 import com.asual.summer.core.util.RequestUtils;
 
 /**
@@ -33,19 +34,19 @@ import com.asual.summer.core.util.RequestUtils;
  * @author Rostislav Hristov
  *
  */
-@Component("viewNameTranslator")
+@Named("viewNameTranslator")
 public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
 	
 	private final static String INDEX = "/index";
 	
 	private String findViewName(String prefix, String path, String suffix, boolean greedy) {
 
-    	URL uri = getClass().getClassLoader().getResource(prefix.replaceAll("^/", "") + path + suffix);
+    	URL uri = ClassUtils.getClassLoader().getResource(prefix.replaceAll("^/", "") + path + suffix);
         if (uri != null) {
             return path;
         }
         
-        uri = getClass().getClassLoader().getResource(prefix.replaceAll("^/", "") + path + INDEX + suffix);
+        uri = ClassUtils.getClassLoader().getResource(prefix.replaceAll("^/", "") + path + INDEX + suffix);
         if (uri != null) {
             return path + INDEX;
         }

@@ -19,10 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -39,7 +39,7 @@ import com.asual.summer.core.util.StringUtils;
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class ErrorResolver implements HandlerExceptionResolver {
 	
 	public static final String ERRORS = "com.asual.summer.core.ErrorResolver.ERRORS";

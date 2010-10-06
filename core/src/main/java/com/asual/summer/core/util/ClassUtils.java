@@ -19,7 +19,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
+import javax.inject.Named;
+
 import org.springframework.util.ReflectionUtils;
 
 /**
@@ -27,7 +28,7 @@ import org.springframework.util.ReflectionUtils;
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class ClassUtils {
     
 	public static boolean isInstance(String clazz, Object obj) {
@@ -111,6 +112,14 @@ public class ClassUtils {
             }
         }
         return null;
+    }
+    
+    public static ClassLoader getClassLoader() {
+    	if (RequestUtils.getRequest() != null) {
+    		return RequestUtils.getRequest().getClass().getClassLoader();
+    	} else {
+    		return ClassUtils.class.getClassLoader();
+    	}
     }
     
 }

@@ -51,19 +51,23 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 						boolean keyStored = false;
 						if (MESSAGES.equals(bs)) {
 							elContext.setPropertyResolved(true);
-							return ResourceUtils.getMessage(prop);
+							String messageResult = ResourceUtils.getMessage(prop);
+							return "".equals(messageResult) ? "{" + prop + "}" : messageResult;
 						} else if (PROPERTIES.equals(bs)) {
 							elContext.setPropertyResolved(true);
-							return ResourceUtils.getProperty(prop);
+							Object propertyResult = ResourceUtils.getProperty(prop);
+							return (propertyResult instanceof String && "".equals(propertyResult)) ? "{" + prop + "}" : propertyResult;
 						} else if (bs.startsWith("{") && bs.endsWith("}") || (keyStored = keyHolder.get() != null)) {
 							elContext.setPropertyResolved(true);
 							if (keyStored) {
 								bs = "{" + keyHolder.get() + "}";
 							}
 							keyHolder.set(bs.substring(1, bs.length() - 1) + "." + prop);
-							String message = ResourceUtils.getMessage(keyHolder.get());
+							String messageResult = ResourceUtils.getMessage(keyHolder.get());
+							String message = "".equals(messageResult) ? "{" + prop + "}" : messageResult;
 							if (message.startsWith("{") && message.endsWith("}")) {
-								return ResourceUtils.getProperty(keyHolder.get());
+								Object propertyResult = ResourceUtils.getProperty(keyHolder.get());
+								return (propertyResult instanceof String && "".equals(propertyResult)) ? "{" + prop + "}" : propertyResult;
 							} else {
 								return message;
 							}

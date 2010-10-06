@@ -17,6 +17,7 @@ package com.asual.summer.core.view;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,7 +25,6 @@ import org.codehaus.jackson.JsonGenerator.Feature;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.springframework.stereotype.Component;
 
 import com.asual.summer.core.util.StringUtils;
 
@@ -33,7 +33,7 @@ import com.asual.summer.core.util.StringUtils;
  * @author Rostislav Hristov
  *
  */
-@Component("json")
+@Named("json")
 public class JSONView extends AbstractResponseView {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";

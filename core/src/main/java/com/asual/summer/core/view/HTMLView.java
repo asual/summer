@@ -26,11 +26,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
 
@@ -41,7 +41,7 @@ import com.asual.summer.core.ErrorResolver;
  * @author Rostislav Hristov
  *
  */
-@Component("html")
+@Named("html")
 public class HTMLView extends InternalResourceView implements ResponseView {
 
 	private Lifecycle facesLifecycle;

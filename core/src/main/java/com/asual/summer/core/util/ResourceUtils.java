@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.jar.Manifest;
 
+import javax.inject.Named;
 import javax.servlet.ServletContext;
 
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.OrderComparator;
-import org.springframework.stereotype.Component;
 
 import com.asual.summer.core.resource.MessageResource;
 import com.asual.summer.core.resource.PropertyResource;
@@ -37,7 +37,7 @@ import com.asual.summer.core.resource.StylesheetResource;
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class ResourceUtils {
 
 	private static List<MessageResource> messageResources = null;
@@ -46,11 +46,11 @@ public class ResourceUtils {
 	private static List<ScriptResource> scriptResources = null;
 	
 	public static String getMessage(String key) {
-    	return ResourceUtils.getMessage(key, new Object[] {}, LocaleContextHolder.getLocale());
+    	return getMessage(key, new Object[] {}, LocaleContextHolder.getLocale());
     }
     
     public static String getMessage(String key, Locale locale) {
-    	return ResourceUtils.getMessage(key, new Object[] {}, locale);
+    	return getMessage(key, new Object[] {}, locale);
     }
 
 	public static String getMessage(String key, Object[] args) {
@@ -70,7 +70,7 @@ public class ResourceUtils {
 			}
 		}    	
 		
-	    return "{" + key + "}";
+	    return "";
 	}
 
 	public static Object getProperty(String key) {
@@ -96,7 +96,7 @@ public class ResourceUtils {
 	        }
 		}
 		
-	    return "{" + key + "}";
+	    return "";
 	}
 	
 	public static List<ScriptResource> getScripts() {

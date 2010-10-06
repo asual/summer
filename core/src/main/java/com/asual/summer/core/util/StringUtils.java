@@ -18,16 +18,17 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
 
+import javax.inject.Named;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.WordUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * 
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class StringUtils {
 
 	private static String ENCODING = "UTF-8";

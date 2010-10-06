@@ -18,21 +18,22 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.stereotype.Component;
 
 /**
  * 
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class BeanUtils implements BeanFactoryPostProcessor {
 	
-	@Autowired
+	@Inject
 	private static ConfigurableListableBeanFactory beanFactory;
 	
 	public static <T> T getBeanOfType(Class<T> clazz) {

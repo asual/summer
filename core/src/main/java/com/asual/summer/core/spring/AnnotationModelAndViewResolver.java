@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
 import org.springframework.ui.ExtendedModelMap;
@@ -48,7 +48,7 @@ import com.asual.summer.core.view.ResponseView;
  */
 public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 
-	@Autowired
+	@Inject
 	private ViewResolverConfiguration viewResolverConfiguration;
 	
 	private static final UrlPathHelper urlPathHelper = new UrlPathHelper();

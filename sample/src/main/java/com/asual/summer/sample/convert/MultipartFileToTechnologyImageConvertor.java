@@ -17,10 +17,11 @@ package com.asual.summer.sample.convert;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Named;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.asual.summer.sample.domain.Technology.Image;
@@ -30,7 +31,7 @@ import com.asual.summer.sample.domain.Technology.Image;
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class MultipartFileToTechnologyImageConvertor implements Converter<MultipartFile, Image> {
 
     private final Log logger = LogFactory.getLog(getClass());

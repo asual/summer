@@ -14,10 +14,11 @@
 
 package com.asual.summer.sample.convert;
 
+import javax.inject.Named;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
 import com.asual.summer.core.util.StringUtils;
 import com.asual.summer.sample.domain.License;
@@ -27,7 +28,7 @@ import com.asual.summer.sample.domain.License;
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class StringToLicenseConvertor implements Converter<String, License> {
     
     private final Log logger = LogFactory.getLog(getClass());

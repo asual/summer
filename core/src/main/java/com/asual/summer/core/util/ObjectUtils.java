@@ -22,15 +22,16 @@ import java.io.ObjectOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import javax.inject.Named;
+
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.stereotype.Component;
 
 /**
  * 
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class ObjectUtils {
 
     public static Object convert(String value) {

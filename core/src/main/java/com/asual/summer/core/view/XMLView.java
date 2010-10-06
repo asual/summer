@@ -25,10 +25,9 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.stereotype.Component;
 
 import com.asual.summer.core.util.StringUtils;
 import com.thoughtworks.xstream.XStream;
@@ -48,7 +47,7 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
  * @author Rostislav Hristov
  *
  */
-@Component("xml")
+@Named("xml")
 public class XMLView extends AbstractResponseView {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/xml";

@@ -35,6 +35,7 @@ import javax.faces.application.ProjectStage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.ResourceResolver;
 
+import com.asual.summer.core.util.ClassUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 
@@ -50,7 +51,7 @@ public class FacesResourceResolver extends ResourceResolver {
 	public URL resolveUrl(String path) {
     	try {
 			if (!resources.containsKey(path)) {
-	        	URL url = getClass().getClassLoader().getResource(path.replaceAll("^/", ""));
+	        	URL url = ClassUtils.getClassLoader().getResource(path.replaceAll("^/", ""));
 		    	resources.put(path, new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(url)));
 			}
 			return resources.get(path);

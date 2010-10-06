@@ -14,10 +14,11 @@
 
 package com.asual.summer.sample.convert;
 
+import javax.inject.Named;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Component;
 
 import com.asual.summer.core.util.StringUtils;
 import com.asual.summer.sample.domain.Status;
@@ -27,7 +28,7 @@ import com.asual.summer.sample.domain.Status;
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class StringToStatusConvertor implements Converter<String, Status> {
     
     private final Log logger = LogFactory.getLog(getClass());

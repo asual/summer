@@ -18,14 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
+import javax.inject.Named;
 
 /**
  * 
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class MapUtils {
 
 	public static List<Object> getKeysFromValue(Map<?, ?> m, Object value) {

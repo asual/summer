@@ -18,14 +18,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
+import javax.inject.Named;
 
 /**
  * 
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class ArrayUtils {
 	
     public static <T> T first(T[] obj) {

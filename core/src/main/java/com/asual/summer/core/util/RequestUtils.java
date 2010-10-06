@@ -18,9 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
 import com.asual.summer.core.RequestFilter;
@@ -30,7 +30,7 @@ import com.asual.summer.core.RequestFilter;
  * @author Rostislav Hristov
  *
  */
-@Component
+@Named
 public class RequestUtils {
 
     public static HttpServletRequest getRequest() {
