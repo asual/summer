@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -36,12 +37,12 @@ import org.springframework.util.ResourceUtils;
  */
 public class MessageResource extends AbstractResource {
 
-	private ResourceBundleMessageSource rbms;
+	private ReloadableResourceBundleMessageSource rbms;
     private final Log logger = LogFactory.getLog(getClass());
 	
 	public MessageResource() {
 		setOrder(Ordered.HIGHEST_PRECEDENCE);
-		rbms = new ResourceBundleMessageSource();
+		rbms = new ReloadableResourceBundleMessageSource();
 	}
 
 	public String getMessage(String code, Object args[], Locale locale) {
@@ -58,14 +59,16 @@ public class MessageResource extends AbstractResource {
 		List<String> basenames = new ArrayList<String>();
 		for (String location : locations) {
 			try {
-				Resource[] wildcard = resolver.getResources(location + "*.properties");
+				Resource[] wildcard = (Resource[]) ArrayUtils.addAll(
+						resolver.getResources(location + "*.properties"), 
+						resolver.getResources(location + "*.xml"));
 				if (wildcard != null && wildcard.length > 0) {
 					for (Resource resource : wildcard) {
 						URL url = resource.getURL();
 						boolean isJar = ResourceUtils.isJarURL(url);
-						String basename = url.getFile()
-							.split(isJar ? ResourceUtils.JAR_URL_SEPARATOR : "/classes/")[1].replaceAll("/", ".")
-							.replaceAll("(_\\w+){0,3}\\.properties", "");
+						String basename = "classpath:" + url.getFile()
+							.split(isJar ? ResourceUtils.JAR_URL_SEPARATOR : "/classes/")[1]
+							.replaceAll("(_\\w+){0,3}\\.(properties|xml)", "");
 						if (!basenames.contains(basename)) {
 							if (isJar) {
 								basenames.add(basename);
@@ -78,7 +81,8 @@ public class MessageResource extends AbstractResource {
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 			}
-		}		
+		}
+		rbms.clearCache();
 		rbms.setBasenames(basenames.toArray(new String[basenames.size()]));
 	}
 	
