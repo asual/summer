@@ -14,24 +14,24 @@
     <parent>
         <groupId>com.asual.summer</groupId>
         <artifactId>summer-parent</artifactId>
-        <version>1.0.0.M1</version>
+        <version>1.0.0.M2-SNAPSHOT</version>
     </parent>
     
     <dependencies>
         <dependency>
             <groupId>com.asual.summer</groupId>
             <artifactId>summer-ajax</artifactId>
-            <version>1.0.0.M1</version>
+            <version>1.0.0.M2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.asual.summer</groupId>
             <artifactId>summer-atmosphere</artifactId>
-            <version>1.0.0.M1</version>
+            <version>1.0.0.M2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.asual.summer</groupId>
             <artifactId>summer-core</artifactId>
-            <version>1.0.0.M1</version>
+            <version>1.0.0.M2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -142,6 +142,37 @@
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <packaging>jar</packaging>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <groupId>${project.groupId}</groupId>
+                            <version>${project.version}</version>
+                            <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>

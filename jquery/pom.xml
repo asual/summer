@@ -14,14 +14,14 @@
     <parent>
         <groupId>com.asual.summer</groupId>
         <artifactId>summer-parent</artifactId>
-        <version>1.0.0.M1</version>
+        <version>1.0.0.M2-SNAPSHOT</version>
     </parent>
     
     <dependencies>
         <dependency>
             <groupId>com.asual.summer</groupId>
             <artifactId>summer-core</artifactId>
-            <version>1.0.0.M1</version>
+            <version>1.0.0.M2-SNAPSHOT</version>
         </dependency>
     </dependencies>
     
