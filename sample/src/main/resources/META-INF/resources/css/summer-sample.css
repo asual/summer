@@ -1,5 +1,6 @@
-html, body {
-    background: #f5f8fb;
+html {
+    height: 100%;
+    background: #f5f8fb url(../img/bg.jpg) repeat-x fixed bottom;
 }
 
 body, button, input, select, textarea {
@@ -13,7 +14,6 @@ body, header, footer, section, p {
 }
 
 h1 {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
     font-weight: normal;
     text-shadow: #fff 0px 1px 0px;
     font-size: 32px;
@@ -21,7 +21,6 @@ h1 {
 }
 
 h2 {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
     font-weight: normal;
     text-shadow: #fff 0px 1px 0px;
     font-size: 18px;
@@ -36,7 +35,7 @@ a:hover {
 }
 
 header, footer, section {
-    width: 860px;
+    width: 892px;
 }
 
 header {
