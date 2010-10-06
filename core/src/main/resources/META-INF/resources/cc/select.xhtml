@@ -37,7 +37,7 @@
         ${cc.renderer.endElement(cc, 'select')}
 
         <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.formId)}"
-            value="${errors.get(cc.formId).message}" styleClass="error" />
+            value="${errors.get(cc.formId).message}" styleClass="error" escape="false" />
 
     </cs:implementation>
     

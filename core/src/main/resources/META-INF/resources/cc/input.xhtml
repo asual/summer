@@ -44,7 +44,7 @@
                 <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
             </ui:fragment>
             <h:outputText rendered="${not empty cc.formName and not empty errors.get(cc.formName)}"
-                value="${errors.get(cc.formName).message}" styleClass="error" />
+                value="${errors.get(cc.formName).message}" styleClass="error" escape="false" />
         </ui:fragment>
         
         <ui:fragment rendered="${empty cc.attrs.type or not cc.attrs.type.matches('hidden|submit|reset|checkbox|radio')}">
@@ -53,7 +53,7 @@
             </ui:fragment>
             ${cc.renderer.beginElement(cc, 'input')}
             <h:outputText rendered="${not empty cc.formId and not empty errors.get(cc.formId)}"
-                value="${errors.get(cc.formId).message}" styleClass="error" />
+                value="${errors.get(cc.formId).message}" styleClass="error" escape="false" />
         </ui:fragment>
             
     </cs:implementation>
