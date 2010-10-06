@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     
-    <title>${messages.page.welcome}</title>
+    <title>${empty resourceUtils.getMessage('page.welcome') ? 'Welcome to Summer!' : messages.page.welcome}</title>
         
-    <h1>${messages.page.welcome}</h1>
+    <h1>${empty resourceUtils.getMessage('page.welcome') ? 'Welcome to Summer!' : messages.page.welcome}</h1>
     
 </html>
