@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html
-    xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html>
     
-    <title>${classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException') ? messages.page.notfound : messages.page.error}</title>
+    <title>${classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException') ? (empty resourceUtils.getMessage('page.notfound') ? 'Not Found.' : messages.page.notfound) : (empty resourceUtils.getMessage('page.error') ? 'Error!' : messages.page.error)}</title>
 
-    <h1>${classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException') ? messages.page.notfound : messages.page.error}</h1>
+    <h1>${classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException') ? (empty resourceUtils.getMessage('page.notfound') ? 'Not Found.' : messages.page.notfound) : (empty resourceUtils.getMessage('page.error') ? 'Error!' : messages.page.error)}</h1>
     
-    <p 
-        data-rendered="${classUtils.isInstance(error, 'java.lang.Throwable') and !classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException')}">${error}</p>
+    <p data-rendered="${classUtils.isInstance(error, 'java.lang.Throwable') and !classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException')}">${error}</p>
     
 </html>
