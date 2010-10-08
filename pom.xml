@@ -224,23 +224,23 @@
             </build>
         </profile>
         <profile>
-            <id>onejar</id>
+            <id>oneJar</id>
             <build>
-				<plugins>
-					<plugin>
-						<groupId>com.asual.summer</groupId>
-						<artifactId>summer-onejar</artifactId>
-						<version>1.0.0.M2-SNAPSHOT</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>onejar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.asual.summer</groupId>
+                        <artifactId>summer-onejar</artifactId>
+                        <version>1.0.0.M2-SNAPSHOT</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>onejar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
     
