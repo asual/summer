@@ -17,7 +17,7 @@ You can create and run a blank Summer project by using the following commands:
     mvn eclipse:eclipse -DdownloadSources=true
     mvn jetty:run
     
-## Download artifacts manually
+## Specify the dependencies manually
 
 In order to use Summer you need the following records to your Maven 2 POM file:
 
@@ -36,3 +36,17 @@ In order to use Summer you need the following records to your Maven 2 POM file:
             <version>1.0.0.M1</version>
         </dependency>
     </dependencies>
+
+## Changes
+    
+### 10/10/2010 - 1.0.0.M2
+
+- Support for Commons FileUpload Streaming API.
+- Support for XML Resource Bundles.
+- Switched to JavaEE 6 Annotations.
+- Updated Atmosphere Version.
+- Improved Sample.
+
+### 10/01/2010 - 1.0.0.M1
+
+Initial release.
