@@ -248,8 +248,14 @@ public class Technology implements Serializable {
         return em;
     }
     
+    @SuppressWarnings("unchecked")
     public static Technology find(String value) {
-    	return (Technology) entityManager().createQuery("select o from Technology o where o.value = ?1").setParameter(1, value).getSingleResult();
+		List<Technology> technologies = 
+			entityManager().createQuery("select o from Technology o where o.value = ?1").setParameter(1, value).getResultList();
+    	if (technologies.size() != 0) {
+    		return technologies.get(0);
+    	}
+    	return null;
     }
     
     @SuppressWarnings("unchecked")

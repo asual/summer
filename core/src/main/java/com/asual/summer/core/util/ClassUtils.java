@@ -114,12 +114,4 @@ public class ClassUtils {
         return null;
     }
     
-    public static ClassLoader getClassLoader() {
-    	if (RequestUtils.getRequest() != null) {
-    		return RequestUtils.getRequest().getClass().getClassLoader();
-    	} else {
-    		return ClassUtils.class.getClassLoader();
-    	}
-    }
-    
 }

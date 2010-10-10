@@ -39,7 +39,7 @@ public final class FacesDecorator implements TagDecorator {
     public final static String SUMMER = "http://java.sun.com/jsf/composite/cc";
     public final static String QNAME = "qName";
     public final static String ATTRIBUTES = "dataEmpty|dataEmptyOption|dataRepeat|dataTemplate|dataValue|dataVar|" + 
-    	"dataVarStatus|dataBegin|dataEnd|dataPack|dataEscape|dataError|dataLabel|dataClient";
+    	"dataVarStatus|dataBegin|dataEnd|dataPack|dataEscape|dataError|dataLabel";
 
     private List<String> headTags = Arrays.asList(new String[] {
         "base", 

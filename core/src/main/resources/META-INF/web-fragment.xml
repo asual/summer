@@ -32,7 +32,7 @@
         <param-name>javax.faces.FACELETS_VIEW_MAPPINGS</param-name> 
         <param-value>*.html</param-value>
     </context-param>
-
+    
     <context-param>
        <param-name>com.sun.faces.expressionFactory</param-name>  
        <param-value>org.jboss.el.ExpressionFactoryImpl</param-value>  

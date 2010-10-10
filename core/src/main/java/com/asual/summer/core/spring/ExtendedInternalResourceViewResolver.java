@@ -49,6 +49,9 @@ public class ExtendedInternalResourceViewResolver extends InternalResourceViewRe
 			viewName = viewName.substring(0, viewName.length() - getSuffix().length());
 		}
 		String path = getPrefix() + viewName + getSuffix();
+		if (path.startsWith("/META-INF")) {
+			path = path.substring(1);
+		}
 		URL url = getClass().getClassLoader().getResource(path);
 		if (url != null) {
 			return super.resolveViewName(viewName, locale);
