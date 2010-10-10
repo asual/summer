@@ -14,7 +14,9 @@
 
 package com.asual.summer.core.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -120,6 +122,23 @@ public class RequestUtils {
     
     public static boolean isMobile() {
         return Pattern.compile(" Mobile/").matcher(getUserAgent()).find();
+    }
+
+    public static String getClient() {
+    	List<String> data = new ArrayList<String>();
+    	if (isMozilla()) {
+    		data.add("mozilla");
+    	} else if (isMSIE()) {
+    		data.add("msie");
+    	} else if (isOpera()) {
+    		data.add("opera");
+    	} else if (isWebKit()) {
+    		data.add("webkit");
+    	}
+    	if (isMobile()) {
+    		data.add("mobile");
+    	}
+    	return StringUtils.join(data, " ");
     }
     
     public static void setAttribute(String name, Object value) {
