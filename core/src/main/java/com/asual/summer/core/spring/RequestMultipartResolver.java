@@ -16,6 +16,7 @@ package com.asual.summer.core.spring;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileUpload;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -34,5 +35,15 @@ public class RequestMultipartResolver extends CommonsMultipartResolver {
 		return new DefaultMultipartRequest(
 				request, parsingResult.getMultipartFiles(), parsingResult.getMultipartParameters());
 	}
-
+	
+	protected FileUpload prepareFileUpload(String encoding) {
+		FileUpload fileUpload = getFileUpload();
+		FileUpload actualFileUpload = fileUpload;
+		if (encoding != null && !encoding.equals(fileUpload.getHeaderEncoding())) {
+			actualFileUpload = newFileUpload(new StreamFileItemFactory(fileUpload.getSizeMax()));
+			actualFileUpload.setSizeMax(fileUpload.getSizeMax());
+			actualFileUpload.setHeaderEncoding(encoding);
+		}
+		return actualFileUpload;
+	}	
 }
