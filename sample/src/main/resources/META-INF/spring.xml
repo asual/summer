@@ -30,7 +30,10 @@
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" 
         p:dataSource-ref="dataSource" />
     
-    <jdbc:embedded-database id="dataSource" type="H2" />
+    <jdbc:embedded-database id="dataSource" type="H2">
+        <jdbc:script location="classpath:META-INF/data/create.sql" />
+        <jdbc:script location="classpath:META-INF/data/import.sql" />
+    </jdbc:embedded-database>
     
     <!--
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" p:dataSource-ref="dataSource" />
@@ -43,8 +46,10 @@
     </bean>
     -->
     
+    <!--  
     <jdbc:initialize-database data-source="dataSource">
+        <jdbc:script location="classpath:META-INF/data/create.sql" />
         <jdbc:script location="classpath:META-INF/data/import.sql" />
     </jdbc:initialize-database>
-    
+    -->
 </beans>
