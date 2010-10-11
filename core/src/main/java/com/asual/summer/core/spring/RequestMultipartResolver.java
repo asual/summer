@@ -40,7 +40,7 @@ public class RequestMultipartResolver extends CommonsMultipartResolver {
 		FileUpload fileUpload = getFileUpload();
 		FileUpload actualFileUpload = fileUpload;
 		if (encoding != null && !encoding.equals(fileUpload.getHeaderEncoding())) {
-			actualFileUpload = newFileUpload(new StreamFileItemFactory(fileUpload.getSizeMax()));
+			actualFileUpload = newFileUpload(new StreamFileItemFactory());
 			actualFileUpload.setSizeMax(fileUpload.getSizeMax());
 			actualFileUpload.setHeaderEncoding(encoding);
 		}

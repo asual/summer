@@ -39,12 +39,12 @@ public class StreamFileItem implements FileItem {
 	private String name;
 	private ByteArrayOutputStream outputStream;
 	
-	public StreamFileItem(String fieldName, String contentType, boolean formField, String fileName, long maxSize) {
+	public StreamFileItem(String fieldName, String contentType, boolean formField, String fileName) {
 		this.fieldName = fieldName;
 		this.contentType = contentType;
 		this.formField = formField;
 		this.name = fileName;
-		this.outputStream = (maxSize > 0) ? new ByteArrayOutputStream((int) maxSize) : new ByteArrayOutputStream();
+		this.outputStream = new ByteArrayOutputStream();
 	}
 	
 	public InputStream getInputStream() throws IOException {

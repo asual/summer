@@ -24,14 +24,11 @@ import org.apache.commons.fileupload.FileItemFactory;
  */
 public class StreamFileItemFactory implements FileItemFactory {
 
-	private long maxSize;
-	
-	public StreamFileItemFactory(long maxSize) {
-		this.maxSize = maxSize;
+	public StreamFileItemFactory() {
 	}
 	
 	public FileItem createItem(String fieldName, String contentType, boolean isFormField, String fileName) {
-		return new StreamFileItem(fieldName, contentType, isFormField, fileName, maxSize);
+		return new StreamFileItem(fieldName, contentType, isFormField, fileName);
 	}
 
 }
