@@ -14,20 +14,13 @@
 
 package com.asual.summer.core.faces;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
 import java.security.AccessControlException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.FacesException;
-import javax.faces.application.ProjectStage;
-import javax.faces.context.FacesContext;
 import javax.faces.view.facelets.ResourceResolver;
 
 /**
@@ -45,59 +38,13 @@ public class FacesResourceResolver extends ResourceResolver {
 	    	try {
 	        	url = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(url));
 	        } catch (AccessControlException e) {
+	        } catch (NoClassDefFoundError e) {
 	        } catch (MalformedURLException e) {
 	            throw new FacesException(e);
 	        }
         	resources.put(path, url);
 		}
 		return resources.get(path);
-    }
-	
-    private static class FacesStreamHandler extends URLStreamHandler {
-    	
-    	private URL resource;
-    	private byte[] bytes;
-    	private long lastModified = -1;
-    	
-    	public FacesStreamHandler(URL resource) {
-    		this.resource = resource;
-    	}
-    	
-        protected URLConnection openConnection(URL u) throws IOException {
-        	
-            return new URLConnection(u) {
-            	
-                public void connect() throws IOException {
-                }
-                
-                public InputStream getInputStream() throws IOException {
-                	if (bytes == null || (FacesContext.getCurrentInstance().isProjectStage(ProjectStage.Development) && lastModified < getLastModified())) {
-	                    try {
-	                        URLConnection urlc = resource.openConnection();
-	                        InputStream in = urlc.getInputStream();
-	                        try {
-	                            bytes = FacesResourceProcessor.execute(in);
-	                        } finally {
-	                            in.close();
-	                        }
-	                    } catch (IOException e) {
-	                        throw e;
-	                    }
-	                    lastModified = getLastModified();
-                	}
-                	
-                    return new ByteArrayInputStream(bytes);
-                }
-                
-                public long getLastModified() {
-            		try {
-        				return resource.openConnection().getLastModified();
-        			} catch (IOException e) {
-        				return -1;
-        			}
-                }
-            };
-        }
     }
     	
 }
