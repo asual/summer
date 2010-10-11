@@ -14,17 +14,14 @@
 
 package com.asual.summer.sample.convert;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Named;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.asual.summer.sample.domain.Technology.Image;
+import com.asual.summer.core.util.StringUtils;
+import com.asual.summer.sample.domain.License;
 
 /**
  * 
@@ -32,29 +29,19 @@ import com.asual.summer.sample.domain.Technology.Image;
  *
  */
 @Named
-public class MultipartFileToTechnologyImageConvertor implements Converter<MultipartFile, Image> {
-
+public class StringToLicenseConverter implements Converter<String, License> {
+    
     private final Log logger = LogFactory.getLog(getClass());
-    
-    private List<String> mimeTypes = new ArrayList<String>();
-    {
-        mimeTypes.add("image/gif");
-        mimeTypes.add("image/jpeg");
-        mimeTypes.add("image/jpeg");
-        mimeTypes.add("image/png");
-        mimeTypes.add("image/svg+xml");
-    }
-    
-    @Override
-	public Image convert(MultipartFile source) {
-		if (source.getSize() != 0 && mimeTypes.contains(source.getContentType())) {
+
+    public License convert(String source) {
+		if (!StringUtils.isEmpty(source)) {
 			try {
-				return new Image(source);
+				return License.find(source);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}
 		}
 		return null;
-	}
+    }
 
 }

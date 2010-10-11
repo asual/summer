@@ -29,7 +29,7 @@ import com.asual.summer.sample.domain.Status;
  *
  */
 @Named
-public class StringToStatusConvertor implements Converter<String, Status> {
+public class StringToStatusConverter implements Converter<String, Status> {
     
     private final Log logger = LogFactory.getLog(getClass());
 
