@@ -16,7 +16,6 @@ package com.asual.summer.core;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Locale;
@@ -57,10 +56,11 @@ public class RequestFilter extends OncePerRequestFilter {
             result = request.getRemoteAddr();
         }
         try {
-            result = InetAddress.getByName(result).getHostAddress();
+            result = java.net.InetAddress.getByName(result).getHostAddress();
+        } catch (NoClassDefFoundError e) {
         } catch (UnknownHostException e) {
         }
-        return result;		
+        return result;
 	}
 	
 	static String getRemoteHost(HttpServletRequest request) {
@@ -69,7 +69,8 @@ public class RequestFilter extends OncePerRequestFilter {
             result = request.getRemoteHost();
         }
         try {
-            result = InetAddress.getByName(result).getHostName();
+            result = java.net.InetAddress.getByName(result).getHostName();
+        } catch (NoClassDefFoundError e) {
         } catch (UnknownHostException e) {
         }
         return result;			
@@ -81,7 +82,8 @@ public class RequestFilter extends OncePerRequestFilter {
             result = request.getServerName();
         }
         try {
-            result = InetAddress.getByName(result).getHostName();
+            result = java.net.InetAddress.getByName(result).getHostName();
+        } catch (NoClassDefFoundError e) {
         } catch (UnknownHostException e) {
         }
         return result;			
