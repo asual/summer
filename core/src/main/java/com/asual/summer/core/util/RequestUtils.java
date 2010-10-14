@@ -161,8 +161,8 @@ public class RequestUtils {
         return null;
     }
 
-    public static Object getError() {
-        return getAttribute("javax.servlet.error.exception");
+    public static Throwable getError() {
+        return (Throwable) getAttribute("javax.servlet.error.exception");
     }
 
     public static int getErrorCode() {

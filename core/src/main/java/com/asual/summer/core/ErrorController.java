@@ -14,6 +14,10 @@
 
 package com.asual.summer.core;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +36,16 @@ public class ErrorController {
     @RequestMapping("/error")
     @ResponseFormat("*")
     public ModelAndView error() {
-    	return new ModelAndView("/error", new ModelMap("error", RequestUtils.getError()));
+    	
+    	Throwable error = RequestUtils.getError();
+    	Writer stringWriter = new StringWriter();
+    	PrintWriter printWriter = new PrintWriter(stringWriter);
+    	error.printStackTrace(printWriter);
+    	
+	    ModelMap model = new ModelMap();
+	    model.addAttribute("error", RequestUtils.getError());
+	    model.addAttribute("stackTrace", stringWriter.toString());
+    	return new ModelAndView("/error", model);
     }
 
 }

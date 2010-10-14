@@ -84,7 +84,7 @@ public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
             return viewName;
         }
         
-        throw new ViewNotFoundException("The view [" + uri + "] does not exist.");
+        throw new ViewNotFoundException();
     }
     
 }
