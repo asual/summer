@@ -56,7 +56,8 @@ header a {
 }
 
 footer {
-    margin: 0 auto 40px;
+    margin: 0 auto;
+    padding: 0 0 40px;
     font-size: 11px;
     line-height: 15px;
 }
@@ -208,5 +209,9 @@ table .even {
 .error {
     line-height: 26px;
     padding: 4px;
+    vertical-align: top;
+}
+
+.error * {
     vertical-align: top;
 }
