@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.asual.summer.core.ResponseFormat;
+import com.asual.summer.core.ViewNotFoundException;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
@@ -56,9 +57,13 @@ public class TechnologyController {
     @RequestMapping(value="/{value}", method=RequestMethod.GET)
     @ResponseFormat({"json", "xml"})
     public ModelAndView view(@PathVariable("value") String value) {
-        return new ModelAndView("/view", new ModelMap(Technology.find(value)));
+    	Technology technology = Technology.find(value);
+    	if (technology == null) {
+    		throw new ViewNotFoundException();
+    	}
+        return new ModelAndView("/view", new ModelMap(technology));
     }
-
+    
     @RequestMapping(value="/{value}", method=RequestMethod.PUT)
     public ModelAndView merge(@Valid @ModelAttribute Technology technology) {
     	technology.merge();
@@ -80,8 +85,12 @@ public class TechnologyController {
     
     @RequestMapping("/{value}/edit")
     public ModelAndView edit(@PathVariable("value") String value) {
+    	Technology technology = Technology.find(value);
+    	if (technology == null) {
+    		throw new ViewNotFoundException();
+    	}
     	ModelMap model = new ModelMap();
-    	model.addAllAttributes(Arrays.asList(Technology.find(value), License.list(), Status.list()));
+    	model.addAllAttributes(Arrays.asList(technology, License.list(), Status.list()));
         return new ModelAndView("/edit", model);
     }
     
