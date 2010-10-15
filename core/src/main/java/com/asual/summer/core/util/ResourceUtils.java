@@ -15,13 +15,16 @@
 package com.asual.summer.core.util;
 
 import java.io.FileInputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.jar.Manifest;
 
 import javax.inject.Named;
-import javax.servlet.ServletContext;
 
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -39,7 +42,9 @@ import com.asual.summer.core.resource.StylesheetResource;
  */
 @Named
 public class ResourceUtils {
-
+	
+	private static Map<String, String> attributes = new HashMap<String, String>();
+	
 	private static List<MessageResource> messageResources = null;
 	private static List<PropertyResource> propertyResources = null;
 	private static List<StylesheetResource> stylesheetResources = null;
@@ -115,10 +120,17 @@ public class ResourceUtils {
     
     public static String getManifestAttribute(String key) {
         try {
-        	ServletContext servletContext = RequestUtils.getRequest().getSession().getServletContext();
-            Manifest mf = new Manifest();
-			mf.read(new FileInputStream(servletContext.getResource("/META-INF/MANIFEST.MF").getFile()));
-	        return mf.getMainAttributes().getValue(key);
+        	if (!attributes.containsKey(key)) {
+            	String path = "META-INF/MANIFEST.MF";
+                Manifest mf = new Manifest();
+                URL resource = RequestUtils.getServletContext().getResource("/" + path);
+                if (resource == null) {
+                	resource = getClasspathResources(path, false).get(0);
+                }
+    			mf.read(new FileInputStream(resource.getFile()));
+    			attributes.put(key, mf.getMainAttributes().getValue(key));
+        	}
+        	return attributes.get(key);
 		} catch (Exception e) {
 			return "";
 		}
@@ -126,6 +138,21 @@ public class ResourceUtils {
     
     public static boolean exists(String name) {
     	return ResourceUtils.class.getClassLoader().getResource(name) != null;
+    }
+    
+    public static List<URL> getClasspathResources(String name, boolean jarURL) {
+    	List<URL> list = new ArrayList<URL>();
+    	try {
+	    	Enumeration<URL> resources = RequestUtils.class.getClassLoader().getResources(name);
+	    	while(resources.hasMoreElements()) {
+	    		URL resource = resources.nextElement();
+	    		if (org.springframework.util.ResourceUtils.isJarURL(resource) == jarURL) {
+	    			list.add(resource);
+	    		}
+	    	}
+    	} catch (Exception e) {
+    	}
+    	return list;
     }
 
 	@SuppressWarnings("unchecked")

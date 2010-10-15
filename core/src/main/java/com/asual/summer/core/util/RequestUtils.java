@@ -20,9 +20,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.WebUtils;
 
 import com.asual.summer.core.RequestFilter;
@@ -33,7 +39,10 @@ import com.asual.summer.core.RequestFilter;
  *
  */
 @Named
-public class RequestUtils {
+public class RequestUtils implements ApplicationContextAware {
+	
+	@Inject
+	private static WebApplicationContext applicationContext;
 
     public static HttpServletRequest getRequest() {
         return RequestFilter.getRequest();
@@ -168,5 +177,14 @@ public class RequestUtils {
     public static int getErrorCode() {
         return (Integer) getAttribute("javax.servlet.error.status_code");
     }
+
+    public static ServletContext getServletContext() {
+        return applicationContext.getServletContext();
+    }
+
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		RequestUtils.applicationContext = (WebApplicationContext) applicationContext;
+	}
 
 }
