@@ -133,9 +133,15 @@ public class ComponentRenderer extends Renderer {
         writer.write("<");
         writer.write(name);
 
-        Map<String, Object> attrs = new HashMap<String, Object>();
-        attrs.putAll(component.getAttributes());
-
+        Map<String, Object> attrs = new HashMap<String, Object>(component.getAttributes());
+        
+    	Map<String, ValueExpression> bindings = component.getBindings();
+        for (String key : bindings.keySet()) {
+			if (!key.matches(ATTRIBUTES)) {
+				attrs.put(key, bindings.get(key).getValue(FacesContext.getCurrentInstance().getELContext()));
+        	}
+        }
+        
         if ("form".equals(name)) {
 
         	String action = getAttrValue(component, "action");
