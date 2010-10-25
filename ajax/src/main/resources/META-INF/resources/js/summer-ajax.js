@@ -22,44 +22,49 @@
             
         	$('*', scope).filter('[data-ajax]').each(function() {
 
-                var url, 
-                	event = 'click',
-	                o = $(this), 
-	                re = /^(get|post)$/i,
-	                ids = o.attr('data-ajax'),
-	                data = o.attr('data-ajax-params'),
-	                method = o.attr('data-ajax-method'),
-	                regions = $('#' + ids.replace(/:/g, '\\:').split(' ').join(', #'));
-                
-	            if (o.is('a')) {
-	                url = o.attr('href');
-	                method = method ? method : 'get';
-	                if (!re.test(method)) {
-	                	data += (data ? '&' : '') + '_method=' + method;
-	                }
-                } else if (o.is('button, input, select, textarea')) {
-	                var form = o.parents('form');
-	                url = form.attr('action');
-	                data = (data ? data + '&' : '') + form.serialize();	            	
-	                method = method ? method : (form.attr('method') ? form.attr('method') : 'post');
-	                if (!re.test(method)) {
-	                	data = data.replace(/(^|&)_method=[^&]*(&|$)/, '$1_method=' + method + '$2')
-	                }
-	                if (!o.is('button')) {
-		                event = 'blur';
-	                }
+        		var o = $(this),
+        			event = o.attr('data-ajax-event');
+        		
+	            if (!event) {
+	            	if (o.is(':text, textarea')) {
+	            		event = 'blur';
+	            	} else if (o.is('select')) {
+	            		event = 'change';
+	            	} else if (o.is(':checkbox, :radio, :submit, :reset, a, button')) {
+	            		event = 'click';
+	            	}
 	            }
+        		
+        		o.bind(event, function() {
 
-	            if (o.attr('data-ajax-url')) {
-	            	url = o.attr('data-ajax-url');
-	            }
-	            
-	            if (o.attr('data-ajax-event')) {
-	            	event = o.attr('data-ajax-event');
-	            }
-	            
-            	o.bind(event, function() {
-            		
+                    var url, 
+		                o = $(this), 
+		                re = /^(get|post)$/i,
+		                ids = o.attr('data-ajax'),
+		                data = o.attr('data-ajax-params'),
+		                method = o.attr('data-ajax-method'),
+		                regions = $('#' + ids.replace(/:/g, '\\:').split(' ').join(', #'));
+                
+		            if (o.is('a')) {
+		                url = o.attr('href');
+		                method = method ? method : 'get';
+		                if (!re.test(method)) {
+		                	data += (data ? '&' : '') + '_method=' + method;
+		                }
+	                } else if (o.is('button, input, select, textarea')) {
+		                var form = o.parents('form');
+		                url = form.attr('action');
+		                data = (data ? data + '&' : '') + form.serialize();	            	
+		                method = method ? method : (form.attr('method') ? form.attr('method') : 'post');
+		                if (!re.test(method)) {
+		                	data = data.replace(/(^|&)_method=[^&]*(&|$)/, '$1_method=' + method + '$2')
+		                }
+		            }
+	
+		            if (o.attr('data-ajax-url') !== undefined) {
+		            	url = o.attr('data-ajax-url');
+		            }
+		            
                     $.ajax({
                         url: url,
                         type: re.test(method) ? method : 'post',
