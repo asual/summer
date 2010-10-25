@@ -33,6 +33,6 @@
             <artifactId>atmosphere-jersey</artifactId>
             <version>0.6.3</version>
         </dependency>
-    </dependencies>   
+    </dependencies>
     
 </project>

@@ -82,12 +82,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>3.0.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-oxm</artifactId>
-            <version>3.0.4.RELEASE</version>
+            <version>3.0.5.RELEASE</version>
         </dependency>
         <dependency> 
             <groupId>javax.validation</groupId> 
