@@ -24,26 +24,6 @@
             <version>1.0.0.M2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>2.2</version>
-        </dependency>
-        <dependency> 
-            <groupId>asm</groupId> 
-            <artifactId>asm</artifactId> 
-            <version>3.2</version> 
-        </dependency>
-        <dependency> 
-            <groupId>asm</groupId> 
-            <artifactId>asm-attrs</artifactId> 
-            <version>2.2.3</version> 
-        </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>jsr250-api</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
@@ -52,11 +32,6 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.4</version>
-        </dependency>
-        <dependency> 
-            <groupId>commons-io</groupId> 
-            <artifactId>commons-io</artifactId> 
-            <version>1.4</version> 
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -72,6 +47,7 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.2.2</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
