@@ -77,7 +77,6 @@
             <param-name>contextAttribute</param-name>
             <param-value>org.springframework.web.context.WebApplicationContext.ROOT</param-value>
         </init-param>
-        <load-on-startup>1</load-on-startup>
     </servlet>
             
     <servlet-mapping>
@@ -88,7 +87,6 @@
     <servlet>  
         <servlet-name>faces</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>  
     </servlet>
     
     <filter>
