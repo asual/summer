@@ -109,8 +109,4 @@
         </property>
     </bean>
     
-    <bean id="multipartResolver" class="com.asual.summer.core.spring.RequestMultipartResolver">
-        <property name="maxUploadSize" value="${app.maxUploadSize}" />
-    </bean>
-    
 </beans>

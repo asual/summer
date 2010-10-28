@@ -26,17 +26,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.core.NamedThreadLocal;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartResolver;
 
+import com.asual.summer.core.spring.RequestMultipartResolver;
 import com.asual.summer.core.util.RequestUtils;
+import com.asual.summer.core.util.ResourceUtils;
 import com.asual.summer.core.util.StringUtils;
 
 /**
@@ -49,6 +49,8 @@ public class RequestFilter extends OncePerRequestFilter {
 	private static final Log logger = LogFactory.getLog(RequestFilter.class);
 	
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new NamedThreadLocal<HttpServletRequest>("request");
+	
+	private MultipartResolver multipartResolver = null;
 	
 	static String getRemoteAddr(HttpServletRequest request) {
         String result = request.getHeader("X-Forwarded-For");
@@ -158,7 +160,6 @@ public class RequestFilter extends OncePerRequestFilter {
     		FilterChain filterChain) throws ServletException, IOException {        
         
 		HttpServletRequest defaultRequest = new DefaultRequest(request);
-		MultipartResolver multipartResolver = lookupMultipartResolver();
 		
 		if (multipartResolver != null && multipartResolver.isMultipart(request)) {
 			defaultRequest = multipartResolver.resolveMultipart(defaultRequest);
@@ -182,7 +183,7 @@ public class RequestFilter extends OncePerRequestFilter {
         
     	} finally {
         
-			if (defaultRequest instanceof MultipartHttpServletRequest) {
+			if (multipartResolver != null && defaultRequest instanceof MultipartHttpServletRequest) {
 				multipartResolver.cleanupMultipart((MultipartHttpServletRequest) defaultRequest);
 			}
 			
@@ -190,16 +191,27 @@ public class RequestFilter extends OncePerRequestFilter {
     	}
     }
     
-    public static HttpServletRequest getRequest() {
+	protected void initFilterBean() throws ServletException {
+		if (multipartResolver == null) {
+			try {
+				ClassUtils.getClass("org.apache.commons.fileupload.FileItemFactory");
+				RequestMultipartResolver requestMultipartResolver = new RequestMultipartResolver();
+				Object maxInMemorySize = ResourceUtils.getProperty("app.maxInMemorySize");
+				if (maxInMemorySize != null) {
+					requestMultipartResolver.setMaxInMemorySize((Integer) maxInMemorySize);
+				}
+				Object maxUploadSize = ResourceUtils.getProperty("app.maxUploadSize");
+				if (maxUploadSize != null) {
+					requestMultipartResolver.setMaxUploadSize((Integer) maxUploadSize);
+				}
+				multipartResolver = requestMultipartResolver;
+			} catch (ClassNotFoundException e) {
+			}
+		}
+	}
+	
+	public static HttpServletRequest getRequest() {
     	return requestHolder.get();
     }
-    
-	protected MultipartResolver lookupMultipartResolver() {
-		try {
-			WebApplicationContext wac = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-			return wac.getBean("multipartResolver", MultipartResolver.class);
-		} catch (NoSuchBeanDefinitionException e) {
-			return null;
-		}
-	}    
+ 
 }
