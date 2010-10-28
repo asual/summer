@@ -17,6 +17,8 @@ package com.asual.summer.core.util;
 import java.io.FileInputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -137,7 +139,23 @@ public class ResourceUtils {
     }
     
     public static boolean exists(String name) {
-    	return ResourceUtils.class.getClassLoader().getResource(name) != null;
+    	return getClasspathResource(name) != null;
+    }
+    
+    public static URL getClasspathResource(String name) {
+    	return getClasspathResource(name, true);
+    }
+    
+    public static URL getClasspathResource(String name, boolean jarURL) {
+    	List<URL> list = getClasspathResources(name, jarURL);
+    	if (list.size() != 0) {
+    		return getClasspathResources(name, jarURL).get(0);
+    	}
+    	return null;
+    }
+    
+    public static List<URL> getClasspathResources(String name) {
+    	return getClasspathResources(name, true);
     }
     
     public static List<URL> getClasspathResources(String name, boolean jarURL) {
@@ -146,17 +164,22 @@ public class ResourceUtils {
 	    	Enumeration<URL> resources = RequestUtils.class.getClassLoader().getResources(name);
 	    	while(resources.hasMoreElements()) {
 	    		URL resource = resources.nextElement();
-	    		if (org.springframework.util.ResourceUtils.isJarURL(resource) == jarURL) {
+	    		if (jarURL || jarURL == org.springframework.util.ResourceUtils.isJarURL(resource)) {
 	    			list.add(resource);
 	    		}
 	    	}
     	} catch (Exception e) {
     	}
+    	Collections.sort(list, new Comparator<URL>() {
+			public int compare(URL o1, URL o2) {
+				return o1.getPath().indexOf("/summer-") != -1 ? 1 : -1;
+			}
+    	});
     	return list;
     }
 
 	@SuppressWarnings("unchecked")
-	static <T> List<T> getResources(Class<T> clazz) {
+	private static <T> List<T> getResources(Class<T> clazz) {
 		
 		String[] names = BeanUtils.getBeanNames(clazz);
 		List<T> resources = new ArrayList<T>();

@@ -27,6 +27,7 @@ import org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator;
 import com.asual.summer.core.ViewNotFoundException;
 import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.RequestUtils;
+import com.asual.summer.core.util.ResourceUtils;
 
 /**
  * 
@@ -40,12 +41,12 @@ public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
 	
 	private String findViewName(String prefix, String path, String suffix, boolean greedy) {
 
-    	URL uri = getClass().getClassLoader().getResource(prefix.replaceAll("^/", "") + path + suffix);
+    	URL uri = ResourceUtils.getClasspathResource(prefix.replaceAll("^/", "") + path + suffix);
         if (uri != null) {
             return path;
         }
         
-        uri = getClass().getClassLoader().getResource(prefix.replaceAll("^/", "") + path + INDEX + suffix);
+        uri = ResourceUtils.getClasspathResource(prefix.replaceAll("^/", "") + path + INDEX + suffix);
         if (uri != null) {
             return path + INDEX;
         }
