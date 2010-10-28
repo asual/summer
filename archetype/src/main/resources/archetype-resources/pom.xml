@@ -91,6 +91,13 @@
                         <jettyEnvXml>${dollar}{basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
                     </webAppConfig>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.mortbay.jetty</groupId>
+                        <artifactId>servlet-api</artifactId>
+                        <version>3.0.20100224</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
