@@ -75,7 +75,7 @@ public class ResourceUtils {
 			}
 		}    	
 		
-	    return "";
+	    return null;
 	}
 
 	public static Object getProperty(String key) {
@@ -101,7 +101,7 @@ public class ResourceUtils {
 	        }
 		}
 		
-	    return "";
+	    return null;
 	}
 	
 	public static List<ScriptResource> getScripts() {
