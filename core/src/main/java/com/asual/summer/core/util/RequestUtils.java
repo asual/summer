@@ -42,7 +42,7 @@ import com.asual.summer.core.RequestFilter;
 public class RequestUtils implements ApplicationContextAware {
 	
 	@Inject
-	private static WebApplicationContext applicationContext;
+	private static ApplicationContext applicationContext;
 
     public static HttpServletRequest getRequest() {
         return RequestFilter.getRequest();
@@ -179,12 +179,15 @@ public class RequestUtils implements ApplicationContextAware {
     }
 
     public static ServletContext getServletContext() {
-        return applicationContext.getServletContext();
+    	if (applicationContext instanceof WebApplicationContext) {
+    		return ((WebApplicationContext) applicationContext).getServletContext();
+    	}
+    	return null;
     }
 
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {
-		RequestUtils.applicationContext = (WebApplicationContext) applicationContext;
+		RequestUtils.applicationContext = applicationContext;
 	}
 
 }
