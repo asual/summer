@@ -45,7 +45,6 @@ public class PropertyResource extends AbstractResource implements BeanFactoryPos
 		setOrder(Ordered.HIGHEST_PRECEDENCE);
 		eppc = new ExtendedPropertyPlaceholderConfigurer();
 		eppc.setOrder(getOrder());
-		eppc.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
 	}
 
     public Object getProperty(String key) {
@@ -106,7 +105,7 @@ public class PropertyResource extends AbstractResource implements BeanFactoryPos
 	    }	
 
 	    public Object getProperty(String key) {
-	        String value = properties.getProperty(key);
+	        String value = super.resolvePlaceholder(key, properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
 	        if (value != null) {
 	            if (stringArraySeparator != null && value.indexOf(stringArraySeparator) != -1) {
 	                String[] arr = value.split(stringArraySeparator);
