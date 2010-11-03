@@ -195,15 +195,14 @@
                                     <goal>run</goal>
                                 </goals>
                                 <configuration>
-                                    <tasks>
+                                    <target>
                                         <exec executable="${git.executable}" outputproperty="revision" dir="${basedir}">
                                             <arg value="rev-parse" />
                                             <arg value="HEAD" />
                                         </exec>
-                                        <mkdir dir="${project.build.directory}" />
                                         <echo message="maven.build.revision=${revision}" 
                                             file="${project.build.directory}/${project.build.properties}" />
-                                    </tasks>
+                                    </target>
                                 </configuration>
                             </execution>
                         </executions>
