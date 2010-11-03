@@ -1,15 +1,7 @@
-body, input, textarea, select, button {
-    font: 14px 'Helvetica Neue', Arial, sans-serif;
-}
-
 .button, .checkbox, .radio, .select, .text, .textarea {
     display: inline;
 }
 
 .hidden {
     display: none;
-}
-
-.error {
-    color: #cc0000;
 }

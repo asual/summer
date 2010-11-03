@@ -4,7 +4,7 @@ html {
 }
 
 body, button, input, select, textarea {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font: 14px 'Helvetica Neue', Arial, sans-serif;
 }
 
 body, header, footer, section, p {
@@ -207,6 +207,7 @@ table .even {
 }
 
 .error {
+    color: #cc0000;
     line-height: 26px;
     padding: 4px;
     vertical-align: top;
