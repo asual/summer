@@ -71,10 +71,14 @@
                         data: 'javax.faces.partial.ajax=true&javax.faces.partial.render=' + ids + (data ? '&' + data : ''),
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader('Faces-Request', 'partial/ajax');
-                            regions.trigger('beforeSend', [xhr]);
+                            regions.trigger('beforeSend', [xhr]).each(function() {
+                            	$(this).parent().addClass('loading');
+                            });
                         },
                         complete: function(xhr, status) {
-                        	regions.trigger('complete', [xhr, status]);
+                        	regions.trigger('complete', [xhr, status]).each(function() {
+                            	$(this).parent().removeClass('loading');
+                            });
                         },
                         error: function(xhr, status, error) {
                             if (xhr.status) {
