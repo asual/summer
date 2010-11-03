@@ -116,7 +116,7 @@ public final class FacesDecorator implements TagDecorator {
 	    "object", 
 	    "ol", 
 	    "optgroup", 
-	    //"option", 
+	    "option", 
 	    "output", 
 	    "p", 
 	    "param", 
@@ -175,16 +175,16 @@ public final class FacesDecorator implements TagDecorator {
     			if ("target".equals(attr.getQName())) {
     				tagTargetAttr = null;
     			} else if ("data-template".equals(attr.getQName())) {
-    				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
+    				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
     				name = "html".equals(qName) ? "html" : "template";
     			} else if ("data-repeat".equals(attr.getQName())) {
-    				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
+    				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
     				name = "repeat";
     			} else if ("data-error".equals(attr.getQName())) {
-    				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
+    				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
     				name =  Boolean.valueOf(attr.getValue()) ? qName : "tag";
     			} else if ("data-label".equals(attr.getQName()) && !StringUtils.isEmpty(attr.getValue())) {
-    				tagNameAttr = new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), QNAME, QNAME, qName);
+    				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
     				name = qName;
     			} else if ("input".equals(qName) && "type".equals(attr.getQName()) && attr.getValue().matches("hidden|reset|submit")) {
     				name = qName;
@@ -193,11 +193,18 @@ public final class FacesDecorator implements TagDecorator {
     	    		String replace = convertName(attr.getQName());
     	    		if (replace.matches(ATTRIBUTES)) {
     	    			attrs.set(attrs.indexOf(attr), 
-    	    					new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), replace, replace, attr.getValue()));
+    	    					new TagAttributeImpl(location, attr.getNamespace(), replace, replace, attr.getValue()));
     	    		}
     			}
     			replaceAttr(attrs, attr, "class", "styleClass");
     			replaceAttr(attrs, attr, "data-rendered", "rendered");
+    		}
+    		if ("select".equals(qName)) {
+    			if ("select".equals(name)) {
+        			attrs.add(new TagAttributeImpl(location, namespace, "dataRepeat", "dataRepeat", "${''.split('')}"));
+    			} else {
+    				name = "select";
+    			}
     		}
     		if (tagNameAttr != null) {
     			attrs.add(tagNameAttr);

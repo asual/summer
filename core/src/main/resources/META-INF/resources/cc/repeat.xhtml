@@ -21,9 +21,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets">
         
-    <cs:interface componentType="summer.faces.Component" 
-        componentTag="${cc.attrs.qName.matches('select') ? 'div' : cc.attrs.qName}" 
-        componentClass="${cc.attrs.qName.matches('select') ? cc.attrs.qName : ''}">
+    <cs:interface componentType="summer.faces.Component" componentTag="${cc.attrs.qName}">
         <cs:attribute name="dataBegin" required="false" />
         <cs:attribute name="dataEnd" required="false" />
         <cs:attribute name="dataRepeat" required="false" />
@@ -43,13 +41,6 @@
             ${cc.attrs.qName.matches('table') ? cc.renderer.endElement(cc, 'tr') : ''}
         </ui:fragment>
         <ui:fragment rendered="${not empty cc.attrs.dataRepeat}">
-            ${cc.attrs.qName.matches('select') ? cc.renderer.beginElement(cc, 'select') : ''}
-            <ui:fragment rendered="${cc.attrs.qName.matches('select') and not empty cc.attrs.dataLabel}">
-                <label for="${cc.formId}" title="${cc.attrs.dataTitle}">${cc.attrs.dataLabel}</label>
-            </ui:fragment>
-            <ui:fragment rendered="${cc.attrs.qName.matches('select') and not empty cc.attrs.dataEmptyOption}">
-                <h:outputText value="&lt;option value=&quot;&quot;&gt;${cc.attrs.dataEmptyOption}&lt;/option&gt;" escape="false" />            
-            </ui:fragment>
             <ui:repeat value="${cc.attrs.dataRepeat}" var="current" varStatus="vs" begin="${empty cc.attrs.dataBegin ? 0 : cc.attrs.dataBegin}" 
                 end="${empty cc.attrs.dataEnd or cc.attrs.dataEnd gt arrayUtils.asList(cc.attrs.dataRepeat).size() ? arrayUtils.asList(cc.attrs.dataRepeat).size() : cc.attrs.dataEnd}">
                 ${mapUtils.put(cc.attrs, 'current', current)}
@@ -57,11 +48,6 @@
                 ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'repeatVarStatus', vs)}
                 <cs:insertChildren />
             </ui:repeat>
-            ${cc.attrs.qName.matches('select') ? cc.renderer.endElement(cc, 'select') : ''}
-            <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.formId)}"
-                value="${errors.get(cc.formId).message}" styleClass="error" />
-            ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'repeatVar', null)}
-            ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'repeatVarStatus', null)}
         </ui:fragment>
         
     </cs:implementation>
