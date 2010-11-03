@@ -17,6 +17,9 @@ package com.asual.summer.core.util;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Named;
 
@@ -107,7 +110,20 @@ public class StringUtils {
 	    }
 	}
 
+    public static String decorate(String str, Map<String, String> values) {
+    	Matcher m = Pattern.compile("\\$\\{[^}]*\\}").matcher(str);
+    	while (m.find()) {
+    		String key = m.group().replaceAll("^\\$\\{|\\}$", "");
+    		String value = values.get(key);
+    		if (value == null) {
+    			value = "";
+    		}
+    		str = str.replaceAll("\\$\\{" + key + "\\}", value);
+    	}
+    	return str;
+    }	
+	
 	public static String getEncoding() {
 		return ENCODING;
-	}     
+	}
 }
