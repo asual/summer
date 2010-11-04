@@ -159,6 +159,7 @@ public class ResourceUtils {
     }
     
     public static List<URL> getClasspathResources(String name, boolean jarURL) {
+    	
     	List<URL> list = new ArrayList<URL>();
     	try {
 	    	Enumeration<URL> resources = RequestUtils.class.getClassLoader().getResources(name);
@@ -170,11 +171,17 @@ public class ResourceUtils {
 	    	}
     	} catch (Exception e) {
     	}
+    	
     	Collections.sort(list, new Comparator<URL>() {
+    		
+    		private static final String PREFIX = "/summer-";
+    		
 			public int compare(URL o1, URL o2) {
-				return o1.getPath().indexOf("/summer-") != -1 ? 1 : -1;
+				return o1.getPath().indexOf(PREFIX) - o2.getPath().indexOf(PREFIX);
 			}
+			
     	});
+    	
     	return list;
     }
 
