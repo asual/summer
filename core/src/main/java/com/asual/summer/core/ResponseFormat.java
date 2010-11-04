@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.asual.summer.core.view.AbstractResponseView;
+
 /**
  * 
  * @author Rostislav Hristov
@@ -32,6 +34,8 @@ public @interface ResponseFormat {
 
 	String[] value() default {};
 	
+	Class<? extends AbstractResponseView>[] classes() default {};
+
 	boolean explicit() default false;
 
 }

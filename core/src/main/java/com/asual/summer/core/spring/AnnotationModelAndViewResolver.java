@@ -22,6 +22,8 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
 import org.springframework.ui.ExtendedModelMap;
@@ -38,6 +40,7 @@ import org.springframework.web.util.WebUtils;
 import com.asual.summer.core.ResponseFormat;
 import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.RequestUtils;
+import com.asual.summer.core.view.AbstractResponseView;
 import com.asual.summer.core.view.ResponseView;
 
 /**
@@ -47,35 +50,44 @@ import com.asual.summer.core.view.ResponseView;
  *
  */
 public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
+	
+	private final Log logger = LogFactory.getLog(getClass());
 
 	@Inject
 	private ViewResolverConfiguration viewResolverConfiguration;
 	
 	private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
-
-	public View resolveView(Method handlerMethod, NativeWebRequest webRequest) {
+	
+	public View resolveView(Method handlerMethod, NativeWebRequest webRequest) throws InstantiationException, IllegalAccessException {
 
 		ResponseFormat viewAnn = AnnotationUtils.findAnnotation(handlerMethod, ResponseFormat.class);
 		
 		if (viewAnn != null) {
 			
 			String[] values = viewAnn.value();
+			Class<? extends AbstractResponseView>[] classes = viewAnn.classes();
 			boolean explicit = viewAnn.explicit();
 			
+			List<AbstractView> views = new ArrayList<AbstractView>();
+			for (Class<? extends AbstractResponseView> clazz : classes) {
+				views.add(BeanUtils.getBeanOfType(clazz));
+			}
+
 			if (values.length != 0) {
 				if ("*".equals(values[0])) {
-					return handleViews(BeanUtils.getBeansOfType(AbstractView.class).values(), webRequest);
+					return handleViews(views.size() != 0 ? views : BeanUtils.getBeansOfType(AbstractView.class).values(), webRequest);
 				}
-				List<AbstractView> views = new ArrayList<AbstractView>();
+			}
+			if (views.size() == 0) {
 				for (String value : values) {
 					views.add((AbstractView) BeanUtils.getBean(value));
 				}
-				AbstractView view = handleViews(views, webRequest);
-				if (view != null) {
-					return view;
-				} else if (explicit) {
-					return views.get(0);
-				}
+			}
+			AbstractView view = handleViews(views, webRequest);
+			if (view != null) {
+				return view;
+			} else if (explicit) {
+				return views.get(0);
 			}
 		}
 		
@@ -123,16 +135,22 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 			Class handlerType, Object returnValue,
 			ExtendedModelMap implicitModel, NativeWebRequest webRequest) {
 		
-		View view = resolveView(handlerMethod, webRequest);
-		
-		if (view != null) {
-			if (returnValue instanceof ModelAndView) {
-				ModelAndView mav = (ModelAndView) returnValue;
-				mav.setView(view);
-				return mav;
-			} else if (returnValue instanceof ModelMap) {
-				return new ModelAndView(view, (ModelMap) returnValue);
+		try {
+			
+			View view = resolveView(handlerMethod, webRequest);
+			
+			if (view != null) {
+				if (returnValue instanceof ModelAndView) {
+					ModelAndView mav = (ModelAndView) returnValue;
+					mav.setView(view);
+					return mav;
+				} else if (returnValue instanceof ModelMap) {
+					return new ModelAndView(view, (ModelMap) returnValue);
+				}
 			}
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		
 		return UNRESOLVED;
