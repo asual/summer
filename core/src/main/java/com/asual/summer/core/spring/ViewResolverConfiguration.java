@@ -27,6 +27,8 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
+import com.asual.summer.core.ViewNotFoundException;
+
 /**
  * 
  * @author Rostislav Hristov
@@ -66,11 +68,7 @@ public class ViewResolverConfiguration extends ContentNegotiatingViewResolver {
     public View resolveViewName(String viewName, Locale locale) throws Exception {
         View view = super.resolveViewName(viewName, locale);
         if (view == null) {
-            for (ViewResolver vr : getViewResolvers()) {
-                if (vr instanceof ExtendedInternalResourceViewResolver) {
-                    view = vr.resolveViewName(viewName, locale);
-                }
-            }
+            throw new ViewNotFoundException();
         }
         return view;
     }
