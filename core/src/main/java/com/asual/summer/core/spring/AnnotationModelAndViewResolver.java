@@ -37,7 +37,7 @@ import org.springframework.web.servlet.view.AbstractView;
 import org.springframework.web.util.UrlPathHelper;
 import org.springframework.web.util.WebUtils;
 
-import com.asual.summer.core.ResponseFormat;
+import com.asual.summer.core.ResponseViews;
 import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.view.AbstractResponseView;
@@ -60,30 +60,21 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 	
 	public View resolveView(Method handlerMethod, NativeWebRequest webRequest) throws InstantiationException, IllegalAccessException {
 
-		ResponseFormat viewAnn = AnnotationUtils.findAnnotation(handlerMethod, ResponseFormat.class);
+		ResponseViews viewAnn = AnnotationUtils.findAnnotation(handlerMethod, ResponseViews.class);
 		
 		if (viewAnn != null) {
 			
-			String[] values = viewAnn.value();
-			Class<? extends AbstractResponseView>[] classes = viewAnn.classes();
+			Class<? extends AbstractResponseView>[] values = viewAnn.value();
+			List<AbstractView> views = new ArrayList<AbstractView>();
 			boolean explicit = viewAnn.explicit();
 			
-			List<AbstractView> views = new ArrayList<AbstractView>();
-			for (Class<? extends AbstractResponseView> clazz : classes) {
-				views.add(BeanUtils.getBeanOfType(clazz));
-			}
-
 			if (values.length != 0) {
-				if ("*".equals(values[0])) {
-					return handleViews(views.size() != 0 ? views : BeanUtils.getBeansOfType(AbstractView.class).values(), webRequest);
+				for (Class<? extends AbstractResponseView> value : values) {
+					views.addAll(BeanUtils.getBeansOfType(value).values());
 				}
 			}
-			if (views.size() == 0) {
-				for (String value : values) {
-					views.add((AbstractView) BeanUtils.getBean(value));
-				}
-			}
-			AbstractView view = handleViews(views, webRequest);
+			
+			AbstractResponseView view = (AbstractResponseView) handleViews(views, webRequest);
 			if (view != null) {
 				return view;
 			} else if (explicit) {
@@ -102,7 +93,7 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 				String requestUri = urlPathHelper.getRequestUri((HttpServletRequest) request.getNativeRequest());
 				String filename = WebUtils.extractFullFilenameFromUrlPath(requestUri);
 				String extension = StringUtils.getFilenameExtension(filename);
-				if (StringUtils.hasText(extension) && extension.equals(((ResponseView) view).getExtension())) {
+				if (StringUtils.hasText(extension) && extension.matches(((ResponseView) view).getExtension())) {
 					return view;
 				}
 			}
@@ -110,7 +101,7 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 			if (viewResolverConfiguration.getFavorParameter()) {
 				if (request.getParameter(viewResolverConfiguration.getParameterName()) != null) {
 					String parameterValue = request.getParameter(viewResolverConfiguration.getParameterName());
-					if (StringUtils.hasText(parameterValue) && parameterValue.equals(((ResponseView) view).getExtension())) {
+					if (StringUtils.hasText(parameterValue) && parameterValue.matches(((ResponseView) view).getExtension())) {
 						return view;
 					}
 				}

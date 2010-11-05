@@ -27,8 +27,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.asual.summer.core.ResponseFormat;
+import com.asual.summer.core.ResponseViews;
 import com.asual.summer.core.ViewNotFoundException;
+import com.asual.summer.core.view.AbstractResponseView;
+import com.asual.summer.core.view.JSONView;
+import com.asual.summer.core.view.XMLView;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
@@ -43,7 +46,7 @@ import com.asual.summer.sample.domain.Technology;
 public class TechnologyController {
 	
     @RequestMapping(method=RequestMethod.GET)
-    @ResponseFormat("*")
+    @ResponseViews(AbstractResponseView.class)
     public ModelAndView list() {
         return new ModelAndView("/list", new ModelMap(Technology.list()));
     }
@@ -55,7 +58,7 @@ public class TechnologyController {
     }
     
     @RequestMapping(value="/{value}", method=RequestMethod.GET)
-    @ResponseFormat({"json", "xml"})
+    @ResponseViews({JSONView.class, XMLView.class})
     public ModelAndView view(@PathVariable("value") String value) {
     	Technology technology = Technology.find(value);
     	if (technology == null) {

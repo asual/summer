@@ -30,11 +30,9 @@ import com.asual.summer.core.view.AbstractResponseView;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ResponseFormat {
+public @interface ResponseViews {
 
-	String[] value() default {};
-	
-	Class<? extends AbstractResponseView>[] classes() default {};
+	Class<? extends AbstractResponseView>[] value() default {};
 
 	boolean explicit() default false;
 
