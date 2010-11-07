@@ -9,6 +9,6 @@
         ${classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException') ? (empty resourceUtils.getMessage('page.notfound') ? 'Not Found.' : messages.page.notfound) : (empty resourceUtils.getMessage('page.error') ? 'Error!' : messages.page.error)}
     </h1>
     
-    <pre data-rendered="${classUtils.isInstance(error, 'java.lang.Throwable') and not classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException')}" class="stack-trace">${stackTrace}</pre>
+    <p data-rendered="${classUtils.isInstance(error, 'java.lang.Throwable') and not classUtils.isInstance(error, 'com.asual.summer.core.ViewNotFoundException')}" class="stack-trace">${stackTrace}</p>
     
 </html>
