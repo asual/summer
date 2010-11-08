@@ -108,7 +108,7 @@ public class AnnotationModelAndViewResolver implements ModelAndViewResolver {
 			}
 			
 			if (!viewResolverConfiguration.getIgnoreAcceptHeader()) {
-				String acceptHeader = request.getHeader("Accept");
+				String acceptHeader = StringUtils.arrayToCommaDelimitedString(request.getHeaderValues("Accept"));
 				if (StringUtils.hasText(acceptHeader)) {
 					List<MediaType> mediaTypes = viewResolverConfiguration.getMediaTypes(RequestUtils.getRequest());
 					if (mediaTypes.contains(MediaType.parseMediaType(view.getContentType()))) {
