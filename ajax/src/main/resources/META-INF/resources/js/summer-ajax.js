@@ -43,7 +43,16 @@
 		                ids = o.attr('data-ajax'),
 		                data = o.attr('data-ajax-params'),
 		                method = o.attr('data-ajax-method'),
-		                regions = $('#' + ids.replace(/:/g, '\\:').split(' ').join(', #'));
+		                tags = 'input, select, textarea',
+		                selector = '#' + ids.replace(/:/g, '\\:').split(' ').join(', #'),
+		                regions = $(selector),
+		                find = function(arr, id) {
+                    		for (var i = 0; i < arr.length; i++) {
+                    			if ((new RegExp(':' + id + '$')).test(arr[i].getAttribute('id'))) {
+                    				return arr[i];
+                    			}
+                    		}
+	                    };
                 
 		            if (o.is('a')) {
 		                url = o.attr('href');
@@ -51,7 +60,7 @@
 		                if (!re.test(method)) {
 		                	data += (data ? '&' : '') + '_method=' + method;
 		                }
-	                } else if (o.is('button, input, select, textarea')) {
+	                } else if (o.is('button') || o.is(tags)) {
 		                var form = o.parents('form');
 		                url = form.attr('action');
 		                data = (data ? data + '&' : '') + form.serialize();	            	
@@ -72,12 +81,12 @@
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader('Faces-Request', 'partial/ajax');
                             regions.trigger('beforeSend', [xhr]).each(function() {
-                            	$(this).parent().addClass('loading');
+                            	($(this).is(tags) ? $(this).parent() : $(this)).addClass('loading');
                             });
                         },
                         complete: function(xhr, status) {
                         	regions.trigger('complete', [xhr, status]).each(function() {
-                            	$(this).parent().removeClass('loading');
+                        		($(this).is(tags) ? $(this).parent() : $(this)).removeClass('loading');
                             });
                         },
                         error: function(xhr, status, error) {
@@ -89,12 +98,15 @@
                         success: function(data, status, xhr) {
                         	if (data && data.getElementsByTagName('update').length > 0) {
 	                        	regions.each(function(i) {
-	                        		fn($(this).html($(data.getElementsByTagName('update')[i].firstChild.nodeValue).html()));
+	                        		var el = find(data.getElementsByTagName('update'), this.id);
+	                        		fn(($(this).is(tags) ? $(this).parent() : $(this))
+	                        				.html($(el.firstChild.nodeValue).html()));
 	                            });
 	                        	regions.trigger('success', [data, status, xhr]);
                         	} else {
 	                        	regions.trigger('error', [data, status, xhr]);                        		
                         	}
+                        	regions = $(selector);
                         }
                     });
                     
