@@ -52,8 +52,7 @@ public class ComponentRenderer extends Renderer {
     public final static String ATTRIBUTES = "idx|com.sun.faces.facelets.APPLIED";
     
     private String getComponentTag(UIComponent component) {
-    	String componentTag = (String) ((Component) component).getConfig("componentTag");
-    	return componentTag == null ? "div" : componentTag;
+    	return (String) ((Component) component).getConfig("componentTag");
     }
     
     private String getComponentClass(UIComponent component) {
@@ -86,7 +85,8 @@ public class ComponentRenderer extends Renderer {
     	if (!isComponentWrapper(component)) {
     		
 	        ResponseWriter writer = context.getResponseWriter();
-	        writer.startElement(getComponentTag(component), component);
+    		String componentTag = getComponentTag(component);
+	        writer.startElement(componentTag == null ? "div" : componentTag, component);
 	        writeIdAttributeIfNecessary(context, writer, component);
 	        
 	        if (getComponentClass(component) == null) {
@@ -118,7 +118,8 @@ public class ComponentRenderer extends Renderer {
     	
         ResponseWriter writer = context.getResponseWriter();
     	if (!isComponentWrapper(component)) {
-	        writer.endElement(getComponentTag(component));
+    		String componentTag = getComponentTag(component);
+	        writer.endElement(componentTag == null ? "div" : componentTag);
     	}
     }
     
@@ -236,7 +237,7 @@ public class ComponentRenderer extends Renderer {
     protected boolean shouldWriteIdAttribute(UIComponent component) {
 
         String id;
-        return (null != (id = component.getId()) &&
+        return (null != (id = component.getId()) && (isComponentWrapper(component) || getComponentTag(component) != null) && 
                     (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX) ||
                         ((component instanceof ClientBehaviorHolder) &&
                           !((ClientBehaviorHolder) component).getClientBehaviors().isEmpty())));
