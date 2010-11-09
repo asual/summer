@@ -84,6 +84,9 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 		
 		if (errors != null) {
 			request.setAttribute("errors", errors);
+			if (!model.containsKey(objectName)) {
+				model.put(objectName, source.getClass().getConstructor().newInstance());
+			}
 			Object target = model.get(objectName);
 			BeanUtils.copyProperties(source, target);
 			model.put(objectName, target);
