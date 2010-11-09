@@ -29,7 +29,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
 
 import com.asual.summer.core.ErrorResolver;
-import com.asual.summer.core.util.ArrayUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.el.TagValueExpression;
@@ -181,7 +180,11 @@ public class Component extends UINamingContainer {
     }
     
     private String getExprId(String expr) {
-    	return ArrayUtils.last(expr.replaceAll("^(\\$|#)\\{|\\}$", "").split("\\."));
+    	String[] arr = expr.replaceAll("^(\\$|#)\\{|\\}$", "").split("\\.");
+		if (arr.length != 0) {
+			return arr[arr.length - 1];
+		}
+		return null;
     }
     
 }

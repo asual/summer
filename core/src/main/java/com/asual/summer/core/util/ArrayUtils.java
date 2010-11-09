@@ -28,20 +28,6 @@ import javax.inject.Named;
 @Named
 public class ArrayUtils {
 	
-    public static <T> T first(T[] obj) {
-		if (obj.length != 0) {
-			return (T) obj[0];
-		}
-    	return null;
-	}
-    
-    public static <T> T last(T[] obj) {
-		if (obj.length != 0) {
-			return (T) obj[obj.length - 1];
-		}
-    	return null;
-	}
-    
     public static List<?> asList(Object obj) {
     	if (obj instanceof List) {
     		return (List<?>) obj;
