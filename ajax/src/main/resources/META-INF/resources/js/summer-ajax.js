@@ -99,8 +99,10 @@
                         	if (data && data.getElementsByTagName('update').length > 0) {
 	                        	regions.each(function(i) {
 	                        		var el = find(data.getElementsByTagName('update'), this.id);
-	                        		fn(($(this).is(tags) ? $(this).parent() : $(this))
-	                        				.html($(el.firstChild.nodeValue).html()));
+	                        		if (el) {
+		                        		fn(($(this).is(tags) ? $(this).parent() : $(this))
+		                        				.html($(el.firstChild.nodeValue).html()));
+	                        		}
 	                            });
 	                        	regions.trigger('success', [data, status, xhr]);
                         	} else {
