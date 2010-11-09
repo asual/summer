@@ -29,7 +29,6 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.asual.summer.core.util.ArrayUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ResourceUtils;
 import com.asual.summer.core.util.StringUtils;
@@ -56,10 +55,27 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	        
 	        for (FieldError fe : (List<FieldError>) ((BindException) e).getFieldErrors()) {
 		        Map<String, Object> error = new HashMap<String, Object>();
-		        error.put("message", fe.isBindingFailure() ? 
-	        			ResourceUtils.getMessage(fe.getCodes()[2].replaceFirst("typeMismatch", "conversion")) : 
-	        				ResourceUtils.getMessage("validation." + ArrayUtils.last(fe.getCodes()), fe.getArguments()));
-		        error.put("value", fe.getRejectedValue());		        
+		        Object[] args = fe.getArguments();
+		        String key = fe.isBindingFailure() ? 
+		        		fe.getCodes()[2].replaceFirst("typeMismatch", "conversion") : "validation." + fe.getCodes()[2];
+		        String message = ResourceUtils.getMessage(key, args);
+		        if (message == null) {
+		        	if (!fe.isBindingFailure()) {
+		        		if (key.split("\\.").length > 3) {
+		        			message = ResourceUtils.getMessage(key.substring(0, 
+		        					key.indexOf(".", key.indexOf(".") + 1)) + key.substring(key.lastIndexOf(".")), args);
+		        		}
+		        		if (message == null && key.split("\\.").length > 2) {
+		        			message = ResourceUtils.getMessage(key.substring(0, 
+		        					key.indexOf(".", key.indexOf(".") + 1)), args);
+		        		}
+		        	} else if (fe.isBindingFailure() && message == null && key.split("\\.").length > 2) {
+			        	message = ResourceUtils.getMessage(key.substring(0, 
+			        			key.indexOf(".")) + key.substring(key.lastIndexOf(".")), args);
+			        }
+		        }
+		        error.put("message",  message != null ? message : "Error!");
+		        error.put("value", fe.getRejectedValue());
 	        	errors.put(fe.getField(), error);
 	        }
 	        

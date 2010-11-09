@@ -53,6 +53,9 @@
         <property name="propertyEditorRegistrar">
             <bean class="com.asual.summer.core.spring.ResourceEditorRegistrarFactoryBean" />
         </property>
+        <property name="bindingErrorProcessor">
+            <bean class="com.asual.summer.core.spring.ExtendedBindingErrorProcessor" />            
+        </property>
     </bean>
     
     <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
