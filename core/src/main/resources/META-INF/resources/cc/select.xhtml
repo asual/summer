@@ -43,7 +43,6 @@
             </ui:fragment>
             <ui:repeat value="${cc.attrs.dataRepeat}" var="current" varStatus="vs" begin="${empty cc.attrs.dataBegin ? 0 : cc.attrs.dataBegin}" 
                 end="${empty cc.attrs.dataEnd or cc.attrs.dataEnd gt arrayUtils.asList(cc.attrs.dataRepeat).size() ? arrayUtils.asList(cc.attrs.dataRepeat).size() : cc.attrs.dataEnd}">
-                ${mapUtils.put(cc.attrs, 'current', current)}
                 ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'repeatVar', current)}
                 ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'repeatVarStatus', vs)}
                 <cs:insertChildren />

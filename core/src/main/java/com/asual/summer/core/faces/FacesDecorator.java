@@ -38,9 +38,15 @@ public final class FacesDecorator implements TagDecorator {
 
     public final static String SUMMER = "http://java.sun.com/jsf/composite/cc";
     public final static String QNAME = "qName";
-    public final static String ATTRIBUTES = "dataEmpty|dataEmptyOption|dataRepeat|dataTemplate|dataValue|dataVar|" + 
-    	"dataVarStatus|dataBegin|dataEnd|dataPack|dataEscape|dataError|dataLabel";
+    public final static String ATTRIBUTES = "dataEmpty|dataEmptyOption|dataRepeat|dataRepeatBegin|dataRepeatEnd|" + 
+    	"dataTemplate|dataValue|dataVar|dataVarStatus|dataPack|dataEscape|dataError|dataLabel";
 
+    private List<String> reservedTags = Arrays.asList(new String[] {
+        "repeat", 
+	    "tag", 
+	    "template" 
+	});
+    
     private List<String> headTags = Arrays.asList(new String[] {
         "base", 
 	    "link", 
@@ -148,7 +154,7 @@ public final class FacesDecorator implements TagDecorator {
 	    "ul", 
 	    "var", 
 	    "video"
-     });
+    });
 
     public FacesDecorator() {
         super();
@@ -161,9 +167,9 @@ public final class FacesDecorator implements TagDecorator {
     	TagAttributeImpl tagNameAttr = null;
     	TagAttributeImpl tagTargetAttr = null;
 		List<TagAttribute> attrs = new ArrayList<TagAttribute>(Arrays.asList(tag.getAttributes().getAll()));
-    	if (StringUtils.isEmpty(namespace) && !HtmlDecorator.XhtmlNamespace.equals(namespace)) {
+    	if (StringUtils.isEmpty(namespace) && !HtmlDecorator.XhtmlNamespace.equals(namespace) && !reservedTags.contains(qName)) {
         	String name = qName;
-			if (headTags.contains(qName)) {
+        	if (headTags.contains(qName)) {
 				name = "outputStylesheet";
 				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
 				tagTargetAttr = new TagAttributeImpl(location, namespace, "target", "target", "head");

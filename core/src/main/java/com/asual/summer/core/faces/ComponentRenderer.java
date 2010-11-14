@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.el.ValueExpression;
 import javax.faces.application.Resource;
@@ -93,7 +94,7 @@ public class ComponentRenderer extends Renderer {
 	
 	        	Map<String, ValueExpression> bindings = ((Component) component).getBindings();
 		        for (String key : bindings.keySet()) {
-	    			if (!key.matches(ATTRIBUTES)) {
+		    		if (shouldWriteAttribute(key)) {
 			        	writeAttribute(writer, component, key, bindings.get(key).getValue(context.getELContext()));
 		        	}
 		        }
@@ -138,7 +139,7 @@ public class ComponentRenderer extends Renderer {
         
     	Map<String, ValueExpression> bindings = component.getBindings();
         for (String key : bindings.keySet()) {
-			if (!key.matches(ATTRIBUTES)) {
+    		if (shouldWriteAttribute(key)) {
 				attrs.put(key, bindings.get(key).getValue(FacesContext.getCurrentInstance().getELContext()));
         	}
         }
@@ -293,14 +294,14 @@ public class ComponentRenderer extends Renderer {
     }    
     
     private boolean shouldWriteAttribute(String key) {
-		return !key.matches(ATTRIBUTES + "|" + 
-    			FacesDecorator.ATTRIBUTES + "|" + 
-    			FacesDecorator.QNAME + "|" + 
-    			ComponentSupport.MARK_CREATED + "|" + 
-    			Resource.COMPONENT_RESOURCE_KEY + "|" + 
-    			UIComponent.BEANINFO_KEY + "|" + 
-    			UIComponent.FACETS_KEY + "|" + 
-    			UIComponent.VIEW_LOCATION_KEY);
+        return !Pattern.compile(ATTRIBUTES + "|" + 
+			FacesDecorator.ATTRIBUTES + "|" + 
+			FacesDecorator.QNAME + "|" + 
+			ComponentSupport.MARK_CREATED + "|" + 
+			Resource.COMPONENT_RESOURCE_KEY + "|" + 
+			UIComponent.BEANINFO_KEY + "|" + 
+			UIComponent.FACETS_KEY + "|" + 
+			UIComponent.VIEW_LOCATION_KEY, Pattern.CASE_INSENSITIVE).matcher(key).matches();
     }
     
 }
