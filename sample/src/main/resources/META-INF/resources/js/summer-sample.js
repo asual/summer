@@ -14,5 +14,17 @@
 	        });
         }, 200);
     });
+    
+    $(function() {
+    	$('#options, #view').bind('beforeSend', function(e) {
+			if (console) {
+				console.log(e);
+			}
+		}).bind('complete', function(e) {
+			if (console) {
+				console.log(e);
+			}
+    	});
+    });
 
 })(jQuery);
