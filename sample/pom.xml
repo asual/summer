@@ -150,6 +150,7 @@
                 <configuration>
                     <webAppConfig>
                         <jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
+                        <extraClasspath>${basedir}/target/classes;${basedir}/../ajax/target/resources;${basedir}/../core/target/resources</extraClasspath>
                     </webAppConfig>
                 </configuration>
                 <dependencies>
