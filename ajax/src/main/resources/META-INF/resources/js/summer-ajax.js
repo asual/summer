@@ -35,7 +35,7 @@
 	            	}
 	            }
         		
-        		o.bind(event, function() {
+        		o.bind(event, function(event) {
 
                     var url, 
 		                o = $(this), 
@@ -98,10 +98,13 @@
                         success: function(data, status, xhr) {
                         	if (data && data.getElementsByTagName('update').length > 0) {
 	                        	regions.each(function(i) {
-	                        		var el = find(data.getElementsByTagName('update'), this.id);
+	                        		var obj = $(this),
+	                        			el = find(data.getElementsByTagName('update'), this.id);
+	                        		// TODO: Copy events for form element wrappers
+	                        		// obj.data('events');
 	                        		if (el) {
-		                        		fn(($(this).is(tags) ? $(this).parent() : $(this))
-		                        				.html($(el.firstChild.nodeValue).html()));
+	                        			var target = obj.is(tags) ? obj.parent() : obj;
+		                        		fn(target.html($(el.firstChild.nodeValue).html()));
 	                        		}
 	                            });
 	                        	regions.trigger('success', [data, status, xhr]);
@@ -112,7 +115,9 @@
                         }
                     });
                     
-                    return false;
+                    if (o.is(':submit, :reset, a, button')) {
+                    	event.preventDefault();
+                    }
                     
                 });            	
             	
@@ -120,10 +125,6 @@
         	
         })(document);
         
-        //$('.region').bind('beforeSend', function() {
-        //}).bind('success', function() {
-        //});	    
-		
     });
     
 })(jQuery);
