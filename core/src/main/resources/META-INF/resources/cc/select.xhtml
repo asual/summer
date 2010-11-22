@@ -17,6 +17,7 @@
 <ui:component
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:cs="http://java.sun.com/jsf/composite"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets">
     
@@ -41,17 +42,18 @@
             <ui:fragment rendered="${cc.attrs.qName.matches('select') and not empty cc.attrs.dataEmptyOption}">
                 <h:outputText value="&lt;option value=&quot;&quot;&gt;${cc.attrs.dataEmptyOption}&lt;/option&gt;" escape="false" />            
             </ui:fragment>
-            <ui:repeat value="${cc.attrs.dataRepeat}" var="current" varStatus="vs" begin="${empty cc.attrs.dataBegin ? 0 : cc.attrs.dataBegin}" 
-                end="${empty cc.attrs.dataEnd or cc.attrs.dataEnd gt arrayUtils.asList(cc.attrs.dataRepeat).size() ? arrayUtils.asList(cc.attrs.dataRepeat).size() : cc.attrs.dataEnd}">
-                ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'repeatVar', current)}
-                ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'repeatVarStatus', vs)}
+            <ui:repeat value="${cc.attrs.dataRepeat}" var="varAttr" varStatus="varStatusAttr" 
+                begin="${empty cc.attrs.dataRepeatBegin ? 0 : cc.attrs.dataRepeatBegin}"
+                end="${empty cc.attrs.dataRepeatEnd ? fn:length(cc.attrs.dataRepeat) : cc.attrs.dataRepeatEnd}">
+                ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'var', varAttr)}
+                ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'varStatus', varStatusAttr)}
                 <cs:insertChildren />
             </ui:repeat>
             ${cc.renderer.endElement(cc, 'select')}
             <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.formId)}"
                 value="${errors.get(cc.formId).message}" styleClass="error" />
-            ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'repeatVar', null)}
-            ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'repeatVarStatus', null)}
+            ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'var', null)}
+            ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'varStatus', null)}
 
         </ui:fragment>
         

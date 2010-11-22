@@ -85,8 +85,18 @@ public class Component extends UINamingContainer {
     	return null;
     }
     
+    public boolean isUniqueFormId() {
+    	return getFormId().startsWith(UIViewRoot.UNIQUE_ID_PREFIX);
+    }
+    
     public String getFormId() {
-    	String id = (String) getAttributes().get("id");
+    	ValueExpression ve = bindings.get("idx");
+    	String id = null;
+    	if (ve != null) {
+        	id = (String) ve.getValue(FacesContext.getCurrentInstance().getELContext());
+    	} else {
+    		id = (String) getAttributes().get("id");
+    	}
     	if (!StringUtils.isEmpty(id) && !id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
     		return id;
     	}

@@ -157,14 +157,15 @@ public class ComponentRenderer extends Renderer {
         	
         } else if ("input".equals(name)) {
         	
-        	attrs.put("id", component.getFormId());
 			if (nameAttr) {
+	        	attrs.put("id", component.getFormId());
 	        	attrs.put("name", component.getFormName());
 	        	if (component.isMatch() || Boolean.valueOf(getAttrValue(component, "checked"))) {
 	        		attrs.put("checked", "checked");
 	        	}
 			} else {
 				// TODO: Handle the case where only name is provided instead of an id
+	        	attrs.put("id", component.getFormId());
 	        	attrs.put("name", component.getFormId());
 			}
 			
@@ -218,7 +219,7 @@ public class ComponentRenderer extends Renderer {
         }
     }
     
-    protected String writeIdAttributeIfNecessary(FacesContext context,
+    protected void writeIdAttributeIfNecessary(FacesContext context,
             ResponseWriter writer,
             UIComponent component) {
 
@@ -227,12 +228,17 @@ public class ComponentRenderer extends Renderer {
             try {
             	// TODO: Write an unique id for children of repeat components 
                 // writer.writeAttribute("id", id = component.getClientId(context), "id");
-                writer.writeAttribute("id", (String) component.getAttributes().get("id"), "id");
+            	ValueExpression ve = ((Component) component).getBindings().get("idx");
+            	if (ve != null) {
+            		id = (String) ve.getValue(FacesContext.getCurrentInstance().getELContext());
+            	} else {
+            		id = (String) component.getAttributes().get("id");
+            	}
+            	writer.writeAttribute("id", id, "id");
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
             }
         }
-        return id;
     }    
     
     protected boolean shouldWriteIdAttribute(UIComponent component) {

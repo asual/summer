@@ -202,6 +202,9 @@ public final class FacesDecorator implements TagDecorator {
     	    					new TagAttributeImpl(location, attr.getNamespace(), replace, replace, attr.getValue()));
     	    		}
     			}
+    	    	if ("id".equals(attr.getQName()) && attr.getValue().contains("${")) {
+        			replaceAttr(attrs, attr, "id", "idx");
+    			}    	    	
     			replaceAttr(attrs, attr, "class", "styleClass");
     			replaceAttr(attrs, attr, "data-rendered", "rendered");
     		}
@@ -235,8 +238,8 @@ public final class FacesDecorator implements TagDecorator {
     
     private void replaceAttr(List<TagAttribute> attrs, TagAttribute attr, String search, String replace) {
     	if (search.equals(attr.getQName())) {
-			attrs.set(attrs.indexOf(attr), new TagAttributeImpl(attr.getLocation(), attr.getNamespace(), replace,
-					replace, attr.getValue()));
+			attrs.set(attrs.indexOf(attr), new TagAttributeImpl(
+					attr.getLocation(), attr.getNamespace(), replace, replace, attr.getValue()));
 		}
     }    
 }
