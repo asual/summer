@@ -25,7 +25,7 @@
         <fieldset data-label="Image:">
             <img src="data:${technology.image.contentType};base64,${objectUtils.encodeBase64(technology.image.bytes)}" 
                 alt="${technology.name}" width="128" height="128" data-rendered="${not empty technology.image}" />
-            <input type="file" value="${technology.image}" data-error="true" />
+            <input id="image" type="file" data-error="true" />
         </fieldset>
         
         <fieldset data-label="Licenses:">
