@@ -147,7 +147,7 @@ public class Component extends UINamingContainer {
 			if (errors != null && errors.get(getFormName()) != null) {
 				dataValue = errors.get(getFormName()).get("value");
 			}
-			Object current = component.getAttributes().get("current");
+			Object current = component.getAttributes().get("varAttr");
 			if (dataValue instanceof List<?>) {
 				return ((List<?>) dataValue).contains(current);
 			} else if (dataValue instanceof Boolean) {

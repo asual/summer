@@ -85,9 +85,13 @@ public class ComponentRenderer extends Renderer {
         
     	if (!isComponentWrapper(component)) {
     		
-	        ResponseWriter writer = context.getResponseWriter();
     		String componentTag = getComponentTag(component);
-	        writer.startElement(componentTag == null ? "div" : componentTag, component);
+    		if (componentTag ==  null) {
+    			componentTag = "div";
+    		}
+    		
+	        ResponseWriter writer = context.getResponseWriter();
+	        writer.startElement(componentTag, component);
 	        writeIdAttributeIfNecessary(context, writer, component);
 	        
 	        if (getComponentClass(component) == null) {
@@ -110,6 +114,13 @@ public class ComponentRenderer extends Renderer {
 	        List<String> classes = getComponentClasses(component);
 	        if (classes.size() != 0) {
 	        	writeAttribute(writer, component, "class", StringUtils.join(classes, " "));
+	        }
+	        
+	        if ("option".equals(componentTag)) {
+	        	Component c = (Component) component;
+	        	if (c.isMatch() && getAttrValue(c, "selected") == null) {
+	        		writeAttribute(writer, component, "selected", "selected");
+	        	}
 	        }
     	}
     }
@@ -160,7 +171,7 @@ public class ComponentRenderer extends Renderer {
 			if (nameAttr) {
 	        	attrs.put("id", component.getFormId());
 	        	attrs.put("name", component.getFormName());
-	        	if (component.isMatch() || Boolean.valueOf(getAttrValue(component, "checked"))) {
+	        	if (component.isMatch() && getAttrValue(component, "checked") == null) {
 	        		attrs.put("checked", "checked");
 	        	}
 			} else {
@@ -173,13 +184,6 @@ public class ComponentRenderer extends Renderer {
 				(Map<String, Map<String, Object>>) RequestUtils.getAttribute("errors");
         	attrs.put("value", errors != null && errors.get(component.getFormId()) != null ? 
         			errors.get(component.getFormId()).get("value") : getAttrValue(component, "value"));
-			
-        } else if ("option".equals(name)) {
-        	
-        	attrs.put("value", getAttrValue(component, "value"));
-        	if (component.isMatch() || Boolean.valueOf(getAttrValue(component, "checked"))) {
-        		attrs.put("selected", "selected");
-        	}
         	
         } else if ("select".equals(name) || "textarea".equals(name)) {
         	
@@ -207,11 +211,7 @@ public class ComponentRenderer extends Renderer {
     protected void writeAttribute(ResponseWriter writer, UIComponent component, String name, Object value) throws IOException {
     	
     	if (!"rendered".equalsIgnoreCase(name) && !"styleClass".equalsIgnoreCase(name)) {
-        	if ("selected".equalsIgnoreCase(name) || "checked".equalsIgnoreCase(name)) {
-        		if ((value instanceof Boolean && (Boolean) value) || (value instanceof String && Boolean.valueOf((String) value))) {
-        			writer.writeAttribute(name, name, null);
-        		}
-        	} else if ("action".equalsIgnoreCase(name) || "href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
+        	if ("action".equalsIgnoreCase(name) || "href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
     			writer.writeAttribute(name, RequestUtils.contextRelative(value != null ? value.toString() : "", true), null);
         	} else {
         		writer.writeAttribute(name, value, null);        		
@@ -296,8 +296,8 @@ public class ComponentRenderer extends Renderer {
     	if (value != null) {
     		return value.toString();
     	}
-    	return "";
-    }    
+    	return null;
+    }
     
     private boolean shouldWriteAttribute(String key) {
         return !Pattern.compile(ATTRIBUTES + "|" + 
