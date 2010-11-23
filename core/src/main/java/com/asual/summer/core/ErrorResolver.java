@@ -74,7 +74,7 @@ public class ErrorResolver implements HandlerExceptionResolver {
 			        			key.indexOf(".")) + key.substring(key.lastIndexOf(".")), args);
 			        }
 		        }
-		        error.put("message",  message != null ? message : "Error!");
+		        error.put("message",  message != null ? message : "Error (" + key + ")");
 		        error.put("value", fe.getRejectedValue());
 	        	errors.put(fe.getField(), error);
 	        }
