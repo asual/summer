@@ -134,7 +134,6 @@ public final class FacesDecorator implements TagDecorator {
 	    "ruby", 
 	    "samp", 
 	    "section", 
-	    "select", 
 	    "small", 
 	    "source", 
 	    "span", 
