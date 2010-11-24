@@ -193,7 +193,7 @@ public class ComponentRenderer extends Renderer {
         }
         
         for (String key : attrs.keySet()) {
-    		if (shouldWriteAttribute(key)) {
+    		if (shouldWriteAttribute(key) && attrs.get(key) != null) {
     			writer.write(" " + key + "=\"" + attrs.get(key) + "\"");
     		}
         }
@@ -210,11 +210,11 @@ public class ComponentRenderer extends Renderer {
     
     protected void writeAttribute(ResponseWriter writer, UIComponent component, String name, Object value) throws IOException {
     	
-    	if (!"rendered".equalsIgnoreCase(name) && !"styleClass".equalsIgnoreCase(name)) {
+    	if (value != null && !"rendered".equalsIgnoreCase(name) && !"styleClass".equalsIgnoreCase(name)) {
         	if ("action".equalsIgnoreCase(name) || "href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
     			writer.writeAttribute(name, RequestUtils.contextRelative(value != null ? value.toString() : "", true), null);
         	} else {
-        		writer.writeAttribute(name, value, null);        		
+        		writer.writeAttribute(name, value, null);
         	}
         }
     }
