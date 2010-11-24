@@ -34,11 +34,11 @@
     <cs:implementation>
 
         <ui:fragment rendered="${empty cc.attrs.dataRepeat and not empty cc.attrs.dataEmpty}">
-            ${cc.attrs.qName.matches('table') ? cc.renderer.beginElement(cc, 'tr') : ''}
-            ${cc.attrs.qName.matches('table') ? cc.renderer.beginElement(cc, 'td') : ''}
+            ${cc.attrs.qName.matches('tbody') ? cc.renderer.beginElement(cc, 'tr') : ''}
+            ${cc.attrs.qName.matches('tr') ? cc.renderer.beginElement(cc, 'td') : ''}
             ${cc.attrs.dataEmpty}
-            ${cc.attrs.qName.matches('table') ? cc.renderer.endElement(cc, 'td') : ''}
-            ${cc.attrs.qName.matches('table') ? cc.renderer.endElement(cc, 'tr') : ''}
+            ${cc.attrs.qName.matches('tr') ? cc.renderer.endElement(cc, 'td') : ''}
+            ${cc.attrs.qName.matches('tbody') ? cc.renderer.endElement(cc, 'tr') : ''}
         </ui:fragment>
         <ui:fragment rendered="${not empty cc.attrs.dataRepeat}">
             <ui:repeat value="${cc.attrs.dataRepeat}" var="varAttr" varStatus="varStatusAttr" 
