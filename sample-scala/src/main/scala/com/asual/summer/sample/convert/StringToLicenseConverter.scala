@@ -1,5 +1,5 @@
 /*
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -12,16 +12,15 @@
  * limitations under the License.
  */
 
-package com.asual.summer.sample.convert;
+package com.asual.summer.sample.convert
 
-import javax.inject.Named;
+import com.asual.summer.core.util.StringUtils
+import com.asual.summer.sample.domain.License
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.core.convert.converter.Converter;
+import javax.inject.Named
 
-import com.asual.summer.core.util.StringUtils;
-import com.asual.summer.sample.domain.License;
+import org.apache.commons.logging._
+import org.springframework.core.convert.converter.Converter
 
 /**
  * 
@@ -31,17 +30,18 @@ import com.asual.summer.sample.domain.License;
 @Named
 class StringToLicenseConverter extends Converter[String, License] {
     
-    private val logger:Log = LogFactory.getLog(getClass());
+    private val logger:Log = LogFactory.getLog(getClass())
 
     def convert(source:String):License = {
 		if (!StringUtils.isEmpty(source)) {
 			try {
-				return License.find(source);
+				return License.find(source)
 			} catch {
-				case e: Exception => logger.error(e.getMessage(), e);
+				case e: Exception => 
+					logger.error(e.getMessage(), e)
 			}
 		}
-		return null;
+		return null
     }
 
 }

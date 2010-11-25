@@ -1,5 +1,5 @@
 /*
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -12,19 +12,17 @@
  * limitations under the License.
  */
 
-package com.asual.summer.sample.convert;
+package com.asual.summer.sample.convert
 
-import java.util.ArrayList;
-import java.util.List;
+import com.asual.summer.sample.domain.Technology
 
-import javax.inject.Named;
+import java.util._
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.web.multipart.MultipartFile;
+import javax.inject.Named
 
-import com.asual.summer.sample.domain.Technology;
+import org.apache.commons.logging._
+import org.springframework.core.convert.converter.Converter
+import org.springframework.web.multipart.MultipartFile
 
 /**
  * 
@@ -34,26 +32,27 @@ import com.asual.summer.sample.domain.Technology;
 @Named
 class MultipartFileToTechnologyImageConverter extends Converter[MultipartFile, Technology.Image] {
 
-    private val logger:Log = LogFactory.getLog(getClass());
+    private val logger:Log = LogFactory.getLog(getClass())
     
-    var mimeTypes:List[String] = new ArrayList[String]();
+    var mimeTypes:List[String] = new ArrayList[String]()
     {
-        mimeTypes.add("image/gif");
-        mimeTypes.add("image/jpeg");
-        mimeTypes.add("image/jpeg");
-        mimeTypes.add("image/png");
-        mimeTypes.add("image/svg+xml");
+        mimeTypes.add("image/gif")
+        mimeTypes.add("image/jpeg")
+        mimeTypes.add("image/jpeg")
+        mimeTypes.add("image/png")
+        mimeTypes.add("image/svg+xml")
     }
     
 	def convert(source:MultipartFile):Technology.Image = {
 		if (source.getSize() != 0 && mimeTypes.contains(source.getContentType())) {
 			try {
-				return new Technology.Image(source);
+				return new Technology.Image(source)
 			} catch {
-				case e: Exception => logger.error(e.getMessage(), e);
+				case e: Exception => 
+					logger.error(e.getMessage(), e)
 			}
 		}
-		return null;
+		return null
 	}
 
 }
