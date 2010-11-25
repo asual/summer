@@ -36,6 +36,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jboss.el.lang.EvaluationContext;
 import org.jboss.el.lang.ExpressionBuilder;
 
+import com.asual.summer.core.ErrorResolver;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.compiler.UIInstructions;
@@ -50,36 +51,7 @@ public class ComponentRenderer extends Renderer {
 
     private final Log logger = LogFactory.getLog(getClass());
 
-    public final static String ATTRIBUTES = "idx|com.sun.faces.facelets.APPLIED";
-    
-    private String getComponentTag(UIComponent component) {
-    	return (String) ((Component) component).getConfig("componentTag");
-    }
-    
-    private String getComponentClass(UIComponent component) {
-        return (String) ((Component) component).getConfig("componentClass");
-    }
-    
-    private List<String> getComponentClasses(UIComponent component) {
-        List<String> classes = new ArrayList<String>();
-        String componentClass = getComponentClass(component);
-        if (!StringUtils.isEmpty(componentClass)) {
-        	classes.add(componentClass);
-        }
-        String styleClass = (String) component.getAttributes().get("styleClass");
-        if (!StringUtils.isEmpty(styleClass)) {
-        	classes.add(styleClass);
-        }
-        return classes;
-    }
-    
-    private boolean isComponentWrapper(UIComponent component) {
-    	Object config = ((Component) component).getConfig("componentWrapper");
-    	if (config != null) {
-    		return config instanceof String ? Boolean.valueOf((String) config) : Boolean.valueOf((Boolean) config);
-    	}
-    	return false;
-    }
+    public final static String ATTRIBUTES = "^\\d.*$|idx|com.sun.faces.facelets.APPLIED";
     
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
         
@@ -118,7 +90,7 @@ public class ComponentRenderer extends Renderer {
 	        
 	        if ("option".equals(componentTag)) {
 	        	Component c = (Component) component;
-	        	if (c.isMatch() && getAttrValue(c, "selected") == null) {
+	        	if (isMatch(c) && getAttrValue(c, "selected") == null) {
 	        		writeAttribute(writer, component, "selected", "selected");
 	        	}
 	        }
@@ -171,7 +143,7 @@ public class ComponentRenderer extends Renderer {
 			if (nameAttr) {
 	        	attrs.put("id", component.getFormId());
 	        	attrs.put("name", component.getFormName());
-	        	if (component.isMatch() && getAttrValue(component, "checked") == null) {
+	        	if (isMatch(component) && getAttrValue(component, "checked") == null) {
 	        		attrs.put("checked", "checked");
 	        	}
 			} else {
@@ -206,6 +178,37 @@ public class ComponentRenderer extends Renderer {
         writer.write("</");
         writer.write(name);
         writer.write(">");
+    }
+    
+
+    public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
+
+        Map<String,UIComponent> facets = component.getFacets();
+        UIComponent compositeRoot = facets.get(UIComponent.COMPOSITE_FACET_NAME);
+        if (null == compositeRoot) {
+            throw new IOException("Unable to find composite " + 
+                    " component root for composite component with id " + 
+                    component.getId() + " and class " + 
+                    component.getClass().getName());
+        }
+        
+        Map<String, Object> attrs = component.getAttributes();
+        if ("false".equals((String) attrs.get("dataEscape"))) {
+	        if (component.getFacetCount() == 1 && component.getFacet(UIComponent.COMPOSITE_FACET_NAME) instanceof UIPanel) {
+	        	UIPanel panel = (UIPanel) component.getFacet(UIComponent.COMPOSITE_FACET_NAME);
+	        	if (panel.getChildCount() == 1 && panel.getChildren().get(0) instanceof UIInstructions) {
+		            ResponseWriter writer = context.getResponseWriter();
+		            writer.write((String) getExpressionValue(panel.getChildren().get(0).toString()));
+		            return;
+	        	}
+	        }
+        }
+        
+        compositeRoot.encodeAll(context);
+    }
+	
+    public boolean getRendersChildren() {
+        return true;
     }
     
     protected void writeAttribute(ResponseWriter writer, UIComponent component, String name, Object value) throws IOException {
@@ -250,34 +253,33 @@ public class ComponentRenderer extends Renderer {
                           !((ClientBehaviorHolder) component).getClientBehaviors().isEmpty())));
     }
 
-    public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
-
-        Map<String,UIComponent> facets = component.getFacets();
-        UIComponent compositeRoot = facets.get(UIComponent.COMPOSITE_FACET_NAME);
-        if (null == compositeRoot) {
-            throw new IOException("Unable to find composite " + 
-                    " component root for composite component with id " + 
-                    component.getId() + " and class " + 
-                    component.getClass().getName());
-        }
-        
-        Map<String, Object> attrs = component.getAttributes();
-        if ("false".equals((String) attrs.get("dataEscape"))) {
-	        if (component.getFacetCount() == 1 && component.getFacet(UIComponent.COMPOSITE_FACET_NAME) instanceof UIPanel) {
-	        	UIPanel panel = (UIPanel) component.getFacet(UIComponent.COMPOSITE_FACET_NAME);
-	        	if (panel.getChildCount() == 1 && panel.getChildren().get(0) instanceof UIInstructions) {
-		            ResponseWriter writer = context.getResponseWriter();
-		            writer.write((String) getExpressionValue(panel.getChildren().get(0).toString()));
-		            return;
-	        	}
-	        }
-        }
-        
-        compositeRoot.encodeAll(context);
+    private String getComponentTag(UIComponent component) {
+    	return (String) ((Component) component).getConfig("componentTag");
     }
-	
-    public boolean getRendersChildren() {
-        return true;
+    
+    private String getComponentClass(UIComponent component) {
+        return (String) ((Component) component).getConfig("componentClass");
+    }
+    
+    private List<String> getComponentClasses(UIComponent component) {
+        List<String> classes = new ArrayList<String>();
+        String componentClass = getComponentClass(component);
+        if (!StringUtils.isEmpty(componentClass)) {
+        	classes.add(componentClass);
+        }
+        String styleClass = (String) component.getAttributes().get("styleClass");
+        if (!StringUtils.isEmpty(styleClass)) {
+        	classes.add(styleClass);
+        }
+        return classes;
+    }
+    
+    private boolean isComponentWrapper(UIComponent component) {
+    	Object config = ((Component) component).getConfig("componentWrapper");
+    	if (config != null) {
+    		return config instanceof String ? Boolean.valueOf((String) config) : Boolean.valueOf((Boolean) config);
+    	}
+    	return false;
     }
     
     private Object getExpressionValue(String expr) {
@@ -310,4 +312,26 @@ public class ComponentRenderer extends Renderer {
 			UIComponent.VIEW_LOCATION_KEY, Pattern.CASE_INSENSITIVE).matcher(key).matches();
     }
     
+    @SuppressWarnings("unchecked")
+	private boolean isMatch(Component component) {
+    	try {
+			Component wrapper = component.getRepeatWrapper();
+			Map<String, ValueExpression> bindings = wrapper.getBindings();
+			Object dataValue = bindings.get("dataValue").getValue(FacesContext.getCurrentInstance().getELContext());
+			Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
+			if (errors != null && errors.get(component.getFormName()) != null) {
+				dataValue = errors.get(component.getFormName()).get("value");
+			}
+			Object valueAttr = wrapper.getAttributes().get("varAttr");
+			if (dataValue instanceof List<?>) {
+				return ((List<?>) dataValue).contains(valueAttr);
+			} else if (dataValue instanceof Boolean) {
+				return dataValue.equals(Boolean.valueOf(valueAttr.toString()));
+			} else {
+				return dataValue.equals(valueAttr);
+			}
+    	} catch (Exception e) {
+    		return false;
+    	}
+    }    
 }

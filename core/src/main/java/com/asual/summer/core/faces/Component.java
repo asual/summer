@@ -28,8 +28,6 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
 
-import com.asual.summer.core.ErrorResolver;
-import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.el.TagValueExpression;
 
@@ -107,7 +105,7 @@ public class Component extends UINamingContainer {
         		ValueExpression dataValue = bindings.get("dataValue");
             	try {
         	    	FacesContext context = FacesContext.getCurrentInstance();
-        	    	return getExprId(getRepeatComponent().getBindings().get("dataValue").getExpressionString()) + 
+        	    	return getExprId(getRepeatWrapper().getBindings().get("dataValue").getExpressionString()) + 
         	    		UINamingContainer.getSeparatorChar(context) + value.getValue(context.getELContext());
             	} catch (Exception e) {
             		if (dataValue != null) {
@@ -131,32 +129,9 @@ public class Component extends UINamingContainer {
     		return name;
     	}
     	try {
-	    	return getExprId(getRepeatComponent().getBindings().get("dataValue").getExpressionString());
+	    	return getExprId(getRepeatWrapper().getBindings().get("dataValue").getExpressionString());
     	} catch (Exception e) {
         	return getFormId();
-    	}
-    }
-    
-    @SuppressWarnings("unchecked")
-	public boolean isMatch() {
-    	try {
-			Component component = getRepeatComponent();
-			Map<String, ValueExpression> bindings = component.getBindings();
-			Object dataValue = bindings.get("dataValue").getValue(FacesContext.getCurrentInstance().getELContext());
-			Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
-			if (errors != null && errors.get(getFormName()) != null) {
-				dataValue = errors.get(getFormName()).get("value");
-			}
-			Object current = component.getAttributes().get("varAttr");
-			if (dataValue instanceof List<?>) {
-				return ((List<?>) dataValue).contains(current);
-			} else if (dataValue instanceof Boolean) {
-				return dataValue.equals(Boolean.valueOf(current.toString()));
-			} else {
-				return dataValue.equals(current);
-			}
-    	} catch (Exception e) {
-    		return false;
     	}
     }
     
@@ -169,6 +144,14 @@ public class Component extends UINamingContainer {
 		}
     }
     
+    public Component getRepeatWrapper() {
+    	try {
+			return (Component) getParent().getParent().getParent().getParent();
+    	} catch (Exception e) {
+    		return null;
+    	}
+    }
+    
     private String getChildrenText() {
     	List<String> strings = new ArrayList<String>();
     	Iterator<UIComponent> fac = getFacetsAndChildren();
@@ -179,14 +162,6 @@ public class Component extends UINamingContainer {
         	}
     	}
     	return StringUtils.join(strings, "");
-    }
-    
-    private Component getRepeatComponent() {
-    	try {
-			return (Component) getParent().getParent().getParent().getParent();
-    	} catch (Exception e) {
-    		return null;
-    	}
     }
     
     private String getExprId(String expr) {
