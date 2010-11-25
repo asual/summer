@@ -1,5 +1,5 @@
 /*
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -12,28 +12,19 @@
  * limitations under the License.
  */
 
-package com.asual.summer.sample.domain;
+package com.asual.summer.sample.domain
 
-import java.io.Serializable;
-import java.util.List;
+import com.asual.summer.core.util.StringUtils
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Table;
+import java.util.List
 
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.transaction.annotation.Transactional;
+import javax.persistence._
 
-import com.asual.summer.core.util.StringUtils;
+import org.hibernate.validator.constraints.NotEmpty
+import org.springframework.beans.factory.annotation.Configurable
+import org.springframework.transaction.annotation.Transactional
 
-import scala.reflect.BeanProperty;
-import scala.transient;
+import scala.reflect.BeanProperty
 
 /**
  * 
@@ -45,110 +36,95 @@ import scala.transient;
 @Table
 @SerialVersionUID(1L) 
 @serializable
-class License extends Serializable {
+class License {
 
     @PersistenceContext
     @BeanProperty    
     @transient 
-    var entityManager:EntityManager = _;
+    var entityManager:EntityManager = _
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(unique=true, nullable=false)
     @BeanProperty
-    var id:Integer = _;
+    var id:Integer = _
 
     @NotEmpty
     @Column(unique=true, nullable=false)
     @BeanProperty
-    var value:String = _;
+    var value:String = _
     
     @NotEmpty
     @Column
     @BeanProperty
-    var name:String = _;
+    var name:String = _
 
-//    public void setName(String name) {
-//        if (name != null) {
-//            value = StringUtils.toURIPath(name);
-//        }
-//        this.name = name;
-//    }
-    
-//	public int hashCode() {
-//		int prime = 31;
-//		int result = 1;
-//		result = (prime * result) + ((value == null) ? 0 : value.hashCode());
-//		return result;
-//	}
-//    
-//	public boolean equals(Object obj) {
-//		if (this == obj)
-//			return true;
-//		if (obj == null)
-//			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
-//		License other = (License) obj;
-//		if (value == null) {
-//			if (other.value != null)
-//				return false;
-//		} else if (!value.equals(other.value))
-//			return false;
-//		return true;
-//	}
+	override def hashCode = {
+    	41 * value.hashCode
+    }
+	
+	override def equals(other:Any) = other match {
+		case that: License => 
+			(that canEqual this) && (this.value == that.value)
+		case _ => 
+			false
+	} 
+	
+	def canEqual(other:Any) = {
+		other.isInstanceOf[License]
+	}
 
     @Transactional
-    def persist() = entityManager.persist(this);
+    def persist() = entityManager.persist(this)
     
     @Transactional
     def merge():License = {
-    	var merged:License = entityManager.merge(this);
-        entityManager.flush();
-        return merged;
+    	var merged:License = entityManager.merge(this)
+        entityManager.flush()
+        return merged
     }
     
     @Transactional
     def remove() = {
         if (entityManager.contains(this)) {
-            entityManager.remove(this);
+            entityManager.remove(this)
         } else {
         	var attached:License = 
-        		entityManager.find(this.getClass(), this.id).asInstanceOf[License];
-            entityManager.remove(attached);
+        		entityManager.find(this.getClass(), this.id).asInstanceOf[License]
+            entityManager.remove(attached)
         }
     }
     
     @Transactional
     def flush() = {
-    	entityManager.flush();
+    	entityManager.flush()
     }    
 }
 
 object License {
 	
 	def entityManager():EntityManager = {
-        var em:EntityManager = new License().entityManager;
+        var em:EntityManager = new License().entityManager
         if (em == null) {
-        	throw new IllegalStateException("Entity manager has not been injected.");
+        	throw new IllegalStateException("Entity manager has not been injected.")
         }
-        return em;
+        return em
     }
     
     def find(value:String):License = {
     	return entityManager().createQuery("select o from License o where o.value = ?1")
-    		.setParameter(1, value).getSingleResult().asInstanceOf[License];
+    		.setParameter(1, value).getSingleResult().asInstanceOf[License]
     }
     
     def list():List[License] = {
         return entityManager().createQuery("select o from License o")
-        	.getResultList().asInstanceOf[List[License]];
+        	.getResultList().asInstanceOf[List[License]]
     }
     
     def list(firstResult:Int, maxResults:Int):List[License] = {
         return entityManager().createQuery("select o from License o")
         	.setFirstResult(firstResult).setMaxResults(maxResults)
-        		.getResultList().asInstanceOf[List[License]];
+        		.getResultList().asInstanceOf[List[License]]
     }
 
 }

@@ -12,39 +12,22 @@
  * limitations under the License.
  */
 
-package com.asual.summer.sample.domain;
+package com.asual.summer.sample.domain
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
+import com.asual.summer.core.util.StringUtils
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import java.net.URL
+import java.util._
 
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import javax.persistence._
+import javax.validation.constraints.Size
 
-import com.asual.summer.core.util.StringUtils;
+import org.hibernate.validator.constraints.NotEmpty
+import org.springframework.beans.factory.annotation.Configurable
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 
-import scala.reflect.BeanProperty;
-import scala.transient;
+import scala.reflect.BeanProperty
 
 /**
  * 
@@ -61,101 +44,116 @@ class Technology {
     @PersistenceContext
     @BeanProperty
     @transient 
-    var entityManager:EntityManager = _;
+    var entityManager:EntityManager = _
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(unique=true, nullable=false)
     @BeanProperty
-    var id:Integer = _;
+    var id:Integer = _
     
     @Column(unique=true, nullable=false)
     @BeanProperty 
-    var value:String = _;
+    var value:String = _
     
     @NotEmpty
     @Size(max=128)
     @Column(length=128)
-    var name:String = _;
+    var name:String = _
     
     @Size(min=128, max=512)
     @Column(length=512)
     @BeanProperty
-    var description:String = _;
+    var description:String = _
 
     @Size(max=255)
     @Column
     @BeanProperty
-    var version:String = _;
+    var version:String = _
 
     @Column
     @BeanProperty 
-    var homepage:URL = _;
+    var homepage:URL = _
 
     @ManyToMany(cascade=Array(CascadeType.ALL), fetch=FetchType.EAGER)
     @JoinTable(name="technology_license",    
             joinColumns=Array(new JoinColumn(name="technology_id")),  
             inverseJoinColumns=Array(new JoinColumn(name="license_id")))
     @BeanProperty
-    var licenses:List[License] = _;
+    var licenses:List[License] = _
 
     @Column
     @BeanProperty
-    var status:Status = _;
+    var status:Status = _
 
     @Column
     @BeanProperty
-    var required:Boolean = _;
+    var required:Boolean = _
 
     @Lob
-    var image:Technology.Image = _;
+    var image:Technology.Image = _
 
     def getName():String = {
-    	return name;
+    	return name
     }
     
     def setName(name:String) = {
         if (name != null) {
-            value = StringUtils.toURIPath(name);
+            value = StringUtils.toURIPath(name)
         }
-        this.name = name;
+        this.name = name
     }
 
     def getImage():Technology.Image = {
-    	return image;
+    	return image
     }
     
     def setImage(image:Technology.Image) = {
     	if (image != null) {
-	        this.image = image;
+	        this.image = image
     	}
     }
-    
+
+	override def hashCode = {
+		41 * value.hashCode
+	}
+	
+	override def equals(other:Any) = other match {
+		case that: Technology => 
+			(that canEqual this) && (this.value == that.value)
+		case _ => 
+			false
+	} 
+	
+	def canEqual(other:Any) = {
+		other.isInstanceOf[Technology]
+	}
+	
 	@Transactional
     def persist() = {
-		entityManager.persist(this);
+		entityManager.persist(this)
 	}
 	
     @Transactional
     def merge():Technology = {
-        var merged:Technology = entityManager.merge(this);
-        entityManager.flush();
-        return merged;
+        var merged:Technology = entityManager.merge(this)
+        entityManager.flush()
+        return merged
     }
     
     @Transactional
     def remove() = {
         if (entityManager.contains(this)) {
-            entityManager.remove(this);
+            entityManager.remove(this)
         } else {
-            var attached:Technology = entityManager.find(this.getClass(), this.id).asInstanceOf[Technology];
-            entityManager.remove(attached);
+            var attached:Technology = entityManager.find(this.getClass(), this.id).asInstanceOf[Technology]
+            entityManager.remove(attached)
         }
     }
     
     @Transactional
     def flush() = {
-    	entityManager.flush();
+    	entityManager.flush()
     }
     
 }
@@ -163,31 +161,31 @@ class Technology {
 object Technology {
 	
     def entityManager():EntityManager = {
-        var em:EntityManager = new Technology().entityManager;
+        var em:EntityManager = new Technology().entityManager
         if (em == null) {
-        	throw new IllegalStateException("Entity manager has not been injected.");
+        	throw new IllegalStateException("Entity manager has not been injected.")
         }
-        return em;
+        return em
     }
     
     def find(value:String):Technology = {
 		var technologies:List[Technology] = 
 			entityManager().createQuery("select o from Technology o where o.value = ?1")
-				.setParameter(1, value).getResultList().asInstanceOf[List[Technology]];
+				.setParameter(1, value).getResultList().asInstanceOf[List[Technology]]
     	if (technologies.size() != 0) {
-    		return technologies.get(0);
+    		return technologies.get(0)
     	}
-    	return null;
+    	return null
     }
     
     def list():List[Technology] = { 
-    	return entityManager().createQuery("select o from Technology o").getResultList().asInstanceOf[List[Technology]];
+    	return entityManager().createQuery("select o from Technology o").getResultList().asInstanceOf[List[Technology]]
     }
     
     def list(firstResult:Int, maxResults:Int):List[Technology] = {
     	return entityManager().createQuery("select o from Technology o")
     		.setFirstResult(firstResult)
-    		.setMaxResults(maxResults).getResultList().asInstanceOf[List[Technology]];
+    		.setMaxResults(maxResults).getResultList().asInstanceOf[List[Technology]]
 	}
 
 	@SerialVersionUID(1L)
@@ -195,19 +193,36 @@ object Technology {
 	class Image(file:MultipartFile) {
 	
 	    @BeanProperty
-	    var value:String = _;
+	    var value:String = _
 	    
 	    @BeanProperty
-	    var contentType:String = _;
+	    var contentType:String = _
 	    
 	    @BeanProperty
-	    var bytes:Array[Byte] = _;
+	    var bytes:Array[Byte] = _
 	    
-	    def getBytesAsString():String = return new String(bytes);
+	    def getBytesAsString():String = {
+	    	return new String(bytes)
+	    }
 	    
-    	value = file.getOriginalFilename();
-    	contentType = file.getContentType();
-    	bytes = file.getBytes();
+		override def hashCode = {
+			41 * Arrays.hashCode(bytes)
+		}
+		
+		override def equals(other:Any) = other match {
+			case that: Image => 
+				(that canEqual this) && (this.bytes == that.bytes)
+			case _ => 
+				false
+		} 
+		
+		def canEqual(other:Any) = {
+			other.isInstanceOf[Image]
+		}
+		
+    	value = file.getOriginalFilename()
+    	contentType = file.getContentType()
+    	bytes = file.getBytes()
 	    
 	}    
 }
