@@ -1,0 +1,22 @@
+<ui:composition 
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <head>
+        <link href="/css/summer-sample.css" rel="stylesheet" />
+        <script src="/js/summer-sample.js"></script>
+    </head>
+    
+    <body>
+        <section class="welcome">
+            <ui:insert />
+        </section>
+        <footer>
+            <p class="copyright">&#169; 2009-2010 Asual DZZD</p>
+            <p class="build" data-rendered="${not empty resourceUtils.getManifestAttribute('Build-Timestamp')}">
+                Build Timestamp: ${resourceUtils.getManifestAttribute('Build-Timestamp')}<br /> 
+                Build Revision: ${resourceUtils.getManifestAttribute('Build-Revision')}
+            </p>
+        </footer>
+    </body>
+    
+</ui:composition>

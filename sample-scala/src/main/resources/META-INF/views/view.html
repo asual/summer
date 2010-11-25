@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    
+    <title>${technology.name}</title>
+    
+    <p><a href="/technology">&larr; Back to List</a></p>
+
+    <div class="view">
+
+        <p data-rendered="${not empty technology.image}" class="image">
+            <img src="data:${technology.image.contentType};base64,${objectUtils.encodeBase64(technology.image.bytes)}" 
+                alt="${technology.name}" width="128" height="128" />
+        </p>
+        
+        <h1>${technology.name}</h1>
+
+        <p>${technology.description}</p>
+        
+        <p>
+            Version: <span>${technology.version}</span><br />
+            Homepage: <a href="${technology.homepage}">${technology.homepage}</a><br />
+            License: <span data-repeat="${technology.licenses}" data-empty="-">${var.name.concat(vs.last ? '' : ', ')}</span>
+        </p>
+    
+        <p class="edit"><a href="/technology/${technology.value}/edit">&plusmn; Edit this technology</a></p>
+        
+    </div>
+</html>

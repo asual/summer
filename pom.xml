@@ -280,6 +280,7 @@
         <module>el</module>
         <module>jquery</module>
         <module>sample</module>
+        <module>sample-scala</module>
     </modules>
     
 </project>
