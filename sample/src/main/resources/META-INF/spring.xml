@@ -35,21 +35,4 @@
         <jdbc:script location="classpath:META-INF/data/import.sql" />
     </jdbc:embedded-database>
     
-    <!--
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" p:dataSource-ref="dataSource" />
-    
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="org.h2.Driver" />
-        <property name="jdbcUrl" value="jdbc:h2:sample" />
-        <property name="user" value="sa" />
-        <property name="password" value="" />
-    </bean>
-    -->
-    
-    <!--  
-    <jdbc:initialize-database data-source="dataSource">
-        <jdbc:script location="classpath:META-INF/data/create.sql" />
-        <jdbc:script location="classpath:META-INF/data/import.sql" />
-    </jdbc:initialize-database>
-    -->
 </beans>
