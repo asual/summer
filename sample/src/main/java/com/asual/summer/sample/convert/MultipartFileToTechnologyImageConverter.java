@@ -40,7 +40,6 @@ public class MultipartFileToTechnologyImageConverter implements Converter<Multip
     {
         mimeTypes.add("image/gif");
         mimeTypes.add("image/jpeg");
-        mimeTypes.add("image/jpeg");
         mimeTypes.add("image/png");
         mimeTypes.add("image/svg+xml");
     }

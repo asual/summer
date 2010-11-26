@@ -38,7 +38,6 @@ class MultipartFileToTechnologyImageConverter extends Converter[MultipartFile, T
     
     mimeTypes.add("image/gif")
     mimeTypes.add("image/jpeg")
-    mimeTypes.add("image/jpeg")
     mimeTypes.add("image/png")
     mimeTypes.add("image/svg+xml")
     
