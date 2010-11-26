@@ -12,30 +12,22 @@
  * limitations under the License.
  */
 
-package com.asual.summer.sample.web;
+package com.asual.summer.sample.web
 
-import java.util.Arrays;
+import com.asual.summer.core._
+import com.asual.summer.core.view._
 
-import javax.validation.Valid;
+import com.asual.summer.sample.domain._
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
+import java.util.Arrays
 
-import com.asual.summer.core.ResponseViews;
-import com.asual.summer.core.ViewNotFoundException;
-import com.asual.summer.core.view.AbstractResponseView;
-import com.asual.summer.core.view.JSONView;
-import com.asual.summer.core.view.XMLView;
+import javax.validation.Valid
 
-import com.asual.summer.sample.domain.License;
-import com.asual.summer.sample.domain.Status;
-import com.asual.summer.sample.domain.Technology;
+import org.springframework.stereotype.Controller
+import org.springframework.ui.ModelMap
+import org.springframework.web.bind.annotation._
+import org.springframework.web.servlet._
+import org.springframework.web.servlet.view.RedirectView
 
 /**
  * 
@@ -49,53 +41,53 @@ class TechnologyController {
     @RequestMapping(method=Array(RequestMethod.GET))
     @ResponseViews(Array(classOf[AbstractResponseView]))
     def list():ModelAndView = {
-    	return new ModelAndView("/list", new ModelMap(Technology.list()));
+    	return new ModelAndView("/list", new ModelMap(Technology.list()))
     }
     
     @RequestMapping(method=Array(RequestMethod.POST))
     def persist(@Valid @ModelAttribute technology:Technology):ModelAndView = {
-    	technology.persist();
-        return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
+    	technology.persist()
+        return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true))
     }
     
     @RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.GET))
     @ResponseViews(Array(classOf[JSONView], classOf[XMLView]))
     def view(@PathVariable("value") value:String):ModelAndView = {
-    	var technology:Technology = Technology.find(value);
+    	var technology:Technology = Technology.find(value)
     	if (technology == null) {
-    		throw new ViewNotFoundException();
+    		throw new ViewNotFoundException()
     	}
-        return new ModelAndView("/view", new ModelMap(technology));
+        return new ModelAndView("/view", new ModelMap(technology))
     }
     
     @RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.PUT))
     def merge(@Valid @ModelAttribute technology:Technology):ModelAndView = {
-    	technology.merge();
-        return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
+    	technology.merge()
+        return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true))
     }
     
     @RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.DELETE))
     def remove(@Valid @ModelAttribute technology:Technology):ModelAndView = {
-    	technology.remove();
-        return new ModelAndView(new RedirectView("/technology", true));
+    	technology.remove()
+        return new ModelAndView(new RedirectView("/technology", true))
     }
     
     @RequestMapping(Array("/add"))
     def add():ModelAndView = {
-        var model:ModelMap = new ModelMap();
-    	model.addAllAttributes(Arrays.asList(new Technology(), License.list(), Status.list()));
-        return new ModelAndView("/add", model);
+        var model:ModelMap = new ModelMap()
+    	model.addAllAttributes(Arrays.asList(new Technology(), License.list(), Status.list()))
+        return new ModelAndView("/add", model)
     }
     
     @RequestMapping(Array("/{value}/edit"))
     def edit(@PathVariable("value") value:String):ModelAndView = {
-    	var technology:Technology = Technology.find(value);
+    	var technology:Technology = Technology.find(value)
     	if (technology == null) {
-    		throw new ViewNotFoundException();
+    		throw new ViewNotFoundException()
     	}
-    	var model:ModelMap = new ModelMap();
-    	model.addAllAttributes(Arrays.asList(technology, License.list(), Status.list()));
-        return new ModelAndView("/edit", model);
+    	var model:ModelMap = new ModelMap()
+    	model.addAllAttributes(Arrays.asList(technology, License.list(), Status.list()))
+        return new ModelAndView("/edit", model)
     }
     
 }

@@ -110,9 +110,9 @@ class Technology {
     
     def setImage(image:Technology.Image) = {
     	if (image == null) {
-			var technology:Technology = Technology.find(value);
+			var technology:Technology = Technology.find(value)
 			if (technology != null) {
-	    		this.image = technology.getImage();
+	    		this.image = technology.getImage()
 			}
     	} else {
     		this.image = image
