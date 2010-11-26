@@ -35,21 +35,19 @@ class MultipartFileToTechnologyImageConverter extends Converter[MultipartFile, T
     private val logger:Log = LogFactory.getLog(getClass())
     
     var mimeTypes:List[String] = new ArrayList[String]()
-    {
-        mimeTypes.add("image/gif")
-        mimeTypes.add("image/jpeg")
-        mimeTypes.add("image/jpeg")
-        mimeTypes.add("image/png")
-        mimeTypes.add("image/svg+xml")
-    }
+    
+    mimeTypes.add("image/gif")
+    mimeTypes.add("image/jpeg")
+    mimeTypes.add("image/jpeg")
+    mimeTypes.add("image/png")
+    mimeTypes.add("image/svg+xml")
     
 	def convert(source:MultipartFile):Technology.Image = {
 		if (source.getSize() != 0 && mimeTypes.contains(source.getContentType())) {
 			try {
 				return new Technology.Image(source)
 			} catch {
-				case e: Exception => 
-					logger.error(e.getMessage(), e)
+				case e: Exception => logger.error(e.getMessage(), e)
 			}
 		}
 		return null
