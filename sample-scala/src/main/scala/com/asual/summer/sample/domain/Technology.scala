@@ -16,6 +16,7 @@ package com.asual.summer.sample.domain
 
 import com.asual.summer.core.util.StringUtils
 
+import java.lang.Integer
 import java.net.URL
 import java.util._
 
