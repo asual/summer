@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +40,6 @@ import com.asual.summer.core.RequestFilter;
 @Named
 public class RequestUtils implements ApplicationContextAware {
 	
-	@Inject
 	private static ApplicationContext applicationContext;
 
     public static HttpServletRequest getRequest() {
