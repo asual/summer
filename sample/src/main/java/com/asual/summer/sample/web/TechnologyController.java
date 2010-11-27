@@ -14,8 +14,10 @@
 
 package com.asual.summer.sample.web;
 
+import java.io.IOException;
 import java.util.Arrays;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,7 @@ import com.asual.summer.core.view.XMLView;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
+import com.asual.summer.sample.domain.Technology.Image;
 
 /**
  * 
@@ -97,4 +100,17 @@ public class TechnologyController {
         return new ModelAndView("/edit", model);
     }
     
+    @RequestMapping("/{value}/image")
+    public void image(@PathVariable("value") String value, HttpServletResponse response) throws IOException {
+		Image image = Technology.find(value).getImage();
+		if (image != null) {
+			response.setContentLength(image.getBytes().length);
+			response.setContentType(image.getContentType());
+			response.getOutputStream().write(image.getBytes());
+		} else {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		}
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+    }    
 }
