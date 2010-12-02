@@ -35,7 +35,7 @@
         <ui:fragment rendered="${not empty cc.attrs.dataRepeat}">
 
             <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
-                <label for="${cc.formId}" title="${cc.attrs.dataTitle}">${cc.attrs.dataLabel}</label>
+                <label for="${cc.renderer.getFormId(cc)}" title="${cc.attrs.dataTitle}">${cc.attrs.dataLabel}</label>
             </ui:fragment>
             
             ${cc.renderer.beginElement(cc, 'select')}
@@ -51,8 +51,8 @@
                 <cs:insertChildren />
             </ui:repeat>
             ${cc.renderer.endElement(cc, 'select')}
-            <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.formId)}"
-                value="${errors.get(cc.formId).message}" styleClass="error" />
+            <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.renderer.getFormId(cc))}"
+                value="${errors.get(cc.renderer.getFormId(cc)).message}" styleClass="error" />
             ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'var', null)}
             ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'varStatus', null)}
 

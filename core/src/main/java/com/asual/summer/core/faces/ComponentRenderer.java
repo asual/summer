@@ -17,6 +17,7 @@ package com.asual.summer.core.faces;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 import javax.el.ValueExpression;
 import javax.faces.application.Resource;
 import javax.faces.component.UIComponent;
+import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIPanel;
 import javax.faces.component.UIViewRoot;
 import javax.faces.component.behavior.ClientBehaviorHolder;
@@ -51,7 +53,7 @@ public class ComponentRenderer extends Renderer {
 
     private final Log logger = LogFactory.getLog(getClass());
 
-    public final static String ATTRIBUTES = "^\\d.*$|idx|com.sun.faces.facelets.APPLIED";
+    public final static String ATTRIBUTES = "^-?\\d.*$|idx|com.sun.faces.facelets.APPLIED";
     
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
         
@@ -141,26 +143,26 @@ public class ComponentRenderer extends Renderer {
         } else if ("input".equals(name)) {
         	
 			if (nameAttr) {
-	        	attrs.put("id", component.getFormId());
-	        	attrs.put("name", component.getFormName());
+	        	attrs.put("id", getFormId(component));
+	        	attrs.put("name", getFormName(component));
 	        	if (isMatch(component) && getAttrValue(component, "checked") == null) {
 	        		attrs.put("checked", "checked");
 	        	}
 			} else {
 				// TODO: Handle the case where only name is provided instead of an id
-	        	attrs.put("id", component.getFormId());
-	        	attrs.put("name", component.getFormId());
+	        	attrs.put("id", getFormId(component));
+	        	attrs.put("name", getFormId(component));
 			}
 			
 			Map<String, Map<String, Object>> errors = 
 				(Map<String, Map<String, Object>>) RequestUtils.getAttribute("errors");
-        	attrs.put("value", errors != null && errors.get(component.getFormId()) != null ? 
-        			errors.get(component.getFormId()).get("value") : getAttrValue(component, "value"));
+        	attrs.put("value", errors != null && errors.get(getFormId(component)) != null ? 
+        			errors.get(getFormId(component)).get("value") : getAttrValue(component, "value"));
         	
         } else if ("select".equals(name) || "textarea".equals(name)) {
         	
-        	attrs.put("id", component.getFormId());
-        	attrs.put("name", component.getFormId());
+        	attrs.put("id", getFormId(component));
+        	attrs.put("name", getFormId(component));
         	
         }
         
@@ -179,7 +181,6 @@ public class ComponentRenderer extends Renderer {
         writer.write(name);
         writer.write(">");
     }
-    
 
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
 
@@ -210,8 +211,50 @@ public class ComponentRenderer extends Renderer {
     public boolean getRendersChildren() {
         return true;
     }
+        
+    public String getFormId(Component component) {
+    	String id = component.getClientId();
+    	if (!StringUtils.isEmpty(id) && !id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
+    		return id;
+    	}
+    	if (id == null || id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
+    		id = null;
+	    	try {
+        		ValueExpression value = component.getBindings().get("value");
+        		ValueExpression dataValue = component.getBindings().get("dataValue");
+            	try {
+        	    	FacesContext context = FacesContext.getCurrentInstance();
+        	    	return getExprId(getRepeatWrapper(component).getBindings().get("dataValue").getExpressionString()) + 
+        	    		UINamingContainer.getSeparatorChar(context) + value.getValue(context.getELContext());
+            	} catch (Exception e) {
+            		if (dataValue != null) {
+                		return getExprId(dataValue.getExpressionString());
+            		}
+            		if (value == null) {
+                		return getExprId(getChildrenText(component));
+            		}
+            		return getExprId(value.getExpressionString());
+            	}
+	    	} catch (Exception e) {
+	        	return id;
+	    	}
+    	}
+    	return id;
+    }
     
-    protected void writeAttribute(ResponseWriter writer, UIComponent component, String name, Object value) throws IOException {
+    public String getFormName(Component component) {
+    	String name = (String) component.getAttributes().get("name");
+    	if (!StringUtils.isEmpty(name)) {
+    		return name;
+    	}
+    	try {
+	    	return getExprId(getRepeatWrapper(component).getBindings().get("dataValue").getExpressionString());
+    	} catch (Exception e) {
+        	return getFormId(component);
+    	}
+    }
+    
+    private void writeAttribute(ResponseWriter writer, UIComponent component, String name, Object value) throws IOException {
     	
     	if (value != null && !"rendered".equalsIgnoreCase(name) && !"styleClass".equalsIgnoreCase(name)) {
         	if ("action".equalsIgnoreCase(name) || "href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
@@ -222,21 +265,12 @@ public class ComponentRenderer extends Renderer {
         }
     }
     
-    protected void writeIdAttributeIfNecessary(FacesContext context,
+    private void writeIdAttributeIfNecessary(FacesContext context,
             ResponseWriter writer,
             UIComponent component) {
-
-        String id = null;
-        if (shouldWriteIdAttribute(component)) {
+        String id = component.getClientId();
+        if (shouldWriteIdAttribute(component, id)) {
             try {
-            	// TODO: Write an unique id for children of repeat components 
-                // writer.writeAttribute("id", id = component.getClientId(context), "id");
-            	ValueExpression ve = ((Component) component).getBindings().get("idx");
-            	if (ve != null) {
-            		id = (String) ve.getValue(FacesContext.getCurrentInstance().getELContext());
-            	} else {
-            		id = (String) component.getAttributes().get("id");
-            	}
             	writer.writeAttribute("id", id, "id");
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
@@ -244,10 +278,8 @@ public class ComponentRenderer extends Renderer {
         }
     }    
     
-    protected boolean shouldWriteIdAttribute(UIComponent component) {
-
-        String id;
-        return (null != (id = component.getId()) && (isComponentWrapper(component) || getComponentTag(component) != null) && 
+    private boolean shouldWriteIdAttribute(UIComponent component, String id) {
+        return (id != null && (isComponentWrapper(component) || getComponentTag(component) != null) && 
                     (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX) ||
                         ((component instanceof ClientBehaviorHolder) &&
                           !((ClientBehaviorHolder) component).getClientBehaviors().isEmpty())));
@@ -312,15 +344,43 @@ public class ComponentRenderer extends Renderer {
 			UIComponent.VIEW_LOCATION_KEY, Pattern.CASE_INSENSITIVE).matcher(key).matches();
     }
     
+    private Component getRepeatWrapper(Component component) {
+    	try {
+			return (Component) component.getParent().getParent().getParent().getParent();
+    	} catch (Exception e) {
+    		return null;
+    	}
+    }
+    
+    private String getChildrenText(Component component) {
+    	List<String> strings = new ArrayList<String>();
+    	Iterator<UIComponent> fac = component.getFacetsAndChildren();
+    	while (fac.hasNext()) {
+    		UIComponent value = fac.next().findComponent("value");
+        	for (UIComponent child : value.getChildren()) {
+        		strings.add(child.toString());
+        	}
+    	}
+    	return StringUtils.join(strings, "");
+    }
+    
+    private String getExprId(String expr) {
+    	String[] arr = expr.replaceAll("^(\\$|#)\\{|\\}$", "").split("\\.");
+		if (arr.length != 0) {
+			return arr[arr.length - 1];
+		}
+		return null;
+    }
+    
     @SuppressWarnings("unchecked")
 	private boolean isMatch(Component component) {
     	try {
-			Component wrapper = component.getRepeatWrapper();
+			Component wrapper = getRepeatWrapper(component);
 			Map<String, ValueExpression> bindings = wrapper.getBindings();
 			Object dataValue = bindings.get("dataValue").getValue(FacesContext.getCurrentInstance().getELContext());
 			Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
-			if (errors != null && errors.get(component.getFormName()) != null) {
-				dataValue = errors.get(component.getFormName()).get("value");
+			if (errors != null && errors.get(getFormName(component)) != null) {
+				dataValue = errors.get(getFormName(component)).get("value");
 			}
 			Object valueAttr = wrapper.getAttributes().get("varAttr");
 			if (dataValue instanceof List<?>) {
@@ -334,4 +394,5 @@ public class ComponentRenderer extends Renderer {
     		return false;
     	}
     }    
+
 }
