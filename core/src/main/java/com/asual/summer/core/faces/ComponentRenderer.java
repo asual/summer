@@ -164,6 +164,12 @@ public class ComponentRenderer extends Renderer {
         	attrs.put("id", getFormId(component));
         	attrs.put("name", getFormId(component));
         	
+        } else if ("td".equals(name)) {
+
+        	try {
+	        	attrs.put("colspan", component.getFacets().values().toArray(new UIPanel[]{})[0].getChildCount());
+        	} catch (Exception e) {}
+        	
         }
         
         for (String key : attrs.keySet()) {
