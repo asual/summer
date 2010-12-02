@@ -25,9 +25,8 @@ import javax.faces.context.PartialViewContextFactory;
  */
 public class AjaxViewContextFactoryImpl extends PartialViewContextFactory {
 
-	@Override
     public PartialViewContext getPartialViewContext(FacesContext context) {
-        return new AjaxPartialViewContextImpl(context);
+        return new AjaxViewContextImpl(context);
     }
 
 }

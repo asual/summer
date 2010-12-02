@@ -48,12 +48,12 @@
 		                regions = $(selector),
 		                find = function(arr, id) {
                     		for (var i = 0; i < arr.length; i++) {
-                    			if ((new RegExp(':' + id + '$')).test(arr[i].getAttribute('id'))) {
+                    			if (id == arr[i].getAttribute('id')) {
                     				return arr[i];
                     			}
                     		}
 	                    };
-                
+	                    
 		            if (o.is('a')) {
 		                url = o.attr('href');
 		                method = method ? method : 'get';
@@ -97,7 +97,7 @@
                         },
                         success: function(data, status, xhr) {
                         	if (data && data.getElementsByTagName('update').length > 0) {
-	                        	regions.each(function(i) {
+                        		regions.each(function(i) {
 	                        		var obj = $(this),
 	                        			el = find(data.getElementsByTagName('update'), this.id);
 	                        		// TODO: Copy events for form element wrappers
