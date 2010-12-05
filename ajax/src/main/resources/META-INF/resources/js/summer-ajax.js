@@ -19,11 +19,14 @@
         (function(scope) {
         	
         	var fn = arguments.callee;
-            
-        	$('*', scope).filter('[data-ajax]').each(function() {
+        	
+        	$('*', scope).filter(function(index) {
+        		return $(this).is('[data-ajax]') || $(this).is('[data-ajax-validation]');
+        	}).each(function() {
 
         		var o = $(this),
-        			event = o.attr('data-ajax-event');
+        			event = o.attr('data-ajax-event'),
+        			validation = o.attr('data-ajax-validation') == 'true';
         		
 	            if (!event) {
 	            	if (o.is(':text, textarea')) {
@@ -40,11 +43,12 @@
                     var url, 
 		                o = $(this), 
 		                re = /^(get|post)$/i,
-		                ids = o.attr('data-ajax'),
+		                ids = o.attr('data-ajax') ? o.attr('data-ajax') : (validation ? o.attr('id') : ''),
 		                data = o.attr('data-ajax-params'),
 		                method = o.attr('data-ajax-method'),
 		                tags = 'input, select, textarea',
 		                selector = '#' + ids.replace(/:/g, '\\:').split(' ').join(', #'),
+		                params = '_ajax=' + ids,
 		                regions = $(selector),
 		                find = function(arr, id) {
                     		for (var i = 0; i < arr.length; i++) {
@@ -77,9 +81,11 @@
                     $.ajax({
                         url: url,
                         type: re.test(method) ? method : 'post',
-                        data: 'javax.faces.partial.ajax=true&javax.faces.partial.render=' + ids + (data ? '&' + data : ''),
+                        data: params + (data ? '&' + data : ''),
                         beforeSend: function(xhr) {
-                            xhr.setRequestHeader('Faces-Request', 'partial/ajax');
+                        	if (validation) {
+                                xhr.setRequestHeader('X-Requested-Operation', 'Validation');
+                        	}
                             regions.trigger('beforeSend', [xhr]).each(function() {
                             	($(this).is(tags) ? $(this).parent() : $(this)).addClass('loading');
                             });

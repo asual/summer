@@ -15,6 +15,8 @@
 package com.asual.summer.ajax;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 
@@ -25,6 +27,9 @@ import javax.faces.context.PartialResponseWriter;
 import javax.faces.context.PartialViewContext;
 import javax.faces.event.PhaseId;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.asual.summer.core.util.RequestUtils;
 import com.sun.faces.context.PartialViewContextImpl;
 
 /**
@@ -34,6 +39,9 @@ import com.sun.faces.context.PartialViewContextImpl;
  */
 public class AjaxViewContextImpl extends PartialViewContextImpl {
 
+	private Boolean ajaxRequest;
+	private Collection<String> renderIds;	
+	
     public AjaxViewContextImpl(FacesContext ctx) {
         super(ctx);
     }
@@ -65,5 +73,24 @@ public class AjaxViewContextImpl extends PartialViewContextImpl {
             }
         }
     }
-
+    
+    public boolean isAjaxRequest() {
+        if (ajaxRequest == null) {
+            ajaxRequest = RequestUtils.isAjaxRequest();
+        }
+        return ajaxRequest;
+    }
+    
+    public Collection<String> getRenderIds() {
+        if (renderIds == null) {
+        	String param = (String) RequestUtils.getParameter("_ajax");
+            if (StringUtils.isEmpty(param)) {
+            	renderIds = new ArrayList<String>();
+            } else {
+            	renderIds = new ArrayList<String>(Arrays.asList(param.split("\\s+")));
+            }        	
+        }
+        return renderIds;
+    }
+    
 }
