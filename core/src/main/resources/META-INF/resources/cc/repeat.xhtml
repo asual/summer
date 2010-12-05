@@ -17,7 +17,6 @@
 <ui:component
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:cs="http://java.sun.com/jsf/composite"
-    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets">
         
@@ -43,7 +42,7 @@
         <ui:fragment rendered="${not empty cc.attrs.dataRepeat}">
             <ui:repeat value="${cc.attrs.dataRepeat}" var="varAttr" varStatus="varStatusAttr" 
                 begin="${empty cc.attrs.dataRepeatBegin ? 0 : cc.attrs.dataRepeatBegin}"
-                end="${empty cc.attrs.dataRepeatEnd ? fn:length(cc.attrs.dataRepeat) : cc.attrs.dataRepeatEnd}">
+                end="${empty cc.attrs.dataRepeatEnd ? objectUtils.size(cc.attrs.dataRepeat) : cc.attrs.dataRepeatEnd}">
                 ${mapUtils.put(cc.attrs, 'varAttr', varAttr)}
                 ${mapUtils.put(requestScope, not empty cc.attrs.dataVar ? cc.attrs.dataVar : 'var', varAttr)}
                 ${mapUtils.put(requestScope, not empty cc.attrs.dataVarStatus ? cc.attrs.dataVarStatus : 'varStatus', varStatusAttr)}

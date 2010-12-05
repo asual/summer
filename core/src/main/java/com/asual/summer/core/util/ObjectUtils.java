@@ -19,6 +19,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Collection;
+import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -35,8 +38,8 @@ import org.apache.commons.codec.binary.Base64;
 public class ObjectUtils {
 
     public static Object convert(String value) {
-        if ("true".equals(value) || "false".equals(value)) {
-            return Boolean.valueOf(value);
+        if (Pattern.compile("true|false", Pattern.CASE_INSENSITIVE).matcher(value).matches()) {
+            return Boolean.valueOf(value.toLowerCase());
         } else {
             try {
                 return Integer.valueOf(value);
@@ -44,6 +47,17 @@ public class ObjectUtils {
                 return value;
             }
         }
+    }
+    
+    public static int size(Object obj) {
+    	if (obj instanceof Collection) {
+    		return ((Collection<?>) obj).size();
+    	} else if (obj instanceof Map) {
+    		return ((Map<?, ?>) obj).size();
+    	} else if (obj.getClass().isArray()) {
+    		return ((Object[]) obj).length;
+    	}
+    	return 0;
     }
     
     public static byte[] encode(Object obj) throws IOException {
