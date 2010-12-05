@@ -60,7 +60,7 @@
     
     <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
     
-    <bean id="annotationMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="webBindingInitializer" ref="configurableWebBindingInitializer" />
         <property name="customModelAndViewResolver" ref="annotationModelAndViewResolver" />
     </bean>
