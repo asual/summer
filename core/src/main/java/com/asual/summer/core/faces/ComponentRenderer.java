@@ -51,7 +51,7 @@ public class ComponentRenderer extends Renderer {
 
     private final Log logger = LogFactory.getLog(getClass());
 
-    public final static String ATTRIBUTES = "^-?\\d.*$|idx|com.sun.faces.facelets.APPLIED";
+    public final static String ATTRIBUTES = "^-?\\d.*$|idx|varAttr|com.sun.faces.facelets.APPLIED";
     
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
         
