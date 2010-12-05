@@ -14,6 +14,7 @@
 
 package com.asual.summer.core.util;
 
+import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -73,6 +74,10 @@ public class BeanUtils implements BeanFactoryPostProcessor {
     
     public static Object getBean(String name) {
         return beanFactory.getBean(name);
+    }
+    
+    public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) {
+    	return beanFactory.getBeansWithAnnotation(annotationType);
     }
     
 	public void postProcessBeanFactory(
