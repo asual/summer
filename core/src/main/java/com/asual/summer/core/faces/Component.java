@@ -15,16 +15,20 @@
 package com.asual.summer.core.faces;
 
 import java.beans.BeanInfo;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-import javax.el.ELContext;
 import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UINamingContainer;
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.render.Renderer;
 
+import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.el.TagValueExpression;
 
 /**
@@ -79,10 +83,49 @@ public class Component extends UINamingContainer {
     	return null;
     }
     
+    public String getValueId() {
+    	try {
+    		ValueExpression value = getBindings().get("value");
+    		ValueExpression dataValue = getBindings().get("dataValue");
+        	try {
+    	    	FacesContext context = FacesContext.getCurrentInstance();
+    	    	return getExprId(getRepeatWrapper().getBindings().get("dataValue").getExpressionString()) + 
+    	    		UINamingContainer.getSeparatorChar(context) + value.getValue(context.getELContext());
+        	} catch (Exception e) {
+        		if (dataValue != null) {
+            		return getExprId(dataValue.getExpressionString());
+        		}
+        		if (value == null) {
+            		return getExprId(getChildrenText());
+        		}
+        		return getExprId(value.getExpressionString());
+        	}
+    	} catch (Exception e) {}    	
+    	return null;
+    }   
+    
+    public String getExprId(String expr) {
+    	String[] arr = expr.replaceAll("^(\\$|#)\\{|\\}$", "").split("\\.");
+		if (arr.length != 0) {
+			return arr[arr.length - 1];
+		}
+		return null;
+    }
+    
     public String getClientId(FacesContext context) {
     	ValueExpression ve = getBindings().get("idx");
-    	ELContext elContext = FacesContext.getCurrentInstance().getELContext();
-        return (String) ((ve != null) ? ve.getValue(elContext) : getId());
+    	if (ve != null) {
+    		return (String) ve.getValue(FacesContext.getCurrentInstance().getELContext());
+    	}
+    	String id = getId();
+    	if (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
+    		return id;
+    	}
+    	String valueId = getValueId();
+    	if (valueId != null) {
+    		return valueId;
+    	}
+        return id;
     }
 
     public void setValueExpression(String name, ValueExpression binding) {
@@ -93,5 +136,24 @@ public class Component extends UINamingContainer {
     		bindingValues.put(name, value);
 		}
     }
-
+    
+    public Component getRepeatWrapper() {
+    	try {
+			return (Component) getParent().getParent().getParent().getParent();
+    	} catch (Exception e) {
+    		return null;
+    	}
+    } 
+    
+    private String getChildrenText() {
+    	List<String> strings = new ArrayList<String>();
+    	Iterator<UIComponent> fac = getFacetsAndChildren();
+    	while (fac.hasNext()) {
+    		UIComponent value = fac.next().findComponent("value");
+        	for (UIComponent child : value.getChildren()) {
+        		strings.add(child.toString());
+        	}
+    	}
+    	return StringUtils.join(strings, "");
+    }
 }

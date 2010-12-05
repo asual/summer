@@ -17,7 +17,6 @@ package com.asual.summer.core.faces;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -25,7 +24,6 @@ import java.util.regex.Pattern;
 import javax.el.ValueExpression;
 import javax.faces.application.Resource;
 import javax.faces.component.UIComponent;
-import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIPanel;
 import javax.faces.component.UIViewRoot;
 import javax.faces.component.behavior.ClientBehaviorHolder;
@@ -217,35 +215,16 @@ public class ComponentRenderer extends Renderer {
     public boolean getRendersChildren() {
         return true;
     }
-        
+    
     public String getFormId(Component component) {
     	String id = component.getClientId();
-    	if (!StringUtils.isEmpty(id) && !id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
+    	if (StringUtils.isEmpty(id)) {
+    		id = component.getValueId();
+    	}
+    	if (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
     		return id;
     	}
-    	if (id == null || id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
-    		id = null;
-	    	try {
-        		ValueExpression value = component.getBindings().get("value");
-        		ValueExpression dataValue = component.getBindings().get("dataValue");
-            	try {
-        	    	FacesContext context = FacesContext.getCurrentInstance();
-        	    	return getExprId(getRepeatWrapper(component).getBindings().get("dataValue").getExpressionString()) + 
-        	    		UINamingContainer.getSeparatorChar(context) + value.getValue(context.getELContext());
-            	} catch (Exception e) {
-            		if (dataValue != null) {
-                		return getExprId(dataValue.getExpressionString());
-            		}
-            		if (value == null) {
-                		return getExprId(getChildrenText(component));
-            		}
-            		return getExprId(value.getExpressionString());
-            	}
-	    	} catch (Exception e) {
-	        	return id;
-	    	}
-    	}
-    	return id;
+    	return null;
     }
     
     public String getFormName(Component component) {
@@ -254,7 +233,7 @@ public class ComponentRenderer extends Renderer {
     		return name;
     	}
     	try {
-	    	return getExprId(getRepeatWrapper(component).getBindings().get("dataValue").getExpressionString());
+	    	return component.getExprId(component.getRepeatWrapper().getBindings().get("dataValue").getExpressionString());
     	} catch (Exception e) {
         	return getFormId(component);
     	}
@@ -350,38 +329,10 @@ public class ComponentRenderer extends Renderer {
 			UIComponent.VIEW_LOCATION_KEY, Pattern.CASE_INSENSITIVE).matcher(key).matches();
     }
     
-    private Component getRepeatWrapper(Component component) {
-    	try {
-			return (Component) component.getParent().getParent().getParent().getParent();
-    	} catch (Exception e) {
-    		return null;
-    	}
-    }
-    
-    private String getChildrenText(Component component) {
-    	List<String> strings = new ArrayList<String>();
-    	Iterator<UIComponent> fac = component.getFacetsAndChildren();
-    	while (fac.hasNext()) {
-    		UIComponent value = fac.next().findComponent("value");
-        	for (UIComponent child : value.getChildren()) {
-        		strings.add(child.toString());
-        	}
-    	}
-    	return StringUtils.join(strings, "");
-    }
-    
-    private String getExprId(String expr) {
-    	String[] arr = expr.replaceAll("^(\\$|#)\\{|\\}$", "").split("\\.");
-		if (arr.length != 0) {
-			return arr[arr.length - 1];
-		}
-		return null;
-    }
-    
     @SuppressWarnings("unchecked")
 	private boolean isMatch(Component component) {
     	try {
-			Component wrapper = getRepeatWrapper(component);
+			Component wrapper = component.getRepeatWrapper();
 			Map<String, ValueExpression> bindings = wrapper.getBindings();
 			Object dataValue = bindings.get("dataValue").getValue(FacesContext.getCurrentInstance().getELContext());
 			Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
