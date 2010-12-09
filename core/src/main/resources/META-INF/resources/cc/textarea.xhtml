@@ -31,7 +31,7 @@
             <label for="${cc.renderer.getFormId(cc)}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
         </ui:fragment>
 
-        ${cc.renderer.beginElement(cc, 'textarea')}<ui:fragment rendered="${not empty errors.get(cc.renderer.getFormId(cc))}">${errors.get(cc.renderer.formId).value}</ui:fragment>
+        ${cc.renderer.beginElement(cc, 'textarea')}<ui:fragment rendered="${not empty errors.get(cc.renderer.getFormId(cc))}">${errors.get(cc.renderer.getFormId(cc)).value}</ui:fragment>
 <ui:fragment id="value" rendered="${empty errors.get(cc.renderer.getFormId(cc))}"><cs:insertChildren /></ui:fragment>${cc.renderer.endElement(cc, 'textarea')}
         
         <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.renderer.getFormId(cc))}"
