@@ -21,17 +21,17 @@
         	var fn = arguments.callee;
         	
         	$('*', scope).filter(function(index) {
-        		return $(this).is('[data-ajax]') || $(this).is('[data-ajax-validation]');
+        		return $(this).is('[data-ajax]') || ($(this).is(':input') && !$(this).is('[type=hidden]') && $(this).parents('form[data-ajax-validation]').size());
         	}).each(function() {
-
+        		
         		var o = $(this),
         			event = o.attr('data-ajax-event'),
-        			validation = o.attr('data-ajax-validation') == 'true';
+        			validation = $(this).parents('form[data-ajax-validation]').attr('data-ajax-validation') == 'true';
         		
-	            if (!event) {
+        		if (!event) {
 	            	if (o.is(':text, textarea')) {
 	            		event = 'blur';
-	            	} else if (o.is('select')) {
+	            	} else if (o.is('select, :file')) {
 	            		event = 'change';
 	            	} else if (o.is(':checkbox, :radio, :submit, :reset, a, button')) {
 	            		event = 'click';
@@ -109,8 +109,20 @@
 	                        		// TODO: Copy events for form element wrappers
 	                        		// obj.data('events');
 	                        		if (el) {
-	                        			var target = obj.is(tags) ? obj.parent() : obj;
-		                        		fn(target.html($(el.firstChild.nodeValue).html()));
+	                        			var source = $(el.firstChild.nodeValue),
+	                        				target = obj.is(tags) ? obj.parent() : obj;
+	                        			if (validation) {
+	                        				var sourceForm = $(tags, source),
+	                        					targetForm = $(tags, target);
+	                        				sourceForm.replaceWith(targetForm);
+		                        			target.replaceWith(source);
+	                        				//if (event.type != 'blur') {
+	                        				//	$(tags, source).trigger('focus');
+	                        				//}	                        				
+	                        			} else {
+		                        			target.replaceWith(source);
+		                        			fn(source);
+	                        			}
 	                        		}
 	                            });
 	                        	regions.trigger('success', [data, status, xhr]);

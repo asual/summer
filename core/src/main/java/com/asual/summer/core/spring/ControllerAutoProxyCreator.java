@@ -1,5 +1,8 @@
 package com.asual.summer.core.spring;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Named;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -9,7 +12,9 @@ import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.InternalResourceView;
 
+import com.asual.summer.core.ErrorResolver;
 import com.asual.summer.core.util.RequestUtils;
 
 @Named
@@ -34,8 +39,10 @@ public class ControllerAutoProxyCreator extends AbstractAutoProxyCreator {
 	private static class ValidationMethodInterceptor implements MethodInterceptor {
 		
 		public Object invoke(MethodInvocation invocation) throws Throwable {
-			if ("Validation".equals((String) RequestUtils.getHeader("X-Requested-Operation"))) {
-				return new ModelAndView();
+			String form = (String) RequestUtils.getParameter("_form");
+			if (RequestUtils.isValidation() && form != null && RequestUtils.getAttribute(ErrorResolver.ERRORS_ATTRIBUTE) != null) {
+				RequestUtils.setAttribute(ErrorResolver.ERRORS_ATTRIBUTE, new HashMap<String, Map<String, Object>>());
+				return new ModelAndView(new InternalResourceView(form));
 			} else {
 				return invocation.proceed();
 			}

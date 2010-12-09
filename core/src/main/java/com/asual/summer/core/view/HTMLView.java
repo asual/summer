@@ -30,11 +30,11 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
 
 import com.asual.summer.core.ErrorResolver;
+import com.asual.summer.core.util.BeanUtils;
 
 /**
  * 
@@ -79,17 +79,11 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 		FacesContext facesContext = facesContextFactory.getFacesContext(getServletContext(), request, response, facesLifecycle);
 		
 		Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) request.getSession().getAttribute(ErrorResolver.ERRORS);
-		String objectName = (String) request.getSession().getAttribute(ErrorResolver.OBJECT_NAME);
-		Object source = request.getSession().getAttribute(ErrorResolver.TARGET);
 		
 		if (errors != null) {
-			request.setAttribute("errors", errors);
-			if (!model.containsKey(objectName)) {
-				model.put(objectName, source.getClass().getConstructor().newInstance());
-			}
-			Object target = model.get(objectName);
-			BeanUtils.copyProperties(source, target);
-			model.put(objectName, target);
+			BeanUtils.getBeanOfType(ErrorResolver.class).prepareAttributes(model, request, errors, 
+					(String) request.getSession().getAttribute(ErrorResolver.OBJECT_NAME), 
+						request.getSession().getAttribute(ErrorResolver.TARGET));
 		}
 		
 		request.getSession().setAttribute(ErrorResolver.ERRORS, null);

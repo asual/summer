@@ -95,8 +95,12 @@ public class RequestUtils implements ApplicationContextAware {
         return getHeader("User-Agent");
     }
     
+    public static boolean isValidation() {
+    	return "Validation".equals(getHeader("X-Requested-Operation"));
+    }
+    
     public static boolean isAjaxRequest() {
-        return "XMLHttpRequest".equals(getRequest().getHeader("X-Requested-With"));
+        return "XMLHttpRequest".equals(getHeader("X-Requested-With"));
     }
         
     public static boolean isGetRequest() {
