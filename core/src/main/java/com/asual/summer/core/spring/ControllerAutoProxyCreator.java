@@ -40,7 +40,7 @@ public class ControllerAutoProxyCreator extends AbstractAutoProxyCreator {
 		
 		public Object invoke(MethodInvocation invocation) throws Throwable {
 			String form = (String) RequestUtils.getParameter("_form");
-			if (RequestUtils.isValidation() && form != null && RequestUtils.getAttribute(ErrorResolver.ERRORS_ATTRIBUTE) != null) {
+			if (RequestUtils.isValidation() && form != null && RequestUtils.getAttribute(ErrorResolver.ERRORS_ATTRIBUTE) == null) {
 				RequestUtils.setAttribute(ErrorResolver.ERRORS_ATTRIBUTE, new HashMap<String, Map<String, Object>>());
 				return new ModelAndView(new InternalResourceView(form));
 			} else {

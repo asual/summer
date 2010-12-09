@@ -116,9 +116,9 @@
 	                        					targetForm = $(tags, target);
 	                        				sourceForm.replaceWith(targetForm);
 		                        			target.replaceWith(source);
-	                        				//if (event.type != 'blur') {
-	                        				//	$(tags, source).trigger('focus');
-	                        				//}	                        				
+	                        				if (event.type != 'blur') {
+	                        					$(tags, source).trigger('focus');
+	                        				}	                        				
 	                        			} else {
 		                        			target.replaceWith(source);
 		                        			fn(source);
