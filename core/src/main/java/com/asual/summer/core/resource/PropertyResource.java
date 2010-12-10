@@ -28,7 +28,6 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.ResourceUtils;
 
 /**
  * 
@@ -73,7 +72,7 @@ public class PropertyResource extends AbstractResource implements BeanFactoryPos
 				Resource[] wildcard = resolver.getResources(location);
 				if (wildcard != null && wildcard.length > 0) {
 					for (Resource resource : wildcard) {
-						if (ResourceUtils.isJarURL(resource.getURL()))  {
+						if (org.springframework.util.ResourceUtils.isJarURL(resource.getURL()))  {
 							resources.add(0, resource);
 						} else {
 							resources.add(resource);
@@ -107,8 +106,12 @@ public class PropertyResource extends AbstractResource implements BeanFactoryPos
 	    public Object getProperty(String key) {
 	        String value = super.resolvePlaceholder(key, properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
 	        if (value != null) {
-	            if (stringArraySeparator != null && value.indexOf(stringArraySeparator) != -1) {
-	                String[] arr = value.split(stringArraySeparator);
+	        	String separator = stringArraySeparator;
+	    		if (separator == null) {
+	    			separator = (String) super.resolvePlaceholder("app.stringArraySeparator", properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
+	    		}
+	            if (separator != null && value.indexOf(separator) != -1) {
+	                String[] arr = value.split(separator);
 	                for (int i = 0; i < arr.length; i++) {
 	                    arr[i] = arr[i].trim();
 	                }
