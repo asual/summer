@@ -67,7 +67,7 @@ public class MessageResource extends AbstractResource {
 						URL url = resource.getURL();
 						boolean isJar = ResourceUtils.isJarURL(url);
 						String basename = "classpath:" + url.getFile()
-							.split(isJar ? ResourceUtils.JAR_URL_SEPARATOR : "/(classes|resources)/")[1]
+							.replaceFirst(isJar ? "^.*" + ResourceUtils.JAR_URL_SEPARATOR : "^(.*/classes|.*/resources)/", "")
 							.replaceAll("(_\\w+){0,3}\\.(properties|xml)", "");
 						if (!basenames.contains(basename)) {
 							if (isJar) {
