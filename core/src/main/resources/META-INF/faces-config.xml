@@ -13,8 +13,18 @@
     </ordering>
 
     <component>
-        <component-type>summer.faces.Component</component-type>
-        <component-class>com.asual.summer.core.faces.Component</component-class>
+        <component-type>summer.faces.CompositeComponent</component-type>
+        <component-class>com.asual.summer.core.faces.CompositeComponent</component-class>
+    </component>
+
+    <component>
+        <component-type>summer.faces.CompositeTemplateComponent</component-type>
+        <component-class>com.asual.summer.core.faces.CompositeTemplateComponent</component-class>
+    </component>
+
+    <component>
+        <component-type>summer.faces.RepeatComponent</component-type>
+        <component-class>com.asual.summer.core.faces.RepeatComponent</component-class>
     </component>
     
     <application>
@@ -35,7 +45,12 @@
         <renderer>
             <component-family>summer.faces.NamingContainer</component-family>
             <renderer-type>javax.faces.Composite</renderer-type>
-            <renderer-class>com.asual.summer.core.faces.ComponentRenderer</renderer-class>
+            <renderer-class>com.asual.summer.core.faces.CompositeComponentRenderer</renderer-class>
+        </renderer>
+        <renderer>
+            <component-family>summer.faces.Facelets</component-family>
+            <renderer-type>facelets.ui.Repeat</renderer-type>
+            <renderer-class>com.asual.summer.core.faces.RepeatComponentRenderer</renderer-class>
         </renderer>
     </render-kit>
     

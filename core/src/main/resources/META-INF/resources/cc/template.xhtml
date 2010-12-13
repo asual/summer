@@ -17,16 +17,17 @@
 <ui:component
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:cs="http://java.sun.com/jsf/composite"
+    xmlns:sc="http://www.asual.com/summer/standard"
     xmlns:ui="http://java.sun.com/jsf/facelets">
         
-    <cs:interface componentType="summer.faces.Component" componentTag="${cc.attrs.qName}">
+    <cs:interface componentType="summer.faces.CompositeTemplateComponent" componentTag="${cc.attrs.qName}">
         <cs:attribute name="dataTemplate" required="true" />
         <cs:attribute name="styleClass" required="false" />
     </cs:interface>
     
     <cs:implementation>
-
         <ui:decorate template="/META-INF/templates/${cc.attrs.dataTemplate}.xhtml">
+            <ui:param name="template" value="${cc.getTemplateParams()}" />
             <cs:insertChildren />
         </ui:decorate>
         

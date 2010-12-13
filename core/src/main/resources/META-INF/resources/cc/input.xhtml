@@ -20,7 +20,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets">
     
-    <cs:interface componentType="summer.faces.Component" componentClass="${empty cc.attrs.type ? 'text' : cc.attrs.type}">
+    <cs:interface componentType="summer.faces.CompositeComponent" componentClass="${empty cc.attrs.type ? 'text' : cc.attrs.type}">
         <cs:attribute name="dataFalse" required="false" />
         <cs:attribute name="dataLabel" required="false" />
         <cs:attribute name="size" required="false" />
@@ -34,7 +34,7 @@
         <ui:fragment rendered="${not empty cc.attrs.type and cc.attrs.type.matches('hidden|submit|reset')}">
             ${cc.renderer.beginElement(cc, 'input')}
         </ui:fragment>
-                
+        
         <ui:fragment rendered="${not empty cc.attrs.type and cc.attrs.type.matches('checkbox|radio')}">
             <ui:fragment rendered="${cc.attrs.dataFalse}">
                 <input id="_${cc.renderer.getFormId(cc)}" name="_${cc.renderer.getFormName(cc)}" value="${cc.attrs.dataFalse}" type="hidden" />

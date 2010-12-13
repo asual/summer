@@ -73,7 +73,7 @@ section p, section ul {
 
 fieldset {
     margin: 0 0 15px;
-    padding: 0 20px;
+    padding: 15px 20px 10px;
     border: 1px solid #999;
 }
 
@@ -87,11 +87,6 @@ fieldset legend {
 
 fieldset img {
     margin: 0 0 10px;
-}
-
-form fieldset .fieldset {
-    margin: 0;
-    padding: 15px 0 10px;
 }
 
 form div {

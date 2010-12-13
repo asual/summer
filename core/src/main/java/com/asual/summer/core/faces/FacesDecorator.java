@@ -36,10 +36,11 @@ import com.sun.faces.facelets.tag.jsf.html.HtmlLibrary;
  */
 public final class FacesDecorator implements TagDecorator {
 
-    public final static String SUMMER = "http://java.sun.com/jsf/composite/cc";
+    public final static String COMPOSITE = "http://www.asual.com/summer/composite";
+    public final static String STANDARD = "http://www.asual.com/summer/standard";
     public final static String QNAME = "qName";
     public final static String ATTRIBUTES = "dataEmpty|dataEmptyOption|dataRepeat|dataRepeatBegin|dataRepeatEnd|" + 
-    	"dataTemplate|dataValue|dataVar|dataVarStatus|dataPack|dataEscape|dataError|dataLabel";
+    	"dataValue|dataVar|dataVarStatus|dataPack|dataEscape|dataError|dataLabel|dataTemplate.*";
 
     private List<String> reservedTags = Arrays.asList(new String[] {
         "repeat", 
@@ -220,7 +221,7 @@ public final class FacesDecorator implements TagDecorator {
     		if (tagTargetAttr != null) {
     			attrs.add(tagTargetAttr);
     		}
-    		return new Tag(location, headTags.contains(qName) ? HtmlLibrary.Namespace : SUMMER, name, name, 
+    		return new Tag(location, headTags.contains(qName) ? HtmlLibrary.Namespace : ("repeat".equals(name) ? STANDARD : COMPOSITE), name, name, 
             		new TagAttributesImpl(attrs.toArray(new TagAttribute[] {})));
     	}
     	return tag;

@@ -46,6 +46,7 @@
 		                ids = o.attr('data-ajax') ? o.attr('data-ajax') : (validation ? o.attr('id') : ''),
 		                data = o.attr('data-ajax-params'),
 		                method = o.attr('data-ajax-method'),
+	        			disabled = o.attr('data-ajax-disabled'),
 		                tags = 'input, select, textarea',
 		                selector = '#' + ids.replace(/:/g, '\\:').split(' ').join(', #'),
 		                params = '_ajax=' + ids,
@@ -78,65 +79,67 @@
 		            	url = o.attr('data-ajax-url');
 		            }
 		            
-                    $.ajax({
-                        url: url,
-                        type: re.test(method) ? method : 'post',
-                        data: params + (data ? '&' + data : ''),
-                        beforeSend: function(xhr) {
-                        	if (validation) {
-                                xhr.setRequestHeader('X-Requested-Operation', 'Validation');
-                        	}
-                            regions.trigger('beforeSend', [xhr]).each(function() {
-                            	($(this).is(tags) ? $(this).parent() : $(this)).addClass('loading');
-                            });
-                        },
-                        complete: function(xhr, status) {
-                        	regions.trigger('complete', [xhr, status]).each(function() {
-                        		($(this).is(tags) ? $(this).parent() : $(this)).removeClass('loading');
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            if (xhr.status) {
-                                this.success(xhr.responseXML, [xhr, status, error]);
-                            }
-                            regions.trigger('error');
-                        },
-                        success: function(data, status, xhr) {
-                        	if (data && data.getElementsByTagName('update').length > 0) {
-                        		regions.each(function(i) {
-	                        		var obj = $(this),
-	                        			el = find(data.getElementsByTagName('update'), this.id);
-	                        		// TODO: Copy events for form element wrappers
-	                        		// obj.data('events');
-	                        		if (el) {
-	                        			var source = $(el.firstChild.nodeValue),
-	                        				target = obj.is(tags) ? obj.parent() : obj;
-	                        			if (validation) {
-	                        				var sourceForm = $(tags, source),
-	                        					targetForm = $(tags, target);
-	                        				sourceForm.replaceWith(targetForm);
-		                        			target.replaceWith(source);
-	                        				if (event.type != 'blur') {
-	                        					$(tags, source).trigger('focus');
-	                        				}	                        				
-	                        			} else {
-		                        			target.replaceWith(source);
-		                        			fn(source);
-	                        			}
-	                        		}
+		            if (!disabled) {
+		            	
+	                    $.ajax({
+	                        url: url,
+	                        type: re.test(method) ? method : 'post',
+	                        data: params + (data ? '&' + data : ''),
+	                        beforeSend: function(xhr) {
+	                        	if (validation) {
+	                                xhr.setRequestHeader('X-Requested-Operation', 'Validation');
+	                        	}
+	                            regions.trigger('beforeSend', [xhr]).each(function() {
+	                            	($(this).is(tags) ? $(this).parent() : $(this)).addClass('loading');
 	                            });
-	                        	regions.trigger('success', [data, status, xhr]);
-                        	} else {
-	                        	regions.trigger('error', [data, status, xhr]);                        		
-                        	}
-                        	regions = $(selector);
-                        }
-                    });
-                    
-                    if (o.is(':submit, :reset, a, button')) {
-                    	event.preventDefault();
-                    }
-                    
+	                        },
+	                        complete: function(xhr, status) {
+	                        	regions.trigger('complete', [xhr, status]).each(function() {
+	                        		($(this).is(tags) ? $(this).parent() : $(this)).removeClass('loading');
+	                            });
+	                        },
+	                        error: function(xhr, status, error) {
+	                            if (xhr.status) {
+	                                this.success(xhr.responseXML, [xhr, status, error]);
+	                            }
+	                            regions.trigger('error');
+	                        },
+	                        success: function(data, status, xhr) {
+	                        	if (data && data.getElementsByTagName('update').length > 0) {
+	                        		regions.each(function(i) {
+		                        		var obj = $(this),
+		                        			el = find(data.getElementsByTagName('update'), this.id);
+		                        		// TODO: Copy events for form element wrappers
+		                        		// obj.data('events');
+		                        		if (el) {
+		                        			var source = $(el.firstChild.nodeValue),
+		                        				target = obj.is(tags) ? obj.parent() : obj;
+		                        			if (validation) {
+		                        				var sourceForm = $(tags, source),
+		                        					targetForm = $(tags, target);
+		                        				sourceForm.replaceWith(targetForm);
+			                        			target.replaceWith(source);
+		                        				if (event.type != 'blur') {
+		                        					$(tags, source).trigger('focus');
+		                        				}	                        				
+		                        			} else {
+			                        			target.replaceWith(source);
+			                        			fn(source);
+		                        			}
+		                        		}
+		                            });
+		                        	regions.trigger('success', [data, status, xhr]);
+	                        	} else {
+		                        	regions.trigger('error', [data, status, xhr]);                        		
+	                        	}
+	                        	regions = $(selector);
+	                        }
+	                    });
+	                    
+	                    if (o.is(':submit, :reset, a, button')) {
+	                    	event.preventDefault();
+	                    }
+		            }
                 });            	
             	
             });
