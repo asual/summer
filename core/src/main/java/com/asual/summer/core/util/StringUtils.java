@@ -118,7 +118,8 @@ public class StringUtils {
     		if (value == null) {
     			value = "";
     		}
-    		str = str.replaceAll("\\$\\{" + key + "\\}", value);
+    		str = str.replaceAll("\\$\\{" + key + "\\}", 
+    				value.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\""));
     	}
     	return str;
     }	
