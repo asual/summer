@@ -14,14 +14,16 @@
 
 (function($) {
 	
-    $(function() {
+    $(function(event) {
 	    
-        (function(scope) {
+        (function(scope, ready) {
         	
         	var fn = arguments.callee;
         	
         	$('*', scope).filter(function(index) {
+        		
         		return $(this).is('[data-ajax]') || ($(this).is(':input') && !$(this).is('[type=hidden]') && $(this).parents('form[data-ajax-validation]').size());
+        		
         	}).each(function() {
         		
         		var o = $(this),
@@ -35,6 +37,8 @@
 	            		event = 'change';
 	            	} else if (o.is(':checkbox, :radio, :submit, :reset, a, button')) {
 	            		event = 'click';
+	            	} else {
+	            		event = 'ready';
 	            	}
 	            }
         		
@@ -139,12 +143,17 @@
 	                    if (o.is(':submit, :reset, a, button')) {
 	                    	event.preventDefault();
 	                    }
+	                    
 		            }
                 });            	
             	
+        		if (ready && event == 'ready') {
+        			o.trigger(event, ready);
+        		}
+        		
             });
         	
-        })(document);
+        })(document, event);
         
     });
     
