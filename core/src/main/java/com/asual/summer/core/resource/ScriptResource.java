@@ -30,4 +30,30 @@ public class ScriptResource extends AbstractResource {
 	public void setPack(String pack) {
 		this.pack = pack;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((pack == null) ? 0 : pack.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ScriptResource other = (ScriptResource) obj;
+		if (pack == null) {
+			if (other.pack != null)
+				return false;
+		} else if (!pack.equals(other.pack))
+			return false;
+		return true;
+	}
+
 }

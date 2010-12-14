@@ -192,7 +192,10 @@ public class ResourceUtils {
 		List<T> resources = new ArrayList<T>();
 	
 		for (String name : names) {
-			resources.add((T) BeanUtils.getBean(name));
+			T bean = (T) BeanUtils.getBean(name);
+			if (!resources.contains(bean)) {
+				resources.add(bean);
+			}
 		}
 		
 		OrderComparator.sort(resources);

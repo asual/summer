@@ -40,4 +40,35 @@ public class StylesheetResource extends AbstractResource {
 		this.pack = pack;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((media == null) ? 0 : media.hashCode());
+		result = prime * result + ((pack == null) ? 0 : pack.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StylesheetResource other = (StylesheetResource) obj;
+		if (media == null) {
+			if (other.media != null)
+				return false;
+		} else if (!media.equals(other.media))
+			return false;
+		if (pack == null) {
+			if (other.pack != null)
+				return false;
+		} else if (!pack.equals(other.pack))
+			return false;
+		return true;
+	}
+	
 }
