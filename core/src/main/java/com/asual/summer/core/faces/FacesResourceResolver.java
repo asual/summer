@@ -32,21 +32,21 @@ import com.asual.summer.core.util.ResourceUtils;
  */
 public class FacesResourceResolver extends ResourceResolver {
     
-	private Map<String, URL> resources = new HashMap<String, URL>();
-	
-	public URL resolveUrl(String path) {
-		if (!resources.containsKey(path)) {
-			URL url = ResourceUtils.getClasspathResource("/".equals(path) ? "META-INF" : path.replaceAll("^/", ""));
-	    	try {
-	        	url = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(url));
-	        } catch (AccessControlException e) {
-	        } catch (NoClassDefFoundError e) {
-	        } catch (MalformedURLException e) {
-	            throw new FacesException(e);
-	        }
-        	resources.put(path, url);
-		}
-		return resources.get(path);
+    private Map<String, URL> resources = new HashMap<String, URL>();
+    
+    public URL resolveUrl(String path) {
+        if (!resources.containsKey(path)) {
+            URL url = ResourceUtils.getClasspathResource("/".equals(path) ? "META-INF/" : path.replaceAll("^/", ""));
+            try {
+                url = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(url));
+            } catch (AccessControlException e) {
+            } catch (NoClassDefFoundError e) {
+            } catch (MalformedURLException e) {
+                throw new FacesException(e);
+            }
+            resources.put(path, url);
+        }
+        return resources.get(path);
     }
-    	
+    
 }
