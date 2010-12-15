@@ -27,6 +27,8 @@ import javax.faces.render.Renderer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.asual.summer.core.util.ObjectUtils;
+
 /**
  * 
  * @author Rostislav Hristov
@@ -52,6 +54,25 @@ public class RepeatComponentRenderer extends Renderer {
             while (itr.hasNext()) {
             	((UIComponent) itr.next()).encodeAll(context);
             }
+        }
+        RepeatComponent repeatComponent = ((RepeatComponent) component);
+        String componentTag = getComponentTag(component);
+        Object value = repeatComponent.getValue();
+    	ResponseWriter writer = context.getResponseWriter();
+        if (ObjectUtils.size(value) == 0 && repeatComponent.getEmpty() != null) {
+        	if (componentTag.matches("tbody")) {
+        		writer.write("<tr>");
+        	}
+        	if (componentTag.matches("tbody|tr")) {
+        		writer.write("<td>");
+        	}
+        	writer.write(repeatComponent.getEmpty());
+        	if (componentTag.matches("tbody|tr")) {
+        		writer.write("</td>");
+        	}
+        	if (componentTag.matches("tbody")) {
+        		writer.write("</tr>");
+        	}
         }
     }
 

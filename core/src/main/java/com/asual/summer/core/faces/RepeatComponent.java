@@ -125,7 +125,11 @@ public class RepeatComponent extends UIRepeat implements Component {
             return getAttributeExpression("dataRepeat");
         }
         return super.getValue();
-    }  
+    }
+    
+    public String getEmpty() {
+        return (String) getAttributeExpression("dataRepeatEmpty");
+    }
     
     public void setValueExpression(String name, ValueExpression binding) {
     	super.setValueExpression(name, binding);

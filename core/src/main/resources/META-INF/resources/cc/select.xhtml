@@ -32,11 +32,12 @@
         <ui:fragment rendered="${empty cc.attrs.dataRepeat and not empty cc.attrs.dataEmpty}">
             ${cc.attrs.dataEmpty}
         </ui:fragment>
+        
+        <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
+            <label for="${cc.renderer.getFormId(cc)}" title="${cc.attrs.dataTitle}">${cc.attrs.dataLabel}</label>
+        </ui:fragment>
+        
         <ui:fragment rendered="${not empty cc.attrs.dataRepeat}">
-
-            <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
-                <label for="${cc.renderer.getFormId(cc)}" title="${cc.attrs.dataTitle}">${cc.attrs.dataLabel}</label>
-            </ui:fragment>
             
             ${cc.renderer.beginElement(cc, 'select')}
             <ui:fragment rendered="${cc.attrs.qName.matches('select') and not empty cc.attrs.dataEmptyOption}">
