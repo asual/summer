@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +61,28 @@ public class RequestUtils implements ApplicationContextAware {
             return (String) getAttribute(WebUtils.FORWARD_QUERY_STRING_ATTRIBUTE);
         }
         return getRequest().getQueryString();
+    }
+    
+    public static String getURL() {
+        return getRequestURI() + (getQueryString() != null ? "?" + getQueryString() : "");
+    }
+    
+    public static String getURL(String parameters) {
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+    	String[] params = parameters.split("&");
+        for (String param : params) {
+        	String[] pair = param.split("=");
+            if (pair.length != 2 || pair[0].trim().length() == 0) {
+                continue;
+            }
+        	if (!map.containsKey(pair[0])) {
+        		map.put(pair[0], new ArrayList<String>());
+        	}
+        	map.get(pair[0]).add(pair[1]);
+        }
+    	return getRequestURI() + (map.size() != 0 ? StringUtils.decode(
+    			FacesContext.getCurrentInstance().getExternalContext().encodeRedirectURL("?" + 
+    					(getQueryString() != null ? getQueryString() : ""), map)) : "");
     }
     
     public static Map<String, Object[]> getParametersMap() {
