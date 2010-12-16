@@ -173,7 +173,7 @@ public class ComponentUtils {
     static void writeAttribute(ResponseWriter writer, Component component, String name, Object value) throws IOException {
     	
     	if (value != null && !"rendered".equalsIgnoreCase(name) && !"styleClass".equalsIgnoreCase(name)) {
-        	if ("action".equalsIgnoreCase(name) || "href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
+        	if ("data-ajax-url".equalsIgnoreCase(name) || "href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
     			writer.writeAttribute(name, RequestUtils.contextRelative(value != null ? value.toString() : "", true), null);
         	} else {
         		writer.writeAttribute(name, value, null);

@@ -62,7 +62,7 @@ public class CompositeComponentRenderer extends Renderer {
 	        	if (isMatch(c) && getAttrValue(c, "selected") == null) {
 	        		ComponentUtils.writeAttribute(writer, (Component) component, "selected", "selected");
 	        	}
-	        }	        
+	        }
     	}
     }
     
