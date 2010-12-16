@@ -41,7 +41,7 @@ import com.asual.summer.core.util.BeanUtils;
  * @author Rostislav Hristov
  *
  */
-@Named("html")
+@Named
 public class HTMLView extends InternalResourceView implements ResponseView {
 
 	private Lifecycle facesLifecycle;

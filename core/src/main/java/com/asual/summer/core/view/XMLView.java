@@ -47,7 +47,7 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
  * @author Rostislav Hristov
  *
  */
-@Named("xml")
+@Named
 public class XMLView extends AbstractResponseView {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/xml";

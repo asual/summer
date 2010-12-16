@@ -33,7 +33,7 @@ import com.asual.summer.core.util.StringUtils;
  * @author Rostislav Hristov
  *
  */
-@Named("json")
+@Named
 public class JSONView extends AbstractResponseView {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
