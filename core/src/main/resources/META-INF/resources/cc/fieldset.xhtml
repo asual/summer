@@ -26,8 +26,8 @@
     
     <cs:implementation>
         ${cc.renderer.beginElement(cc, 'fieldset')}
-            <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
-                <legend>${cc.attrs.dataLabel}</legend>
+            <ui:fragment rendered="${not empty cc.attrs.dataLegend}">
+                <legend>${cc.attrs.dataLegend}</legend>
             </ui:fragment>
             <cs:insertChildren />
         ${cc.renderer.endElement(cc, 'fieldset')}
