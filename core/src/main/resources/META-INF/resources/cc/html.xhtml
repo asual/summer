@@ -28,6 +28,7 @@
     <cs:implementation>
         <f:view contentType="text/html;charset=UTF-8" locale="${request.locale}"><html data-client="${requestUtils.getClient()}">
             <ui:decorate template="/META-INF/templates/${empty cc.attrs.dataTemplate ? 'template' : cc.attrs.dataTemplate}.xhtml">
+                <ui:param name="template" value="${cc.getTemplateParams()}" />
                 <cs:insertChildren />${''}
             </ui:decorate></html>
         </f:view>
