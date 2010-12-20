@@ -184,13 +184,13 @@ public class RequestUtils implements ApplicationContextAware {
     }
     
     public static String contextRelative(String uri, boolean contextRelative) {
-        if (uri != null) {
+        if (uri != null && uri.startsWith("/")) {
             String contextPath = getRequest().getContextPath();
+        	uri = uri.replaceFirst("^" + contextPath + "/?", "/");
             if (contextRelative) {
-                return uri.startsWith("/") ? contextPath.concat(uri) : uri;
-            } else {
-                return !"".equals(contextPath) ? uri.replaceFirst("^" + contextPath, "") : uri;
+                uri = contextPath.concat(uri);
             }
+            return uri;
         }
         return null;
     }
