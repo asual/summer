@@ -17,6 +17,7 @@ package com.asual.summer.ajax;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.faces.component.UIComponent;
@@ -37,9 +38,11 @@ import com.sun.faces.facelets.compiler.UIInstructions;
 public class AjaxVisitContext extends PartialVisitContext {
     
     private NullWriter nullWriter = new NullWriter();
+    private Collection<String> unvisitedClientIds;
     
     public AjaxVisitContext(Collection<String> clientIds, Set<VisitHint> hints) {
         super(FacesContext.getCurrentInstance(), clientIds, hints);
+        unvisitedClientIds = new HashSet<String>(clientIds);
     }
 
     public VisitResult invokeVisitCallback(UIComponent component, 
@@ -63,9 +66,9 @@ public class AjaxVisitContext extends PartialVisitContext {
         }
         
         VisitResult result = callback.visit(this, component);
-        getUnvisitedClientIds().remove(clientId);
+        unvisitedClientIds.remove(clientId);
         
-        if (getUnvisitedClientIds().isEmpty()) {
+        if (unvisitedClientIds.isEmpty()) {
             return VisitResult.COMPLETE;
         }
         
