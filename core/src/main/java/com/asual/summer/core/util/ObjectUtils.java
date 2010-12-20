@@ -50,7 +50,9 @@ public class ObjectUtils {
     }
     
     public static int size(Object obj) {
-    	if (obj instanceof Collection) {
+    	if (obj instanceof String) {
+    		return ((String) obj).length();    		
+    	} else if (obj instanceof Collection) {
     		return ((Collection<?>) obj).size();
     	} else if (obj instanceof Map) {
     		return ((Map<?, ?>) obj).size();
