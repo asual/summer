@@ -151,33 +151,37 @@ public class ComponentUtils {
         	Map<String, ValueExpression> bindings = component.getBindings();
 	        for (String key : bindings.keySet()) {
 	    		if (shouldWriteAttribute(component, key)) {
-		        	writeAttribute(writer, component, key, bindings.get(key).getValue(FacesContext.getCurrentInstance().getELContext()));
+		        	writeAttribute(writer, key, bindings.get(key).getValue(FacesContext.getCurrentInstance().getELContext()));
 	        	}
 	        }
 	        
 	        Map<String, Object> attrs = component.getAttributes();
 	        for (String key : attrs.keySet()) {
 	    		if (shouldWriteAttribute(component, key)) {
-	            	writeAttribute(writer, component, key, attrs.get(key));
+	            	writeAttribute(writer, key, attrs.get(key));
 	        	}
 			}
         }
         
         List<String> classes = ComponentUtils.getComponentClasses(component);
         if (classes.size() != 0) {
-        	writeAttribute(writer, component, "class", StringUtils.join(classes, " "));
+        	writeAttribute(writer, "class", StringUtils.join(classes, " "));
         }
     	
     }
     
-    static void writeAttribute(ResponseWriter writer, Component component, String name, Object value) throws IOException {
-    	
+    static String contextAttribute(String name, Object value) {
+    	if (value != null && "data-ajax-url".equalsIgnoreCase(name) || 
+    			"href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
+			return RequestUtils.contextRelative(value.toString(), true);
+    	} else {
+			return value.toString();
+    	}
+    }
+    
+    static void writeAttribute(ResponseWriter writer, String name, Object value) throws IOException {
     	if (value != null && !"rendered".equalsIgnoreCase(name) && !"styleClass".equalsIgnoreCase(name)) {
-        	if ("data-ajax-url".equalsIgnoreCase(name) || "href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
-    			writer.writeAttribute(name, RequestUtils.contextRelative(value != null ? value.toString() : "", true), null);
-        	} else {
-        		writer.writeAttribute(name, value, null);
-        	}
+    		writer.writeAttribute(name, contextAttribute(name, value), null);
         }
     }
     

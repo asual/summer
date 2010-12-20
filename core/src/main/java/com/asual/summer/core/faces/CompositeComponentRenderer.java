@@ -60,7 +60,7 @@ public class CompositeComponentRenderer extends Renderer {
 	        if ("option".equals(componentTag)) {
 	        	CompositeComponent c = (CompositeComponent) component;
 	        	if (isMatch(c) && getAttrValue(c, "selected") == null) {
-	        		ComponentUtils.writeAttribute(writer, (Component) component, "selected", "selected");
+	        		ComponentUtils.writeAttribute(writer, "selected", "selected");
 	        	}
 	        }
     	}
@@ -164,7 +164,7 @@ public class CompositeComponentRenderer extends Renderer {
         
         for (String key : attrs.keySet()) {
     		if (ComponentUtils.shouldWriteAttribute(component, key) && attrs.get(key) != null) {
-    			writer.write(" " + key + "=\"" + attrs.get(key) + "\"");
+    			writer.write(" " + key + "=\"" + ComponentUtils.contextAttribute(key, attrs.get(key)) + "\"");
     		}
         }
         
@@ -223,7 +223,9 @@ public class CompositeComponentRenderer extends Renderer {
     }    
     
     private boolean shouldWriteIdAttribute(UIComponent component, String id) {
-        return (id != null && (isComponentWrapper(component) || getComponentTag(component) != null) && 
+    	String componentTag = getComponentTag(component);
+        return (id != null && (isComponentWrapper(component) || componentTag != null) && 
+        			!"option".equals(componentTag) &&
                     (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX) ||
                         ((component instanceof ClientBehaviorHolder) &&
                           !((ClientBehaviorHolder) component).getClientBehaviors().isEmpty())));
