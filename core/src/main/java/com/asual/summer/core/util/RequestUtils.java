@@ -190,9 +190,8 @@ public class RequestUtils implements ApplicationContextAware {
             if (contextRelative) {
                 uri = contextPath.concat(uri);
             }
-            return uri;
         }
-        return null;
+        return uri;
     }
 
     public static Throwable getError() {
