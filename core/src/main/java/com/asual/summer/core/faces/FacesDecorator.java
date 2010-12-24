@@ -192,8 +192,6 @@ public final class FacesDecorator implements TagDecorator {
     			} else if ("data-label".equals(attr.getQName()) && !StringUtils.isEmpty(attr.getValue())) {
     				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
     				name = qName;
-    			} else if ("input".equals(qName) && "type".equals(attr.getQName()) && attr.getValue().matches("hidden|reset|submit")) {
-    				name = qName;
     			}
     	    	if (attr.getQName().startsWith("data-") && !attr.getQName().equals("data-rendered")) {
     	    		String replace = convertName(attr.getQName());
@@ -204,7 +202,7 @@ public final class FacesDecorator implements TagDecorator {
     			}
     	    	if ("id".equals(attr.getQName()) && attr.getValue().contains("${")) {
         			replaceAttr(attrs, attr, "id", "idx");
-    			}    	    	
+    			}
     			replaceAttr(attrs, attr, "class", "styleClass");
     			replaceAttr(attrs, attr, "data-rendered", "rendered");
     		}

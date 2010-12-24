@@ -2,10 +2,6 @@
     display: inline;
 }
 
-.hidden {
-    display: none;
-}
-
 .stack-trace {
     font-family: monospace;
 }

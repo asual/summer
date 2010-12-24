@@ -57,9 +57,24 @@ public class CompositeComponentRenderer extends Renderer {
 	        writeIdAttributeIfNecessary(context, writer, component);
 	        ComponentUtils.writeAttributes((Component) component, writer);
 	        
-	        if ("option".equals(componentTag)) {
-	        	CompositeComponent c = (CompositeComponent) component;
-	        	if (isMatch(c) && getAttrValue(c, "selected") == null) {
+        	CompositeComponent cc = (CompositeComponent) component;
+	        
+	        if ("input".equals(componentTag)) {
+
+	        	String type = (String) component.getAttributes().get("type");
+	        	
+	        	if (type != null && type.matches("checkbox|radio")) {
+	        		ComponentUtils.writeAttribute(writer, "name", getFormName(cc));
+		        	if (isMatch(cc) && getAttrValue(cc, "checked") == null) {
+		        		ComponentUtils.writeAttribute(writer, "checked", "checked");
+		        	}
+	        	} else {
+					// TODO: Handle the case where only name is provided instead of an id
+	        		ComponentUtils.writeAttribute(writer, "name", getFormId(cc));
+	        	}
+	        	
+	        } else if ("option".equals(componentTag)) {
+	        	if (isMatch(cc) && getAttrValue(cc, "selected") == null) {
 	        		ComponentUtils.writeAttribute(writer, "selected", "selected");
 	        	}
 	        }
@@ -99,12 +114,8 @@ public class CompositeComponentRenderer extends Renderer {
     	}
     }
     
-    public void beginElement(CompositeComponent component, String name) throws IOException {
-    	beginElement(component, name, false);
-    }
-    
     @SuppressWarnings("unchecked")
-	public void beginElement(Component component, String name, boolean nameAttr) throws IOException {
+	public void beginElement(Component component, String name) throws IOException {
         
     	ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
         writer.write("<");
@@ -132,7 +143,9 @@ public class CompositeComponentRenderer extends Renderer {
         	
         } else if ("input".equals(name)) {
         	
-			if (nameAttr) {
+        	String type = (String) attrs.get("type");
+        	
+        	if (type != null && type.matches("checkbox|radio")) {
 	        	attrs.put("id", getFormId(component));
 	        	attrs.put("name", getFormName(component));
 	        	if (isMatch(component) && getAttrValue(component, "checked") == null) {
@@ -153,13 +166,10 @@ public class CompositeComponentRenderer extends Renderer {
         	
         	attrs.put("id", getFormId(component));
         	attrs.put("name", getFormId(component));
-        	
-        } else if ("td".equals(name)) {
-
-        	try {
-	        	attrs.put("colspan", component.getFacets().values().toArray(new UIPanel[]{})[0].getChildCount());
-        	} catch (Exception e) {}
-        	
+        }
+		
+        if (isComponentWrapper((UIComponent) component)) {
+        	attrs.put("class", component.getStyleClass());
         }
         
         for (String key : attrs.keySet()) {

@@ -38,7 +38,6 @@ public class RepeatComponent extends UIRepeat implements Component {
     public static final String COMPONENT_FAMILY = "summer.faces.Facelets";
     
     private String styleClass;
-    private boolean escape;
     private Map<String, ValueExpression> bindings = new HashMap<String, ValueExpression>();
     private Map<String, String> bindingValues = new HashMap<String, String>();
     
@@ -56,14 +55,6 @@ public class RepeatComponent extends UIRepeat implements Component {
 
     public void setStyleClass(String styleClass) {
         this.styleClass = styleClass;
-    }
-
-    public boolean isEscape() {
-        return escape;
-    }
-
-    public void setEscape(boolean escape) {
-        this.escape = escape;
     }
     
     public Map<String, ValueExpression> getBindings() {

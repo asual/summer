@@ -28,6 +28,8 @@ import javax.faces.component.UIComponent;
  */
 public interface Component {
 	
+	public String getStyleClass();
+    public void setStyleClass(String styleClass);
 	public Map<String, Object> getAttributes();
 	public Map<String, ValueExpression> getBindings();
 	public String getId();
