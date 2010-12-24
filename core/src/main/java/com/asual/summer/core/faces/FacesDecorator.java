@@ -40,7 +40,7 @@ public final class FacesDecorator implements TagDecorator {
     public final static String STANDARD = "http://www.asual.com/summer/standard";
     public final static String QNAME = "qName";
     public final static String ATTRIBUTES = "dataEmpty|dataEmptyOption|dataRepeat|dataRepeatBegin|dataRepeatEnd|" + 
-    	"dataValue|dataVar|dataVarStatus|dataPack|dataEscape|dataError|dataLabel|dataTemplate.*";
+    	"dataValue|dataVar|dataVarStatus|dataPack|dataEscape|dataError|dataLabel|dataLegend|dataTemplate.*";
 
     private List<String> reservedTags = Arrays.asList(new String[] {
         "repeat", 
