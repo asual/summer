@@ -158,7 +158,7 @@ public class CompositeComponentRenderer extends Renderer {
 			}
 			
 			Map<String, Map<String, Object>> errors = 
-				(Map<String, Map<String, Object>>) RequestUtils.getAttribute("errors");
+				(Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
         	attrs.put("value", errors != null && errors.get(getFormId(component)) != null ? 
         			errors.get(getFormId(component)).get("value") : getAttrValue(component, "value"));
         	
