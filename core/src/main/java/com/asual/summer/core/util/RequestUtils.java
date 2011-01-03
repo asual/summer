@@ -85,7 +85,7 @@ public class RequestUtils implements ApplicationContextAware {
     					(getQueryString() != null ? getQueryString() : ""), map)) : "");
     }
     
-    public static Map<String, Object[]> getParametersMap() {
+    public static Map<String, Object[]> getParameterMap() {
         Map<String, Object[]> normalized = new HashMap<String, Object[]>();
         Map<String, String[]> params = getRequest().getParameterMap();
         for (String key : params.keySet()) {
@@ -100,14 +100,14 @@ public class RequestUtils implements ApplicationContextAware {
     }
 
     public static Object getParameter(String name) {
-        if (getParametersMap().get(name) != null) {
-        	return getParametersMap().get(name)[0];
+        if (getParameterMap().get(name) != null) {
+        	return getParameterMap().get(name)[0];
         }
         return null;
     }
 
     public static Object[] getParameterValues(String name) {
-        return getParametersMap().get(name);
+        return getParameterMap().get(name);
     }
     
     public static String getHeader(String name) {
@@ -182,7 +182,18 @@ public class RequestUtils implements ApplicationContextAware {
     public static Object getAttribute(String name) {
         return getRequest().getAttribute(name);
     }
-    
+
+	public static String serializeParameters() {
+		List<String> pairs = new ArrayList<String>();
+		Map<String, String[]> params = getRequest().getParameterMap();
+		for (String key : params.keySet()) {
+			for (String value : params.get(key)) {
+				pairs.add(key + "=" + StringUtils.encode(value));
+			}
+		}
+		return StringUtils.join(pairs, "&");
+	}
+	
     public static String contextRelative(String uri, boolean contextRelative) {
         if (uri != null && uri.startsWith("/")) {
             String contextPath = getRequest().getContextPath();
