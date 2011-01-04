@@ -15,12 +15,13 @@
 package com.asual.summer.core.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -42,12 +43,15 @@ import com.asual.summer.core.RequestFilter;
 public class RequestUtils implements ApplicationContextAware {
 	
 	private static ApplicationContext applicationContext;
+	private static final String QUERY_STRING_SEPARATOR = "?";
+	private static final String PARAMETER_SEPARATOR = "&";
+	private static final String NAME_VALUE_SEPARATOR = "=";
 
     public static HttpServletRequest getRequest() {
         return RequestFilter.getRequest();
     }
 
-    public static String getRequestURI() {
+    public static String getRequestUri() {
         String requestUri = (String) getAttribute(WebUtils.FORWARD_REQUEST_URI_ATTRIBUTE);
         if (requestUri != null) {
             return requestUri;
@@ -63,26 +67,16 @@ public class RequestUtils implements ApplicationContextAware {
         return getRequest().getQueryString();
     }
     
-    public static String getURL() {
-        return getRequestURI() + (getQueryString() != null ? "?" + getQueryString() : "");
+    public static String getUrl() {
+        return getRequestUri() + (getQueryString() != null ? QUERY_STRING_SEPARATOR + getQueryString() : "");
     }
     
-    public static String getURL(String parameters) {
-        Map<String, List<String>> map = new HashMap<String, List<String>>();
-    	String[] params = parameters.split("&");
-        for (String param : params) {
-        	String[] pair = param.split("=");
-            if (pair.length != 2 || pair[0].trim().length() == 0) {
-                continue;
-            }
-        	if (!map.containsKey(pair[0])) {
-        		map.put(pair[0], new ArrayList<String>());
-        	}
-        	map.get(pair[0]).add(pair[1]);
-        }
-    	return getRequestURI() + (map.size() != 0 ? StringUtils.decode(
-    			FacesContext.getCurrentInstance().getExternalContext().encodeRedirectURL("?" + 
-    					(getQueryString() != null ? getQueryString() : ""), map)) : "");
+    public static UrlBuilder getUrlBuilder() {
+    	return getUrlBuilder(getUrl());
+    }
+    
+    public static UrlBuilder getUrlBuilder(String url) {
+    	return new UrlBuilder(url);
     }
     
     public static Map<String, Object[]> getParameterMap() {
@@ -188,10 +182,10 @@ public class RequestUtils implements ApplicationContextAware {
 		Map<String, String[]> params = getRequest().getParameterMap();
 		for (String key : params.keySet()) {
 			for (String value : params.get(key)) {
-				pairs.add(key + "=" + StringUtils.encode(value));
+				pairs.add(key + NAME_VALUE_SEPARATOR + StringUtils.encode(value));
 			}
 		}
-		return StringUtils.join(pairs, "&");
+		return StringUtils.join(pairs, PARAMETER_SEPARATOR);
 	}
 	
     public static String contextRelative(String uri, boolean contextRelative) {
@@ -224,5 +218,101 @@ public class RequestUtils implements ApplicationContextAware {
 			throws BeansException {
 		RequestUtils.applicationContext = applicationContext;
 	}
+	
+	private static class UrlBuilder {
+		
+		private String path;
+	    private String extension;
+		private Map<String, List<String>> parameters = new LinkedHashMap<String, List<String>>();
 
+		public UrlBuilder(String url) {
+	        int index = url.indexOf(QUERY_STRING_SEPARATOR);
+        	String urlPath = index != -1 ? url.substring(0, index) : url;
+        	setPath(WebUtils.extractFilenameFromUrlPath(urlPath));
+        	setExtension(urlPath.equals(path) ? null : urlPath.substring(path.length() + 1));
+	        if (index != -1) {
+	            addParameters(url.substring(index + 1));
+	        }
+		}
+
+	    public UrlBuilder setPath(String path) {
+            this.path = path;
+            return this;
+	    }
+		
+		public UrlBuilder setExtension(String extension) {
+			this.extension = extension;
+			return this;
+		}
+		
+		public UrlBuilder addParameter(String parameter) {
+			if (!StringUtils.isEmpty(parameter)) {
+				String[] pair = parameter.split(NAME_VALUE_SEPARATOR);
+				if (pair.length > 0) {
+				    addParameter(pair[0], pair.length > 1 ? StringUtils.decode(pair[1]) : null);
+				}
+			}
+			return this;
+		}
+		
+		public UrlBuilder addParameter(String name, Object value) {
+			if (value != null) {
+				List<String> values = new ArrayList<String>();
+				if (value instanceof String) {
+					values.add((String) value);
+				} else if (value.getClass().isArray()) {
+					for (Object v : (Object[]) value) {
+						values.add(String.valueOf(v));
+					}
+				} else if (value instanceof Collection) {
+					for (Object v : (Collection<?>) value) {
+						values.add(String.valueOf(v));
+					}
+				} else {
+					values.add(String.valueOf(value));
+				}
+			    parameters.put(name, values);
+			    return this;
+			}
+			removeParameter(name);
+			return this;
+		}
+	    
+		public UrlBuilder removeParameter(String name) {
+		    parameters.remove(name);
+		    return this;
+	    }
+	    
+		public UrlBuilder addParameters(String parameters) {
+			if (!StringUtils.isEmpty(parameters)) {
+				String[] params = parameters.replaceAll("&amp;", PARAMETER_SEPARATOR).split(PARAMETER_SEPARATOR);
+				for (String param : params) {
+					addParameter(param);
+				}
+			}
+			return this;
+		}
+		
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			if (!StringUtils.isEmpty(extension)) {
+				sb.append(path.replaceAll("(.+)/$", "$1"));
+				if (!extension.startsWith(".")) {
+					sb.append(".");
+				}
+				sb.append(extension);
+			} else {
+				sb.append(path);
+			}
+			for (String key : parameters.keySet()) {
+	            sb.append(sb.toString().contains(QUERY_STRING_SEPARATOR) ? PARAMETER_SEPARATOR : QUERY_STRING_SEPARATOR);
+				for (String v : parameters.get(key)) {
+					sb.append(key);
+					sb.append(NAME_VALUE_SEPARATOR);
+					sb.append(StringUtils.encode(v));
+				}
+			}
+			return sb.toString();
+		}
+	}
 }
