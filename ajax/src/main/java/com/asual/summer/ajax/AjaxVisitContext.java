@@ -48,6 +48,7 @@ public class AjaxVisitContext extends PartialVisitContext {
     public VisitResult invokeVisitCallback(UIComponent component, 
             VisitCallback callback) {
         
+    	// TODO: Check if this is an HTML comment
         if (component instanceof UIInstructions) {
             try {
                 FacesContext context = FacesContext.getCurrentInstance();
