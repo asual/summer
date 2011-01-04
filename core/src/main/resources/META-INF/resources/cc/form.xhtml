@@ -27,7 +27,7 @@
     <cs:implementation>
         ${cc.renderer.beginElement(cc, 'form')}
             <cs:insertChildren />
-            <input type="hidden" name="_form" value="${requestUtils.getRequestURI()}" />
+            <input type="hidden" name="_form" value="${requestUtils.getRequestUri()}" />
             <ui:fragment rendered="${not empty cc.attrs.method and not requestUtils.isMethodBrowserSupported(cc.attrs.method)}">
                 <input type="hidden" name="_method" value="${cc.attrs.method}" />
             </ui:fragment>

@@ -133,7 +133,7 @@ public class CompositeComponentRenderer extends Renderer {
         if ("form".equals(name)) {
 
         	String action = getAttrValue(component, "action");
-        	attrs.put("action", StringUtils.isEmpty(action) ? RequestUtils.getRequestURI() : RequestUtils.contextRelative(action, true));
+        	attrs.put("action", StringUtils.isEmpty(action) ? RequestUtils.getRequestUri() : RequestUtils.contextRelative(action, true));
         	
         	String method = getAttrValue(component, "method");
         	attrs.put("method", StringUtils.isEmpty(method) ? "get" : (RequestUtils.isMethodBrowserSupported(method) ? method : "post"));
