@@ -24,8 +24,13 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import com.asual.summer.core.util.StringUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class DefaultMultipartRequest extends DefaultMultipartHttpServletRequest {
-
+	
 	public DefaultMultipartRequest(HttpServletRequest request, MultiValueMap<String, MultipartFile> mpFiles, Map<String, String[]> mpParams) {
 		super(request, mpFiles, mpParams);
 		Map<String, String[]> multipartParameters = super.getMultipartParameters();

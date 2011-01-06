@@ -20,6 +20,11 @@
         <appender-ref ref="console" />
     </logger>
     
+    <logger name="com.sun.faces.context.flash.ELFlash">
+        <level value="FATAL" />
+        <appender-ref ref="console" />
+    </logger>
+    
     <root>
         <level value="INFO" />
         <appender-ref ref="console" />

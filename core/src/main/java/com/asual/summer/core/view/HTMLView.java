@@ -19,13 +19,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.lifecycle.Lifecycle;
-import javax.faces.lifecycle.LifecycleFactory;
+import javax.faces.event.PhaseId;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +31,10 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
 
 import com.asual.summer.core.ErrorResolver;
+import com.asual.summer.core.RequestFilter;
 import com.asual.summer.core.util.BeanUtils;
+import com.asual.summer.core.util.RequestUtils;
+import com.sun.faces.context.flash.ELFlash;
 
 /**
  * 
@@ -44,7 +44,6 @@ import com.asual.summer.core.util.BeanUtils;
 @Named
 public class HTMLView extends InternalResourceView implements ResponseView {
 
-	private Lifecycle facesLifecycle;
     private static final String DEFAULT_EXTENSION = "html";
 
     private String extension;
@@ -69,26 +68,16 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 	@SuppressWarnings("unchecked")
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
-		if (facesLifecycle == null) {
-			LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-			facesLifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
-		}
 		
-		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-		FacesContext facesContext = facesContextFactory.getFacesContext(getServletContext(), request, response, facesLifecycle);
+		FacesContext facesContext = RequestUtils.getFacesContext(request, response);
 		
-		Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) request.getSession().getAttribute(ErrorResolver.ERRORS);
+		ELFlash flash = (ELFlash) facesContext.getExternalContext().getFlash();
+		Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) flash.get(RequestFilter.ERRORS);
 		
 		if (errors != null) {
 			BeanUtils.getBeanOfType(ErrorResolver.class).prepareAttributes(model, request, errors, 
-					(String) request.getSession().getAttribute(ErrorResolver.OBJECT_NAME), 
-						request.getSession().getAttribute(ErrorResolver.TARGET));
+					(String) flash.get(RequestFilter.ERRORS_OBJECT_NAME), flash.get(RequestFilter.ERRORS_TARGET));
 		}
-		
-		request.getSession().setAttribute(ErrorResolver.ERRORS, null);
-		request.getSession().setAttribute(ErrorResolver.OBJECT_NAME, null);
-		request.getSession().setAttribute(ErrorResolver.TARGET, null);
 		
 		Iterator<String> i = model.keySet().iterator();
 		while (i.hasNext()) {
@@ -102,6 +91,9 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 		UIViewRoot viewRoot = viewHandler.createView(facesContext, getUrl());
 		viewRoot.setLocale(RequestContextUtils.getLocale(request));
 		viewRoot.setTransient(true);
+		
+		facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
+		//flash.doLastPhaseActions(facesContext, false);
 		
 		facesContext.setViewRoot(viewRoot);
 		facesContext.renderResponse();

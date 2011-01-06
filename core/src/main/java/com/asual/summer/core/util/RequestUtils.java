@@ -22,9 +22,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.faces.FactoryFinder;
+import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
+import javax.faces.event.PhaseId;
+import javax.faces.lifecycle.LifecycleFactory;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -43,6 +49,8 @@ import com.asual.summer.core.RequestFilter;
 public class RequestUtils implements ApplicationContextAware {
 	
 	private static ApplicationContext applicationContext;
+	private static LifecycleFactory lifecycleFactory;
+
 	private static final String QUERY_STRING_SEPARATOR = "?";
 	private static final String PARAMETER_SEPARATOR = "&";
 	private static final String NAME_VALUE_SEPARATOR = "=";
@@ -92,7 +100,24 @@ public class RequestUtils implements ApplicationContextAware {
         }
         return normalized;
     }
-
+    
+    @SuppressWarnings("unchecked")
+	public static Map<String, Object[]> getFlashParameterMap() {
+        Map<String, Object[]> normalized = new HashMap<String, Object[]>();
+        Map<String, String[]> flashParams = (Map<String, String[]>) getAttribute(RequestFilter.FLASH_PARAMETER_MAP);
+        if (flashParams != null) {
+	        for (String key : flashParams.keySet()) {
+	            String[] value = (String[]) flashParams.get(key);
+	            Object[] result = new Object[value.length];
+	            for (int i = 0; i < value.length; i++) {
+	                result[i] = ObjectUtils.convert(value[i]);
+	            }
+	            normalized.put(key, result);
+	        }
+        }
+        return normalized;    	
+    }
+    
     public static Object getParameter(String name) {
         if (getParameterMap().get(name) != null) {
         	return getParameterMap().get(name)[0];
@@ -100,8 +125,19 @@ public class RequestUtils implements ApplicationContextAware {
         return null;
     }
 
+    public static Object getFlashParameter(String name) {
+        if (getFlashParameterMap().get(name) != null) {
+        	return getFlashParameterMap().get(name)[0];
+        }
+        return null;
+    }
+    
     public static Object[] getParameterValues(String name) {
         return getParameterMap().get(name);
+    }
+    
+    public static Object[] getFlashParameterValues(String name) {
+        return getFlashParameterMap().get(name);    	
     }
     
     public static String getHeader(String name) {
@@ -177,9 +213,15 @@ public class RequestUtils implements ApplicationContextAware {
         return getRequest().getAttribute(name);
     }
 
-	public static String serializeParameters() {
+	@SuppressWarnings("unchecked")
+	public static String serializeParameters(boolean includeFlash) {
 		List<String> pairs = new ArrayList<String>();
-		Map<String, String[]> params = getRequest().getParameterMap();
+		Map<String, String[]> params = new HashMap<String, String[]>();
+        Map<String, String[]> flashParams = (Map<String, String[]>) getAttribute(RequestFilter.FLASH_PARAMETER_MAP);
+		if (includeFlash && flashParams != null) {
+			params.putAll(flashParams);
+		}
+		params.putAll(getRequest().getParameterMap());
 		for (String key : params.keySet()) {
 			for (String value : params.get(key)) {
 				pairs.add(key + NAME_VALUE_SEPARATOR + StringUtils.encode(value));
@@ -207,6 +249,20 @@ public class RequestUtils implements ApplicationContextAware {
         return (Integer) getAttribute("javax.servlet.error.status_code");
     }
 
+    public static FacesContext getFacesContext(HttpServletRequest request, HttpServletResponse response) {
+		if (lifecycleFactory == null) {
+			lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		}
+		if (FacesContext.getCurrentInstance() == null) {
+			FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+			FacesContext facesContext = facesContextFactory.getFacesContext(
+					RequestUtils.getServletContext(), request, response, lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE));
+			facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
+            facesContext.getExternalContext().getFlash().doPrePhaseActions(facesContext);
+		}
+		return FacesContext.getCurrentInstance();
+    }
+    
     public static ServletContext getServletContext() {
     	if (applicationContext instanceof WebApplicationContext) {
     		return ((WebApplicationContext) applicationContext).getServletContext();

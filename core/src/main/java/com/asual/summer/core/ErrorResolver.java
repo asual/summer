@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
+import javax.faces.event.PhaseId;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,11 +35,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ResourceUtils;
 import com.asual.summer.core.util.StringUtils;
+import com.asual.summer.core.view.FlashView;
 
 /**
  * 
@@ -47,11 +50,7 @@ import com.asual.summer.core.util.StringUtils;
 public class ErrorResolver implements HandlerExceptionResolver {
 	
 	private final Log logger = LogFactory.getLog(getClass());
-	
-	public static final String ERRORS_ATTRIBUTE = "errors";
-	public static final String ERRORS = "com.asual.summer.core.ErrorResolver.ERRORS";
-	public static final String OBJECT_NAME = "com.asual.summer.core.ErrorResolver.OBJECT_NAME";
-	public static final String TARGET = "com.asual.summer.core.ErrorResolver.TARGET";
+	public static final String ERRORS = "errors";
 	
     @SuppressWarnings("unchecked")
     public ModelAndView resolveException(HttpServletRequest request,
@@ -94,10 +93,13 @@ public class ErrorResolver implements HandlerExceptionResolver {
 					prepareAttributes(map, request, errors, ((BindException) e).getObjectName(), ((BindException) e).getTarget());
 					return new ModelAndView(new InternalResourceView(form), map);
 				} else {
-		        	request.getSession().setAttribute(ERRORS, errors);
-		        	request.getSession().setAttribute(OBJECT_NAME, ((BindException) e).getObjectName());
-		        	request.getSession().setAttribute(TARGET, ((BindException) e).getTarget());
-		        	return new ModelAndView(new RedirectView(form, false));
+					FacesContext facesContext = RequestUtils.getFacesContext(request, response);
+					facesContext.setCurrentPhaseId(PhaseId.ANY_PHASE);
+					Flash flash = facesContext.getExternalContext().getFlash();
+					flash.put(RequestFilter.ERRORS, errors);
+					flash.put(RequestFilter.ERRORS_OBJECT_NAME, ((BindException) e).getObjectName());
+					flash.put(RequestFilter.ERRORS_TARGET, ((BindException) e).getTarget());
+		        	return new ModelAndView(new FlashView(form, false));
 				}
 	        } else {
 	            List<String> pairs = new ArrayList<String>();
@@ -115,7 +117,7 @@ public class ErrorResolver implements HandlerExceptionResolver {
     
     public void prepareAttributes(Map<String, Object> model, HttpServletRequest request, 
     		Map<String, Map<String, Object>> errors, String objectName, Object source) {
-		request.setAttribute(ERRORS_ATTRIBUTE, errors);
+    	request.setAttribute(ERRORS, errors);
 		if (!model.containsKey(objectName)) {
 			try {
 				model.put(objectName, source.getClass().getConstructor().newInstance());
@@ -126,6 +128,6 @@ public class ErrorResolver implements HandlerExceptionResolver {
 		Object target = model.get(objectName);
 		BeanUtils.copyProperties(source, target);
 		model.put(objectName, target);
-    }    
+    }
     
 }

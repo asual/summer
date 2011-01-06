@@ -21,8 +21,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,9 +48,15 @@ import com.asual.summer.core.util.StringUtils;
  *
  */
 public class RequestFilter extends OncePerRequestFilter {
-
-	private static final Log logger = LogFactory.getLog(RequestFilter.class);
 	
+	public static final String ERRORS_TARGET = "com.asual.summer.core.RequestFilter.ERRORS_TARGET";
+	public static final String ERRORS_OBJECT_NAME = "com.asual.summer.core.RequestFilter.ERRORS_OBJECT_NAME";
+	public static final String ERRORS = "com.asual.summer.core.RequestFilter.ERRORS";
+
+	public static final String FLASH_MODEL = "com.asual.summer.core.RequestFilter.FLASH_MODEL";
+	public static final String FLASH_PARAMETER_MAP = "com.asual.summer.core.RequestFilter.FLASH_PARAMETER_MAP";
+	
+	private static final Log logger = LogFactory.getLog(RequestFilter.class);
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new NamedThreadLocal<HttpServletRequest>("request");
 	
 	private MultipartResolver multipartResolver = null;
@@ -94,7 +103,7 @@ public class RequestFilter extends OncePerRequestFilter {
 	static String getParameter(HttpServletRequest request, String paramName) {
         return encode(request.getParameter(paramName));
     }
-    
+	
 	static String[] getParameterValues(HttpServletRequest request, String paramName) {
         String values[] = request.getParameterValues(paramName);
         if (values != null) {
@@ -139,7 +148,7 @@ public class RequestFilter extends OncePerRequestFilter {
     }
     
 	static String encode(String input) {
-        if (input != null && !"".equalsIgnoreCase(input.trim())) {
+		if (!StringUtils.isEmpty(input)) {
             try {
             	String encoding = StringUtils.getEncoding();
                 String utf8 = new String(input.getBytes(encoding), encoding);
@@ -157,14 +166,31 @@ public class RequestFilter extends OncePerRequestFilter {
 	}
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
-    		FilterChain filterChain) throws ServletException, IOException {        
+    		FilterChain filterChain) throws ServletException, IOException {
+    	
+    	requestHolder.set(request);
+    	
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+        	String cookieName = "csfcfc";
+	        for (Cookie cookie : cookies) {
+	            if (cookie.getName().equals(cookieName)) {
+	            	if (cookie.getValue() != null) {
+	            		FacesContext facesContext = RequestUtils.getFacesContext(request, response);
+	            		Flash flash = facesContext.getExternalContext().getFlash();
+	            		request.setAttribute(FLASH_PARAMETER_MAP, flash.get(FLASH_PARAMETER_MAP));
+	            	}
+	                break;
+	            }
+	        }
+        }
         
 		HttpServletRequest defaultRequest = new DefaultRequest(request);
 		
 		if (multipartResolver != null && multipartResolver.isMultipart(request)) {
 			defaultRequest = multipartResolver.resolveMultipart(defaultRequest);
-		}		
-		
+		}
+        
     	try {
     		
 	    	long time = System.currentTimeMillis();
@@ -213,5 +239,5 @@ public class RequestFilter extends OncePerRequestFilter {
 	public static HttpServletRequest getRequest() {
     	return requestHolder.get();
     }
- 
+	
 }

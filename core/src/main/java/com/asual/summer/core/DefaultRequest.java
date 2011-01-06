@@ -21,8 +21,13 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import com.asual.summer.core.util.StringUtils;
 
+/**
+ * 
+ * @author Rostislav Hristov
+ *
+ */
 public class DefaultRequest extends HttpServletRequestWrapper {
-    
+	
     public DefaultRequest(HttpServletRequest request) {
         super(request);
     }
