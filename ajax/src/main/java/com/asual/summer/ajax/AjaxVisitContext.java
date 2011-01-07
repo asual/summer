@@ -14,8 +14,6 @@
 
 package com.asual.summer.ajax;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,10 +23,8 @@ import javax.faces.component.visit.VisitCallback;
 import javax.faces.component.visit.VisitHint;
 import javax.faces.component.visit.VisitResult;
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 import com.sun.faces.component.visit.PartialVisitContext;
-import com.sun.faces.facelets.compiler.UIInstructions;
 
 /**
  * 
@@ -37,7 +33,6 @@ import com.sun.faces.facelets.compiler.UIInstructions;
  */
 public class AjaxVisitContext extends PartialVisitContext {
     
-    private NullWriter nullWriter = new NullWriter();
     private Collection<String> unvisitedClientIds;
     
     public AjaxVisitContext(Collection<String> clientIds, Set<VisitHint> hints) {
@@ -47,17 +42,6 @@ public class AjaxVisitContext extends PartialVisitContext {
 
     public VisitResult invokeVisitCallback(UIComponent component, 
             VisitCallback callback) {
-        
-    	// TODO: Check if this is an HTML comment
-        if (component instanceof UIInstructions) {
-            try {
-                FacesContext context = FacesContext.getCurrentInstance();
-                ResponseWriter writer = context.getResponseWriter();
-                context.setResponseWriter(nullWriter);
-                component.encodeBegin(context);
-                context.setResponseWriter(writer);
-            } catch (IOException e) {}
-        }
         
         String clientId = component.getClientId();
         
@@ -80,49 +64,4 @@ public class AjaxVisitContext extends PartialVisitContext {
         return getIdsToVisit();     
     }
 
-    private static class NullWriter extends ResponseWriter {
-
-        public String getContentType() {
-            return null;
-        }
-        
-        public String getCharacterEncoding() {
-            return null;
-        }
-        
-        public void flush() throws IOException {}
-        
-        public void startDocument() throws IOException {}
-        
-        public void endDocument() throws IOException {}
-        
-        public void startElement(String name, UIComponent component)
-            throws IOException {
-        }
-        
-        public void endElement(String name) throws IOException {}
-        
-        public void writeAttribute(String name, Object value, String property)
-            throws IOException {
-        }
-        
-        public void writeURIAttribute(String name, Object value, String property)
-            throws IOException {
-        }
-        
-        public void writeComment(Object comment) throws IOException {}
-        
-        public void writeText(Object text, String property) throws IOException {}
-        
-        public void writeText(char[] text, int off, int len) throws IOException {}
-        
-        public ResponseWriter cloneWithWriter(Writer writer) {
-            return null;
-        }
-        
-        public void write(char[] cbuf, int off, int len) throws IOException {}
-        
-        public void close() throws IOException {}
-
-    }    
 }
