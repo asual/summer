@@ -83,7 +83,7 @@
 		            	url = o.attr('data-ajax-url');
 		            }
 		            
-		            if (!disabled) {
+		            if (disabled != 'true') {
 		            	
 	                    $.ajax({
 	                        url: url,
@@ -128,7 +128,7 @@
 		                        				}	                        				
 		                        			} else {
 			                        			target.replaceWith(source);
-			                        			fn(source);
+			                        			fn(source, ready);
 		                        			}
 		                        		}
 		                            });
@@ -148,7 +148,9 @@
                 });            	
             	
         		if (ready && event == 'ready') {
-        			o.trigger(event, ready);
+        			o.trigger(event, ready).bind('success', function() {
+        				o.trigger(event, ready);
+        			});
         		}
         		
             });
