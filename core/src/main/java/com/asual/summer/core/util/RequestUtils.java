@@ -301,6 +301,18 @@ public class RequestUtils implements ApplicationContextAware {
 			return this;
 		}
 		
+		@SuppressWarnings("unused")
+		public UrlBuilder addPath(String path) {
+			setPath(this.path.concat(path));
+			return this;
+		}
+		
+		@SuppressWarnings("unused")
+		public UrlBuilder removePath(String path) {
+			setPath(this.path.replaceFirst(path + "$", ""));
+			return this;
+		}
+		
 		public UrlBuilder addParameter(String parameter) {
 			if (!StringUtils.isEmpty(parameter)) {
 				String[] pair = parameter.split(NAME_VALUE_SEPARATOR);
