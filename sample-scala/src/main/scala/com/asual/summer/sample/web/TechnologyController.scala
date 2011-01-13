@@ -51,7 +51,7 @@ class TechnologyController {
     }
     
     @RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.GET))
-    @ResponseViews(Array(classOf[JSONView], classOf[XMLView]))
+    @ResponseViews(Array(classOf[JsonView], classOf[XmlView]))
     def view(@PathVariable("value") value:String):ModelAndView = {
     	var technology:Technology = Technology.find(value)
     	if (technology == null) {

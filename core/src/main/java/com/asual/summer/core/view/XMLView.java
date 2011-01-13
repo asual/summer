@@ -48,12 +48,12 @@ import com.thoughtworks.xstream.mapper.MapperWrapper;
  *
  */
 @Named
-public class XMLView extends AbstractResponseView {
+public class XmlView extends AbstractResponseView {
 
     private static final String DEFAULT_CONTENT_TYPE = "application/xml";
     private static final String DEFAULT_EXTENSION = "xml";
 
-    public XMLView() {
+    public XmlView() {
         super();
         setContentType(DEFAULT_CONTENT_TYPE);
         setExtension(DEFAULT_EXTENSION);

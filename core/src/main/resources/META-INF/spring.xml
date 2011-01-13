@@ -103,10 +103,10 @@
         <property name="viewResolvers">
             <list>
                 <bean class="com.asual.summer.core.spring.ExtendedInternalResourceViewResolver" 
-                    p:viewClass="com.asual.summer.core.view.HTMLView" 
+                    p:viewClass="com.asual.summer.core.view.HtmlView" 
                     p:prefix="/META-INF/views" p:suffix=".html" />
                 <bean class="com.asual.summer.core.spring.ExtendedInternalResourceViewResolver" 
-                    p:viewClass="com.asual.summer.core.view.HTMLView" 
+                    p:viewClass="com.asual.summer.core.view.HtmlView" 
                     p:prefix="/META-INF/pages" p:suffix=".html" />
             </list>
         </property>

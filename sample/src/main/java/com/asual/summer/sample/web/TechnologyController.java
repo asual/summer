@@ -32,8 +32,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.asual.summer.core.ResponseViews;
 import com.asual.summer.core.ViewNotFoundException;
 import com.asual.summer.core.view.AbstractResponseView;
-import com.asual.summer.core.view.JSONView;
-import com.asual.summer.core.view.XMLView;
+import com.asual.summer.core.view.JsonView;
+import com.asual.summer.core.view.XmlView;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
@@ -61,7 +61,7 @@ public class TechnologyController {
     }
     
     @RequestMapping(value="/{value}", method=RequestMethod.GET)
-    @ResponseViews({JSONView.class, XMLView.class})
+    @ResponseViews({JsonView.class, XmlView.class})
     public ModelAndView view(@PathVariable("value") String value) {
     	Technology technology = Technology.find(value);
     	if (technology == null) {

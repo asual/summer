@@ -30,11 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.InternalResourceView;
 
-import com.asual.summer.core.ErrorResolver;
-import com.asual.summer.core.RequestFilter;
-import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.RequestUtils;
-import com.sun.faces.context.flash.ELFlash;
 
 /**
  * 
@@ -42,13 +38,13 @@ import com.sun.faces.context.flash.ELFlash;
  *
  */
 @Named
-public class HTMLView extends InternalResourceView implements ResponseView {
+public class HtmlView extends InternalResourceView implements ResponseView {
 
     private static final String DEFAULT_EXTENSION = "html";
 
     private String extension;
     
-    public HTMLView() {
+    public HtmlView() {
     	super();
     	setExtension(DEFAULT_EXTENSION);
     }
@@ -65,26 +61,16 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 		return false;
 	}
 	
-	@SuppressWarnings("unchecked")
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
 		FacesContext facesContext = RequestUtils.getFacesContext(request, response);
-		
-		ELFlash flash = (ELFlash) facesContext.getExternalContext().getFlash();
-		Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) flash.get(RequestFilter.ERRORS);
-		
-		if (errors != null) {
-			BeanUtils.getBeanOfType(ErrorResolver.class).prepareAttributes(model, request, errors, 
-					(String) flash.get(RequestFilter.ERRORS_OBJECT_NAME), flash.get(RequestFilter.ERRORS_TARGET));
-		}
-		
 		Iterator<String> i = model.keySet().iterator();
 		while (i.hasNext()) {
 			String key = i.next().toString();
 			facesContext.getExternalContext().getRequestMap().put(key, model.get(key));
 		}
-
+		
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 		viewHandler.initView(facesContext);
 
@@ -93,7 +79,6 @@ public class HTMLView extends InternalResourceView implements ResponseView {
 		viewRoot.setTransient(true);
 		
 		facesContext.setCurrentPhaseId(PhaseId.RENDER_RESPONSE);
-		//flash.doLastPhaseActions(facesContext, false);
 		
 		facesContext.setViewRoot(viewRoot);
 		facesContext.renderResponse();
