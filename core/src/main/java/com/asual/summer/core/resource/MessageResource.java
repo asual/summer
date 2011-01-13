@@ -56,34 +56,59 @@ public class MessageResource extends AbstractResource {
 	public void setWildcardLocations(String[] locations) {
 		
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-		List<String> basenames = new ArrayList<String>();
+		List<Resource[]> resourceLocations = new ArrayList<Resource[]>();
+
+		List<String> fileBasenames = new ArrayList<String>();
+		List<String> jarBasenames = new ArrayList<String>();
+		
 		for (String location : locations) {
 			try {
 				Resource[] wildcard = (Resource[]) ArrayUtils.addAll(
 						resolver.getResources(location + "*.properties"), 
 						resolver.getResources(location + "*.xml"));
 				if (wildcard != null && wildcard.length > 0) {
-					for (Resource resource : wildcard) {
-						URL url = resource.getURL();
-						boolean isJar = ResourceUtils.isJarURL(url);
-						String basename = "classpath:" + url.getFile()
-							.replaceFirst(isJar ? "^.*" + ResourceUtils.JAR_URL_SEPARATOR : "^(.*/classes|.*/resources)/", "")
-							.replaceAll("(_\\w+){0,3}\\.(properties|xml)", "");
-						if (!basenames.contains(basename)) {
-							if (isJar) {
-								basenames.add(basename);
-							} else {
-								basenames.add(0, basename);
-							}
-						}
-					}
+					resourceLocations.add(wildcard);
 				}
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 			}
 		}
+		
+		int i = 0;
+		boolean entries = true;
+		
+		while(entries) {
+			entries = false;
+			for (Resource[] location : resourceLocations) {
+				if (location.length > i) {
+					try {
+						URL url = location[i].getURL();
+						boolean isJar = ResourceUtils.isJarURL(url);
+						String basename = "classpath:" + url.getFile()
+							.replaceFirst(isJar ? "^.*" + ResourceUtils.JAR_URL_SEPARATOR : "^(.*/classes|.*/resources)/", "")
+							.replaceAll("(_\\w+){0,3}\\.(properties|xml)", "");
+						if (isJar) {
+							if (!jarBasenames.contains(basename)) {
+								jarBasenames.add(basename);
+							}							
+						} else {
+							if (!fileBasenames.contains(basename)) {
+								fileBasenames.add(basename);
+							}
+						}
+					} catch (IOException e) {
+						logger.error(e.getMessage(), e);
+					}
+					entries = true;
+				}
+			}
+			i++;
+		}		
+		
+		fileBasenames.addAll(jarBasenames);
+		
 		rbms.clearCache();
-		rbms.setBasenames(basenames.toArray(new String[basenames.size()]));
+		rbms.setBasenames(fileBasenames.toArray(new String[fileBasenames.size()]));
 	}
 	
 }

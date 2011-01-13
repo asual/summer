@@ -16,6 +16,7 @@ package com.asual.summer.core.resource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.ResourceUtils;
 
 /**
  * 
@@ -64,27 +66,50 @@ public class PropertyResource extends AbstractResource implements BeanFactoryPos
     
 	public void setWildcardLocations(String[] locations) {
 		
-		List<Resource> resources = new ArrayList<Resource>();
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-
+		List<Resource[]> resourceLocations = new ArrayList<Resource[]>();
+		
+		List<Resource> fileResources = new ArrayList<Resource>();
+		List<Resource> jarResources = new ArrayList<Resource>();
+		
 		for (String location : locations) {
 			try {
 				Resource[] wildcard = resolver.getResources(location);
 				if (wildcard != null && wildcard.length > 0) {
-					for (Resource resource : wildcard) {
-						if (org.springframework.util.ResourceUtils.isJarURL(resource.getURL()))  {
-							resources.add(0, resource);
-						} else {
-							resources.add(resource);
-						}
-					}
+					resourceLocations.add(wildcard);
 				}
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 			}
 		}
+
+		int i = 0;
+		boolean entries = true;
 		
-		eppc.setLocations(resources.toArray(new Resource[resources.size()]));
+		while(entries) {
+			entries = false;
+			for (Resource[] location : resourceLocations) {
+				if (location.length > i) {
+					try {
+						boolean isJar = ResourceUtils.isJarURL(location[i].getURL());
+						if (isJar) {
+							jarResources.add(location[i]);
+						} else {
+							fileResources.add(location[i]);
+						}
+					} catch (IOException e) {
+						logger.error(e.getMessage(), e);
+					}
+					entries = true;
+				}
+			}
+			i++;
+		}
+		
+		fileResources.addAll(jarResources);
+		Collections.reverse(fileResources);
+		
+		eppc.setLocations(fileResources.toArray(new Resource[fileResources.size()]));
 	}
 
 	@Override
