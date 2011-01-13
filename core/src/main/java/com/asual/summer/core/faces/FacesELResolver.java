@@ -20,6 +20,8 @@ import javax.el.ELException;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.jsf.el.SpringBeanFacesELResolver;
 
+import com.asual.summer.core.ErrorResolver;
+import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.ResourceUtils;
 
 /**
@@ -42,6 +44,10 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 			try {
 				if (property instanceof String) {
 					String prop = (String) property;
+					if (base == null && ErrorResolver.ERRORS.equals(prop)) {
+						elContext.setPropertyResolved(true);
+						return BeanUtils.getBeanOfType(ErrorResolver.class).getErrors();
+					}
 					if (base == null && (MESSAGES.equals(prop) || PROPERTIES.equals(prop))) {
 						elContext.setPropertyResolved(true);
 						return new String(prop);

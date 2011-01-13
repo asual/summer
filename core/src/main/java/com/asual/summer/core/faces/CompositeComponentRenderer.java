@@ -34,6 +34,7 @@ import org.jboss.el.lang.EvaluationContext;
 import org.jboss.el.lang.ExpressionBuilder;
 
 import com.asual.summer.core.ErrorResolver;
+import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.compiler.UIInstructions;
@@ -114,10 +115,10 @@ public class CompositeComponentRenderer extends Renderer {
     	}
     }
     
-    @SuppressWarnings("unchecked")
 	public void beginElement(Component component, String name) throws IOException {
         
-    	ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
+    	FacesContext context = FacesContext.getCurrentInstance();
+    	ResponseWriter writer = context.getResponseWriter();
         writer.write("<");
         writer.write(name);
 
@@ -156,9 +157,8 @@ public class CompositeComponentRenderer extends Renderer {
 	        	attrs.put("id", getFormId(component));
 	        	attrs.put("name", getFormId(component));
 			}
-			
-			Map<String, Map<String, Object>> errors = 
-				(Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
+        	
+        	Map<String, Map<String, Object>> errors = BeanUtils.getBeanOfType(ErrorResolver.class).getErrors();
         	attrs.put("value", errors != null && errors.get(getFormId(component)) != null ? 
         			errors.get(getFormId(component)).get("value") : getAttrValue(component, "value"));
         	
@@ -268,13 +268,13 @@ public class CompositeComponentRenderer extends Renderer {
     	return null;
     }
     
-    @SuppressWarnings("unchecked")
 	private boolean isMatch(Component component) {
     	try {
     		RepeatComponent repeatComponent = ComponentUtils.getRepeatComponent(component);
 			Map<String, ValueExpression> bindings = repeatComponent.getBindings();
-			Object dataValue = bindings.get("dataValue").getValue(FacesContext.getCurrentInstance().getELContext());
-			Map<String, Map<String, Object>> errors = (Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
+			FacesContext context = FacesContext.getCurrentInstance();
+			Object dataValue = bindings.get("dataValue").getValue(context.getELContext());
+        	Map<String, Map<String, Object>> errors = BeanUtils.getBeanOfType(ErrorResolver.class).getErrors();
 			if (errors != null && errors.get(getFormName(component)) != null) {
 				dataValue = errors.get(getFormName(component)).get("value");
 			}

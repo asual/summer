@@ -15,7 +15,6 @@
 package com.asual.summer.core.view;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
@@ -27,7 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
-import com.asual.summer.core.RequestFilter;
 import com.asual.summer.core.util.RequestUtils;
 import com.sun.faces.context.flash.ELFlash;
 
@@ -71,12 +69,8 @@ public class FlashView extends AbstractUrlBasedView {
 		facesContext.setCurrentPhaseId(PhaseId.ANY_PHASE);
 		
 		ELFlash flash = (ELFlash) facesContext.getExternalContext().getFlash();
-		flash.put(RequestFilter.FLASH_MODEL, model);
-		
-		Map<String, String[]> map = new HashMap<String, String[]>();
-		map.putAll(request.getParameterMap());
-		flash.put(RequestFilter.FLASH_PARAMETER_MAP, map);
-		
+		flash.putAll(model);
+		flash.put("params", request.getParameterMap());
 		flash.doLastPhaseActions(facesContext, true);
 		
 		sendRedirect(request, response, targetUrl.toString(), this.http10Compatible);

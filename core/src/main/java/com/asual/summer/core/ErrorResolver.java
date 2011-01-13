@@ -20,15 +20,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
-import javax.faces.context.Flash;
-import javax.faces.event.PhaseId;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -49,18 +44,18 @@ import com.asual.summer.core.view.FlashView;
 @Named
 public class ErrorResolver implements HandlerExceptionResolver {
 	
-	private final Log logger = LogFactory.getLog(getClass());
 	public static final String ERRORS = "errors";
 	
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
     public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception e) {
         
 	    if (e instanceof BindException) {
 	        
+	    	BindException be = (BindException) e;
 	    	Map<String, Map<String, Object>> errors = new HashMap<String, Map<String, Object>>();
 	        
-	        for (FieldError fe : (List<FieldError>) ((BindException) e).getFieldErrors()) {
+	        for (FieldError fe : (List<FieldError>) be.getFieldErrors()) {
 		        Map<String, Object> error = new HashMap<String, Object>();
 		        Object[] args = fe.getArguments();
 		        String key = fe.isBindingFailure() ? 
@@ -89,17 +84,14 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	        String form = (String) RequestUtils.getParameter("_form");
 	        if (form != null) {
 				if (RequestUtils.isValidation()) {
-					ModelMap map = new ModelMap();
-					prepareAttributes(map, request, errors, ((BindException) e).getObjectName(), ((BindException) e).getTarget());
-					return new ModelAndView(new InternalResourceView(form), map);
+					request.setAttribute(ErrorResolver.ERRORS, errors);
+					request.setAttribute(be.getObjectName(), be.getTarget());
+					return new ModelAndView(new InternalResourceView(form));
 				} else {
-					FacesContext facesContext = RequestUtils.getFacesContext(request, response);
-					facesContext.setCurrentPhaseId(PhaseId.ANY_PHASE);
-					Flash flash = facesContext.getExternalContext().getFlash();
-					flash.put(RequestFilter.ERRORS, errors);
-					flash.put(RequestFilter.ERRORS_OBJECT_NAME, ((BindException) e).getObjectName());
-					flash.put(RequestFilter.ERRORS_TARGET, ((BindException) e).getTarget());
-		        	return new ModelAndView(new FlashView(form, false));
+					ModelMap model = new ModelMap();
+					model.addAttribute(ErrorResolver.ERRORS, errors);
+					model.addAttribute(be.getObjectName(), be.getTarget());
+		        	return new ModelAndView(new FlashView(form, false), model);
 				}
 	        } else {
 	            List<String> pairs = new ArrayList<String>();
@@ -114,20 +106,15 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	    
 		return null;
     }
-    
-    public void prepareAttributes(Map<String, Object> model, HttpServletRequest request, 
-    		Map<String, Map<String, Object>> errors, String objectName, Object source) {
-    	request.setAttribute(ERRORS, errors);
-		if (!model.containsKey(objectName)) {
-			try {
-				model.put(objectName, source.getClass().getConstructor().newInstance());
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Map<String, Object>> getErrors() {
+		if (RequestUtils.isValidation()) {
+			return (Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
+		} else {
+        	return (Map<String, Map<String, Object>>) 
+    			FacesContext.getCurrentInstance().getExternalContext().getFlash().get(ErrorResolver.ERRORS);
 		}
-		Object target = model.get(objectName);
-		BeanUtils.copyProperties(source, target);
-		model.put(objectName, target);
-    }
-    
+	}
+	
 }

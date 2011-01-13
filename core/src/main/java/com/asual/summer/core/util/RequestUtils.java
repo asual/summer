@@ -101,43 +101,15 @@ public class RequestUtils implements ApplicationContextAware {
         return normalized;
     }
     
-    @SuppressWarnings("unchecked")
-	public static Map<String, Object[]> getFlashParameterMap() {
-        Map<String, Object[]> normalized = new HashMap<String, Object[]>();
-        Map<String, String[]> flashParams = (Map<String, String[]>) getAttribute(RequestFilter.FLASH_PARAMETER_MAP);
-        if (flashParams != null) {
-	        for (String key : flashParams.keySet()) {
-	            String[] value = (String[]) flashParams.get(key);
-	            Object[] result = new Object[value.length];
-	            for (int i = 0; i < value.length; i++) {
-	                result[i] = ObjectUtils.convert(value[i]);
-	            }
-	            normalized.put(key, result);
-	        }
-        }
-        return normalized;    	
-    }
-    
     public static Object getParameter(String name) {
         if (getParameterMap().get(name) != null) {
         	return getParameterMap().get(name)[0];
         }
         return null;
     }
-
-    public static Object getFlashParameter(String name) {
-        if (getFlashParameterMap().get(name) != null) {
-        	return getFlashParameterMap().get(name)[0];
-        }
-        return null;
-    }
     
     public static Object[] getParameterValues(String name) {
         return getParameterMap().get(name);
-    }
-    
-    public static Object[] getFlashParameterValues(String name) {
-        return getFlashParameterMap().get(name);    	
     }
     
     public static String getHeader(String name) {
@@ -212,18 +184,11 @@ public class RequestUtils implements ApplicationContextAware {
     public static Object getAttribute(String name) {
         return getRequest().getAttribute(name);
     }
-
-	@SuppressWarnings("unchecked")
-	public static String serializeParameters(boolean includeFlash) {
+    
+	public static String serializeParameters(Map<String, String[]> parameterMap) {
 		List<String> pairs = new ArrayList<String>();
-		Map<String, String[]> params = new HashMap<String, String[]>();
-        Map<String, String[]> flashParams = (Map<String, String[]>) getAttribute(RequestFilter.FLASH_PARAMETER_MAP);
-		if (includeFlash && flashParams != null) {
-			params.putAll(flashParams);
-		}
-		params.putAll(getRequest().getParameterMap());
-		for (String key : params.keySet()) {
-			for (String value : params.get(key)) {
+		for (String key : parameterMap.keySet()) {
+			for (String value : parameterMap.get(key)) {
 				pairs.add(key + NAME_VALUE_SEPARATOR + StringUtils.encode(value));
 			}
 		}

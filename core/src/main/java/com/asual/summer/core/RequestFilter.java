@@ -21,11 +21,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
-import javax.faces.context.Flash;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,13 +45,6 @@ import com.asual.summer.core.util.StringUtils;
  *
  */
 public class RequestFilter extends OncePerRequestFilter {
-	
-	public static final String ERRORS_TARGET = "com.asual.summer.core.RequestFilter.ERRORS_TARGET";
-	public static final String ERRORS_OBJECT_NAME = "com.asual.summer.core.RequestFilter.ERRORS_OBJECT_NAME";
-	public static final String ERRORS = "com.asual.summer.core.RequestFilter.ERRORS";
-
-	public static final String FLASH_MODEL = "com.asual.summer.core.RequestFilter.FLASH_MODEL";
-	public static final String FLASH_PARAMETER_MAP = "com.asual.summer.core.RequestFilter.FLASH_PARAMETER_MAP";
 	
 	private static final Log logger = LogFactory.getLog(RequestFilter.class);
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new NamedThreadLocal<HttpServletRequest>("request");
@@ -169,7 +159,9 @@ public class RequestFilter extends OncePerRequestFilter {
     		FilterChain filterChain) throws ServletException, IOException {
     	
     	requestHolder.set(request);
-    	
+    	/*
+		request.setAttribute(FlashView.MODEL, new HashMap<String, Object>());
+		
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
         	String cookieName = "csfcfc";
@@ -178,12 +170,12 @@ public class RequestFilter extends OncePerRequestFilter {
 	            	if (cookie.getValue() != null) {
 	            		FacesContext facesContext = RequestUtils.getFacesContext(request, response);
 	            		Flash flash = facesContext.getExternalContext().getFlash();
-	            		request.setAttribute(FLASH_PARAMETER_MAP, flash.get(FLASH_PARAMETER_MAP));
+	            		request.setAttribute(FlashView.MODEL, flash.get(FlashView.MODEL));
 	            	}
 	                break;
 	            }
 	        }
-        }
+        }*/
         
 		HttpServletRequest defaultRequest = new DefaultRequest(request);
 		
