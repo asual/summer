@@ -306,10 +306,6 @@ public class Technology implements Serializable {
             this.bytes = bytes;
         }
         
-        public String getBytesAsString() { 
-            return new String(bytes);
-        }
-        
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;

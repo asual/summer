@@ -207,10 +207,6 @@ object Technology {
 	    @BeanProperty
 	    var bytes:Array[Byte] = _
 	    
-	    def getBytesAsString():String = {
-	    	return new String(bytes)
-	    }
-	    
 		override def hashCode = {
 			41 * Arrays.hashCode(bytes)
 		}

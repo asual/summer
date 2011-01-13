@@ -14,7 +14,6 @@
 
 package com.asual.summer.core.view;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 import javax.inject.Named;
@@ -24,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.JsonGenerator.Feature;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.asual.summer.core.util.StringUtils;
 
@@ -48,33 +46,24 @@ public class JsonView extends AbstractResponseView {
     protected void renderMergedOutputModel(Map<String, Object> model,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-       
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 
+        response.setContentType(getContentType());
+        response.setCharacterEncoding(StringUtils.getEncoding());
+    	
         String callback = (String) request.getParameter("callback");
         if (callback != null) {
-        	byteStream.write((callback + " && " + callback + "(").getBytes(StringUtils.getEncoding()));
+        	response.getOutputStream().write((callback + " && " + callback + "(").getBytes(StringUtils.getEncoding()));
         }
         
         ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(Feature.AUTO_CLOSE_TARGET, false);
-        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-        mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
-        mapper.getSerializationConfig().setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-        mapper.writeValue(byteStream, filterModel(model));
+		mapper.configure(Feature.AUTO_CLOSE_TARGET, false);
+		mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
+        mapper.writeValue(response.getOutputStream(), filterModel(model));
 
         if (callback != null) {
-        	byteStream.write(");".getBytes(StringUtils.getEncoding()));
+        	response.getOutputStream().write(");".getBytes(StringUtils.getEncoding()));
         }
 
-        byte[] bytes = byteStream.toByteArray();
-        
-        byteStream.close();
-
-        response.setContentLength(bytes.length);
-        response.setContentType(getContentType());
-        response.setCharacterEncoding(StringUtils.getEncoding());
-        response.getOutputStream().write(bytes);
     }
 
 }

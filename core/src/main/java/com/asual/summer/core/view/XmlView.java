@@ -14,33 +14,18 @@
 
 package com.asual.summer.core.view;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonGenerator.Feature;
+import org.codehaus.jackson.map.SerializationConfig;
+
 import com.asual.summer.core.util.StringUtils;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.collections.CollectionConverter;
-import com.thoughtworks.xstream.converters.collections.TreeMapConverter;
-import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.mapper.Mapper;
-import com.thoughtworks.xstream.mapper.MapperWrapper;
+import com.fasterxml.jackson.xml.XmlMapper;
+import com.fasterxml.jackson.xml.ser.ToXmlGenerator;
 
 /**
  * 
@@ -63,96 +48,14 @@ public class XmlView extends AbstractResponseView {
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         
-    	XStream xstream = new XStream() {
-		    protected MapperWrapper wrapMapper(MapperWrapper next) {
-		        return new PersistentCollectionPackageStrippingMapper(next);
-		    }
-		};
-		xstream.registerConverter(new PersistentCollectionConverter(xstream.getMapper()));
-		
-		String encoding = StringUtils.getEncoding();
-		byte[] bytes = ("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>\n" + xstream.toXML(filterModel(model))).getBytes(encoding);
-		
-		response.setContentLength(bytes.length);
         response.setContentType(getContentType());
         response.setCharacterEncoding(StringUtils.getEncoding());
-		response.getOutputStream().write(bytes);
-	}
-	
-    @SuppressWarnings("rawtypes")
-    private static class PersistentCollectionPackageStrippingMapper extends MapperWrapper {
     	
-        public PersistentCollectionPackageStrippingMapper(Mapper wrapped) {
-            super(wrapped);
-        }
-        
-        public String serializedClass(Class type) {
-        	return StringUtils.toCamelCase(replaceClass(type).getSimpleName());
-        }
-        
-        private Class replaceClass(Class type) {
-        	if (PersistentCollectionConverter.isPersistenCollection(type)) {
-    			if (SortedSet.class.isAssignableFrom(type)) {
-    				type = TreeSet.class;
-    			} else if (SortedMap.class.isAssignableFrom(type)) {
-    				type = TreeMap.class;
-    			} else if (Map.class.isAssignableFrom(type)) {
-    				type = HashMap.class;
-    			} else if (Set.class.isAssignableFrom(type)) {
-    				type = HashSet.class;
-    			} else if (List.class.isAssignableFrom(type)) {
-    				type = ArrayList.class;
-    			}
-    		}
-        	return type;
-        }
-    }
-    
-	@SuppressWarnings("rawtypes")
-    private static class PersistentCollectionConverter implements Converter {
-
-        private final Mapper mapper;
-            
-    	public PersistentCollectionConverter(Mapper mapper) {
-            this.mapper = mapper;
-    	}
-        
-		public boolean canConvert(Class type) {
-			return isPersistenCollection(type);
-	    }
-
-		public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-			
-			Converter converter = null;
-			
-			if (source instanceof TreeSet) {
-				converter = new TreeSetConverter(mapper);
-			} else if (source instanceof TreeMap) {
-				converter = new TreeMapConverter(mapper);
-			} else if (source instanceof Map) {
-				converter = new CollectionConverter(mapper);
-			} else if (source instanceof List) {
-				converter = new CollectionConverter(mapper);
-			}
-			
-			if (converter != null) {
-				converter.marshal(source, writer, context);
-			}
-		}
-		
-		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-			return null;
-		}
-
-        @SuppressWarnings("unchecked")
-		private static boolean isPersistenCollection(Class type) {
-			try {
-				Class persistentCollection = Class.forName("org.hibernate.collection.PersistentCollection");
-	    		return persistentCollection.isAssignableFrom(type);
-			} catch (ClassNotFoundException e) {
-				return false;
-			}
-        }    	
-    }
+        XmlMapper mapper = new XmlMapper();
+        mapper.configure(Feature.AUTO_CLOSE_TARGET, false);
+		mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
+        mapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
+        mapper.writeValue(response.getOutputStream(), filterModel(model));
+	}
 
 }
