@@ -23,8 +23,8 @@ import java.util.EnumSet;
 import javax.faces.component.visit.VisitHint;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.context.PartialResponseWriter;
 import javax.faces.context.PartialViewContext;
+import javax.faces.context.ResponseWriter;
 import javax.faces.event.PhaseId;
 
 import org.apache.commons.lang.StringUtils;
@@ -40,10 +40,10 @@ import com.sun.faces.context.PartialViewContextImpl;
 public class AjaxViewContextImpl extends PartialViewContextImpl {
 
 	private Boolean ajaxRequest;
-	private Collection<String> renderIds;	
+	private Collection<String> renderIds;
 	
-    public AjaxViewContextImpl(FacesContext ctx) {
-        super(ctx);
+    public AjaxViewContextImpl(FacesContext context) {
+        super(context);
     }
     
     public void processPartial(PhaseId phaseId) {
@@ -54,24 +54,31 @@ public class AjaxViewContextImpl extends PartialViewContextImpl {
 
         if (phaseId == PhaseId.RENDER_RESPONSE) {
             try {
-                PartialResponseWriter writer = partialViewContext.getPartialResponseWriter();
+                ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
                 context.setResponseWriter(writer);
                 ExternalContext exContext = context.getExternalContext();
                 exContext.setResponseContentType("text/xml");
                 exContext.addResponseHeader("Cache-Control", "no-cache");
                 writer.startDocument();
+                writer.write("<?xml version='1.0' encoding='" + writer.getCharacterEncoding() + "'?>\n");
+                writer.startElement("partial-response", null);                
                 if (renderIds != null && !renderIds.isEmpty()) {
                     EnumSet<VisitHint> hints = EnumSet.of(VisitHint.SKIP_UNRENDERED, VisitHint.EXECUTE_LIFECYCLE);
                     context.getViewRoot().visitTree(
                     		new AjaxVisitContext(renderIds, hints), 
                     		new AjaxVisitCallback(phaseId));
                 }
+                writer.endElement("partial-response");
                 writer.endDocument();
             } catch (IOException ioe) {
             } catch (RuntimeException e) {
                 throw e;
             }
         }
+    }
+    
+    public ResponseWriter getResponseWriter() {
+        return FacesContext.getCurrentInstance().getResponseWriter();
     }
     
     public boolean isAjaxRequest() {

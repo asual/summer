@@ -21,7 +21,7 @@ import javax.faces.component.visit.VisitCallback;
 import javax.faces.component.visit.VisitContext;
 import javax.faces.component.visit.VisitResult;
 import javax.faces.context.FacesContext;
-import javax.faces.context.PartialResponseWriter;
+import javax.faces.context.ResponseWriter;
 import javax.faces.event.PhaseId;
 
 import org.apache.commons.logging.Log;
@@ -45,10 +45,13 @@ public class AjaxVisitCallback implements VisitCallback {
     	FacesContext ctx = FacesContext.getCurrentInstance();
         if (phaseId == PhaseId.RENDER_RESPONSE) {
             try {
-                PartialResponseWriter writer = ctx.getPartialViewContext().getPartialResponseWriter();
-                writer.startUpdate(component.getClientId(ctx));
+                ResponseWriter writer = ((AjaxViewContextImpl) ctx.getPartialViewContext()).getResponseWriter();
+                writer.startElement("update", null);
+                writer.writeAttribute("id", component.getClientId(ctx), null);
+                writer.startCDATA();
                 component.encodeAll(ctx);
-                writer.endUpdate();
+                writer.endCDATA();
+                writer.endElement("update");                
             } catch (IOException e) {
             	logger.error(e.getMessage(), e);
             }
