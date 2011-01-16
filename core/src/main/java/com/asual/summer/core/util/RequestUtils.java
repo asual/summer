@@ -249,7 +249,7 @@ public class RequestUtils implements ApplicationContextAware {
 		public UrlBuilder(String url) {
 	        int index = url.indexOf(QUERY_STRING_SEPARATOR);
         	String urlPath = index != -1 ? url.substring(0, index) : url;
-        	setPath(WebUtils.extractFilenameFromUrlPath(urlPath));
+        	setPath(urlPath.replaceFirst("\\.[^/]*$", ""));
         	setExtension(urlPath.equals(path) ? null : urlPath.substring(path.length() + 1));
 	        if (index != -1) {
 	            addParameters(url.substring(index + 1));
