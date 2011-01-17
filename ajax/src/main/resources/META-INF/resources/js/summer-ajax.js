@@ -89,6 +89,7 @@
 	                        url: url,
 	                        type: re.test(method) ? method : 'post',
 	                        data: params + (data ? '&' + data : ''),
+	                        dataType: 'html',
 	                        beforeSend: function(xhr) {
 	                        	if (validation) {
 	                                xhr.setRequestHeader('X-Requested-Operation', 'Validation');
@@ -109,15 +110,15 @@
 	                            regions.trigger('error');
 	                        },
 	                        success: function(data, status, xhr) {
-	                        	if (data && data.getElementsByTagName('update').length > 0) {
+                        		var elements = $(data);
+	                        	if (elements.size() > 0) {
 	                        		regions.each(function(i) {
 		                        		var obj = $(this),
-		                        			el = find(data.getElementsByTagName('update'), this.id);
+		                        			source = elements.filter('#' + this.id),
+		                        			target = obj.is(tags) ? obj.parent() : obj;
 		                        		// TODO: Copy events for form element wrappers
 		                        		// obj.data('events');
-		                        		if (el) {
-		                        			var source = $(el.firstChild.nodeValue),
-		                        				target = obj.is(tags) ? obj.parent() : obj;
+		                        		if (source.size()) {
 		                        			if (validation) {
 		                        				var sourceForm = $(tags, source),
 		                        					targetForm = $(tags, target);

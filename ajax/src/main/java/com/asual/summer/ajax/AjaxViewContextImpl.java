@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.EnumSet;
 
 import javax.faces.component.visit.VisitHint;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.context.PartialViewContext;
 import javax.faces.context.ResponseWriter;
@@ -55,20 +54,19 @@ public class AjaxViewContextImpl extends PartialViewContextImpl {
         if (phaseId == PhaseId.RENDER_RESPONSE) {
             try {
                 ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
-                context.setResponseWriter(writer);
-                ExternalContext exContext = context.getExternalContext();
-                exContext.setResponseContentType("text/xml");
-                exContext.addResponseHeader("Cache-Control", "no-cache");
                 writer.startDocument();
-                writer.write("<?xml version='1.0' encoding='" + writer.getCharacterEncoding() + "'?>\n");
-                writer.startElement("partial-response", null);                
+                writer.write("<!DOCTYPE html>");
+                writer.startElement("html", null);
+                writer.startElement("title", null);
+                writer.write("Ajax Response");
+                writer.endElement("title");
                 if (renderIds != null && !renderIds.isEmpty()) {
                     EnumSet<VisitHint> hints = EnumSet.of(VisitHint.SKIP_UNRENDERED, VisitHint.EXECUTE_LIFECYCLE);
                     context.getViewRoot().visitTree(
                     		new AjaxVisitContext(renderIds, hints), 
                     		new AjaxVisitCallback(phaseId));
                 }
-                writer.endElement("partial-response");
+                writer.endElement("html");
                 writer.endDocument();
             } catch (IOException ioe) {
             } catch (RuntimeException e) {
