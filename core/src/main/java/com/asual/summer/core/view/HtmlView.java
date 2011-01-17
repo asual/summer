@@ -19,10 +19,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.FacesException;
+import javax.faces.FactoryFinder;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
 import javax.faces.event.PhaseId;
+import javax.faces.lifecycle.LifecycleFactory;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +44,7 @@ import com.asual.summer.core.util.RequestUtils;
 public class HtmlView extends InternalResourceView implements ResponseView {
 
     private static final String DEFAULT_EXTENSION = "html";
+	private static LifecycleFactory lifecycleFactory;
 
     private String extension;
     
@@ -64,11 +68,23 @@ public class HtmlView extends InternalResourceView implements ResponseView {
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		FacesContext facesContext = RequestUtils.getFacesContext(request, response);
+		if (lifecycleFactory == null) {
+			lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		}
+		
+		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+		FacesContext facesContext = facesContextFactory.getFacesContext(
+				RequestUtils.getServletContext(), request, response, lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE));
+		facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
+        facesContext.getExternalContext().getFlash().doPrePhaseActions(facesContext);
+        
+        Map<String, Object> requestMap = facesContext.getExternalContext().getRequestMap();
 		Iterator<String> i = model.keySet().iterator();
 		while (i.hasNext()) {
 			String key = i.next().toString();
-			facesContext.getExternalContext().getRequestMap().put(key, model.get(key));
+			if (!requestMap.containsKey(key)) {
+				requestMap.put(key, model.get(key));
+			}
 		}
 		
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();

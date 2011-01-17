@@ -14,17 +14,18 @@
 
 package com.asual.summer.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.ui.ModelMap;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.HandlerExceptionResolver;
@@ -34,7 +35,6 @@ import org.springframework.web.servlet.view.InternalResourceView;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ResourceUtils;
 import com.asual.summer.core.util.StringUtils;
-import com.asual.summer.core.view.FlashView;
 
 /**
  * 
@@ -44,7 +44,8 @@ import com.asual.summer.core.view.FlashView;
 @Named
 public class ErrorResolver implements HandlerExceptionResolver {
 	
-	public static final String ERRORS = "errors";
+	private static final String ERRORS = "errors";
+	private final Log logger = LogFactory.getLog(getClass());
 	
 	@SuppressWarnings("unchecked")
     public ModelAndView resolveException(HttpServletRequest request,
@@ -83,25 +84,22 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	        
 	        String form = (String) RequestUtils.getParameter("_form");
 	        if (form != null) {
-				if (RequestUtils.isValidation()) {
-					request.setAttribute(ErrorResolver.ERRORS, errors);
+	        	if (request.getAttribute(ERRORS) == null) {
+	        		request.setAttribute(ERRORS, errors);
 					request.setAttribute(be.getObjectName(), be.getTarget());
 					return new ModelAndView(new InternalResourceView(form));
-				} else {
-					ModelMap model = new ModelMap();
-					model.addAttribute(ErrorResolver.ERRORS, errors);
-					model.addAttribute(be.getObjectName(), be.getTarget());
-		        	return new ModelAndView(new FlashView(form, false), model);
-				}
+	        	}
 	        } else {
 	            List<String> pairs = new ArrayList<String>();
 	            for (String key : errors.keySet()) {
 	                pairs.add(key + "=" + errors.get(key).get("message"));
 	            }
-		        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);	            
-		        response.setHeader("Warning", StringUtils.join(pairs, ";"));	        	
+	            try {
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, StringUtils.join(pairs, ";"));
+				} catch (IOException ioe) {
+					logger.error(ioe.getMessage(), ioe);
+				}
 	        }
-	        
 	    }
 	    
 		return null;
@@ -109,12 +107,7 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	
 	@SuppressWarnings("unchecked")
 	public Map<String, Map<String, Object>> getErrors() {
-		if (RequestUtils.isValidation()) {
-			return (Map<String, Map<String, Object>>) RequestUtils.getAttribute(ErrorResolver.ERRORS);
-		} else {
-        	return (Map<String, Map<String, Object>>) 
-    			FacesContext.getCurrentInstance().getExternalContext().getFlash().get(ErrorResolver.ERRORS);
-		}
+		return (Map<String, Map<String, Object>>) RequestUtils.getAttribute(ERRORS);
 	}
 	
 }

@@ -22,15 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import javax.faces.FactoryFinder;
-import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
-import javax.faces.event.PhaseId;
-import javax.faces.lifecycle.LifecycleFactory;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -49,7 +43,6 @@ import com.asual.summer.core.RequestFilter;
 public class RequestUtils implements ApplicationContextAware {
 	
 	private static ApplicationContext applicationContext;
-	private static LifecycleFactory lifecycleFactory;
 
 	private static final String QUERY_STRING_SEPARATOR = "?";
 	private static final String PARAMETER_SEPARATOR = "&";
@@ -212,20 +205,6 @@ public class RequestUtils implements ApplicationContextAware {
 
     public static int getErrorCode() {
         return (Integer) getAttribute("javax.servlet.error.status_code");
-    }
-
-    public static FacesContext getFacesContext(HttpServletRequest request, HttpServletResponse response) {
-		if (lifecycleFactory == null) {
-			lifecycleFactory = (LifecycleFactory) FactoryFinder.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
-		}
-		if (FacesContext.getCurrentInstance() == null) {
-			FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-			FacesContext facesContext = facesContextFactory.getFacesContext(
-					RequestUtils.getServletContext(), request, response, lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE));
-			facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
-            facesContext.getExternalContext().getFlash().doPrePhaseActions(facesContext);
-		}
-		return FacesContext.getCurrentInstance();
     }
     
     public static ServletContext getServletContext() {

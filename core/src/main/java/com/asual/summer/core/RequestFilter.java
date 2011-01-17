@@ -159,23 +159,6 @@ public class RequestFilter extends OncePerRequestFilter {
     		FilterChain filterChain) throws ServletException, IOException {
     	
     	requestHolder.set(request);
-    	/*
-		request.setAttribute(FlashView.MODEL, new HashMap<String, Object>());
-		
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-        	String cookieName = "csfcfc";
-	        for (Cookie cookie : cookies) {
-	            if (cookie.getName().equals(cookieName)) {
-	            	if (cookie.getValue() != null) {
-	            		FacesContext facesContext = RequestUtils.getFacesContext(request, response);
-	            		Flash flash = facesContext.getExternalContext().getFlash();
-	            		request.setAttribute(FlashView.MODEL, flash.get(FlashView.MODEL));
-	            	}
-	                break;
-	            }
-	        }
-        }*/
         
 		HttpServletRequest defaultRequest = new DefaultRequest(request);
 		

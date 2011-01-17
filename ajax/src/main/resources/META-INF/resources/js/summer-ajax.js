@@ -114,24 +114,23 @@
 	                        	if (elements.size() > 0) {
 	                        		regions.each(function(i) {
 		                        		var obj = $(this),
-		                        			source = elements.filter('#' + this.id),
 		                        			target = obj.is(tags) ? obj.parent() : obj;
 		                        		// TODO: Copy events for form element wrappers
 		                        		// obj.data('events');
-		                        		if (source.size()) {
-		                        			if (validation) {
-		                        				var sourceForm = $(tags, source),
-		                        					targetForm = $(tags, target);
-		                        				sourceForm.replaceWith(targetForm);
-			                        			target.replaceWith(source);
-		                        				if (event.type != 'blur') {
-		                        					$(tags, source).trigger('focus');
-		                        				}	                        				
-		                        			} else {
-			                        			target.replaceWith(source);
-			                        			fn(source, ready);
-		                        			}
-		                        		}
+	                        			if (validation) {
+		                        			var source = elements.filter(':not(title)'),
+	                        					sourceForm = $(tags, source),
+	                        					targetForm = $(tags, target);
+	                        				sourceForm.replaceWith(targetForm);
+		                        			target.replaceWith(source);
+	                        				if (event.type != 'blur') {
+	                        					$(tags, source).trigger('focus');
+	                        				}	                        				
+	                        			} else {
+		                        			var source = elements.filter('#' + this.id);
+		                        			target.replaceWith(source);
+		                        			fn(source, ready);
+	                        			}
 		                            });
 		                        	regions.trigger('success', [data, status, xhr]);
 	                        	} else {
