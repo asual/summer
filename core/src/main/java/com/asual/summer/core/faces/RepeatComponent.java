@@ -37,6 +37,7 @@ public class RepeatComponent extends UIRepeat implements Component {
     public static final String COMPONENT_TYPE = "summer.faces.RepeatComponent";
     public static final String COMPONENT_FAMILY = "summer.faces.Facelets";
     
+    private String dataEmptyOption;
     private String styleClass;
     private Map<String, ValueExpression> bindings = new HashMap<String, ValueExpression>();
     private Map<String, String> bindingValues = new HashMap<String, String>();
@@ -119,7 +120,18 @@ public class RepeatComponent extends UIRepeat implements Component {
     }
     
     public String getEmpty() {
-        return (String) getAttributeExpression("dataRepeatEmpty");
+        return (String) getAttributeExpression("dataEmpty");
+    }
+    
+    public String getDataEmptyOption() {
+    	if (dataEmptyOption == null) {
+    		return (String) getAttributeExpression("dataEmptyOption");
+    	}
+        return dataEmptyOption;
+    }
+    
+    public void setDataEmptyOption(String dataEmptyOption) {
+        this.dataEmptyOption = dataEmptyOption;
     }
     
     public void setValueExpression(String name, ValueExpression binding) {

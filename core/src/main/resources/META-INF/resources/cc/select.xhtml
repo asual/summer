@@ -22,6 +22,7 @@
     xmlns:ui="http://java.sun.com/jsf/facelets">
     
     <cs:interface componentType="summer.faces.CompositeComponent" componentClass="select">
+        <cs:attribute name="dataEmpty" required="false" />
         <cs:attribute name="dataEmptyOption" required="false" />
         <cs:attribute name="dataLabel" required="false" />
         <cs:attribute name="dataTitle" required="false" />
@@ -38,13 +39,9 @@
         </ui:fragment>
         
         <ui:fragment rendered="${not empty cc.attrs.dataRepeat}">
-            
             ${cc.renderer.beginElement(cc, 'select')}
-            <ui:fragment rendered="${cc.attrs.qName.matches('select') and not empty cc.attrs.dataEmptyOption}">
-                <h:outputText value="&lt;option value=&quot;&quot;&gt;${cc.attrs.dataEmptyOption}&lt;/option&gt;" escape="false" />            
-            </ui:fragment>
-            <sc:repeat dataRepeat="${cc.attrs.dataRepeat}" dataValue="${cc.attrs.dataValue}"
-                dataVar="${cc.attrs.dataVar}" dataVarStatus="${cc.attrs.dataVarStatus}" 
+            <sc:repeat dataRepeat="${cc.attrs.dataRepeat}" dataValue="${cc.attrs.dataValue}" dataVar="${cc.attrs.dataVar}" 
+                dataVarStatus="${cc.attrs.dataVarStatus}" dataEmptyOption="${cc.attrs.dataEmptyOption}"
                 dataRepeatBegin="${empty cc.attrs.dataRepeatBegin ? 0 : cc.attrs.dataRepeatBegin}"
                 dataRepeatEnd="${empty cc.attrs.dataRepeatEnd ? objectUtils.size(cc.attrs.dataRepeat) - 1 : cc.attrs.dataRepeatEnd}">
                 <cs:insertChildren />

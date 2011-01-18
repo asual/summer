@@ -40,39 +40,43 @@ public class RepeatComponentRenderer extends Renderer {
     
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		String componentTag = getComponentTag(component);
+        RepeatComponent repeatComponent = ((RepeatComponent) component);
+        ResponseWriter writer = context.getResponseWriter();
         if (componentTag != null) {
-	        ResponseWriter writer = context.getResponseWriter();
 	        writer.startElement(componentTag, component);
 	        writeIdAttributeIfNecessary(context, writer, component);
 	        ComponentUtils.writeAttributes((Component) component, writer);
+	        Object value = repeatComponent.getValue();
+	        if (ObjectUtils.size(value) == 0 && repeatComponent.getEmpty() != null) {
+	        	if (componentTag.matches("tbody")) {
+	            	writer.startElement("tr", repeatComponent);
+	        	}
+	        	if (componentTag.matches("tbody|tr")) {
+	            	writer.startElement("td", repeatComponent);
+	        	}
+	        	writer.write(repeatComponent.getEmpty());
+	        	if (componentTag.matches("tbody|tr")) {
+	            	writer.endElement("td");
+	        	}
+	        	if (componentTag.matches("tbody")) {
+	            	writer.endElement("tr");
+	        	}
+	        }
         }
+        if (repeatComponent.getDataEmptyOption() != null) {
+        	writer.startElement("option", repeatComponent);
+        	writer.writeAttribute("value", "", null);
+        	writer.write(repeatComponent.getDataEmptyOption());
+        	writer.endElement("option");
+        }        
     }
     
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
-        if (component.getChildCount() > 0) {
+    	if (component.getChildCount() > 0) {
             Iterator<?> itr = component.getChildren().iterator();
             while (itr.hasNext()) {
             	((UIComponent) itr.next()).encodeAll(context);
             }
-        }
-        RepeatComponent repeatComponent = ((RepeatComponent) component);
-        String componentTag = getComponentTag(component);
-        Object value = repeatComponent.getValue();
-    	ResponseWriter writer = context.getResponseWriter();
-        if (ObjectUtils.size(value) == 0 && repeatComponent.getEmpty() != null) {
-        	if (componentTag.matches("tbody")) {
-        		writer.write("<tr>");
-        	}
-        	if (componentTag.matches("tbody|tr")) {
-        		writer.write("<td>");
-        	}
-        	writer.write(repeatComponent.getEmpty());
-        	if (componentTag.matches("tbody|tr")) {
-        		writer.write("</td>");
-        	}
-        	if (componentTag.matches("tbody")) {
-        		writer.write("</tr>");
-        	}
         }
     }
 

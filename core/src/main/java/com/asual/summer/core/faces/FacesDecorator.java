@@ -16,6 +16,8 @@ package com.asual.summer.core.faces;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.view.Location;
@@ -135,6 +137,7 @@ public final class FacesDecorator implements TagDecorator {
 	    "ruby", 
 	    "samp", 
 	    "section", 
+	    "select", 
 	    "small", 
 	    "source", 
 	    "span", 
@@ -167,6 +170,11 @@ public final class FacesDecorator implements TagDecorator {
     	TagAttributeImpl tagNameAttr = null;
     	TagAttributeImpl tagTargetAttr = null;
 		List<TagAttribute> attrs = new ArrayList<TagAttribute>(Arrays.asList(tag.getAttributes().getAll()));
+		Collections.sort(attrs, new Comparator<TagAttribute>() {
+			public int compare(TagAttribute ta1, TagAttribute ta2) {
+				return ta1.getQName().compareTo(ta2.getQName());
+			}
+		});
     	if (StringUtils.isEmpty(namespace) && !HtmlDecorator.XhtmlNamespace.equals(namespace) && !reservedTags.contains(qName)) {
         	String name = qName;
         	if (headTags.contains(qName)) {
@@ -178,20 +186,22 @@ public final class FacesDecorator implements TagDecorator {
 				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
 			}
     		for (TagAttribute attr : attrs) {
-    			if ("target".equals(attr.getQName())) {
-    				tagTargetAttr = null;
-    			} else if ("data-template".equals(attr.getQName())) {
-    				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
-    				name = "html".equals(qName) ? "html" : "template";
-    			} else if ("data-repeat".equals(attr.getQName())) {
-    				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
-    				name = "repeat";
-    			} else if ("data-error".equals(attr.getQName())) {
+    			if ("data-error".equals(attr.getQName())) {
     				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
     				name =  Boolean.valueOf(attr.getValue()) ? qName : "tag";
     			} else if ("data-label".equals(attr.getQName()) && !StringUtils.isEmpty(attr.getValue())) {
     				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
     				name = qName;
+    			} else if ("data-template".equals(attr.getQName())) {
+    				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
+    				name = "html".equals(qName) ? "html" : "template";
+    			} else if ("data-repeat".equals(attr.getQName())) {
+    				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
+    				if (!"select".equals(name)) {
+    					name = "repeat";
+    				}
+    			} else if ("target".equals(attr.getQName())) {
+    				tagTargetAttr = null;
     			}
     	    	if (attr.getQName().startsWith("data-") && !attr.getQName().equals("data-rendered")) {
     	    		String replace = convertName(attr.getQName());
@@ -205,13 +215,6 @@ public final class FacesDecorator implements TagDecorator {
     			}
     			replaceAttr(attrs, attr, "class", "styleClass");
     			replaceAttr(attrs, attr, "data-rendered", "rendered");
-    		}
-    		if ("select".equals(qName)) {
-    			if ("select".equals(name)) {
-        			attrs.add(new TagAttributeImpl(location, namespace, "dataRepeat", "dataRepeat", "${''.split('')}"));
-    			} else {
-    				name = "select";
-    			}
     		}
     		if (tagNameAttr != null) {
     			attrs.add(tagNameAttr);
