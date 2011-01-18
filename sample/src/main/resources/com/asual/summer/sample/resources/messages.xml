@@ -10,6 +10,7 @@
     <entry key="conversion.java.net.URL">Valid URL is required!</entry>
     <entry key="conversion.com.asual.summer.sample.file.Image">Valid image is required!</entry>
 
+    <entry key="validation.NotNull">Value is required!</entry>
     <entry key="validation.NotEmpty">Value is required!</entry>
     <entry key="validation.Size"><![CDATA[The required size is between <strong>{2}</strong> and <strong>{1}</strong>]]></entry>
 

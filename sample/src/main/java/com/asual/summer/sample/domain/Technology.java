@@ -35,6 +35,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -89,6 +90,7 @@ public class Technology implements Serializable {
             inverseJoinColumns={ @JoinColumn(name="license_id") })
     private List<License> licenses;
 
+    @NotNull
     @Column
     private Status status;
 

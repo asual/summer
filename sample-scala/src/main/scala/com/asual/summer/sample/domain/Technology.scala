@@ -21,6 +21,7 @@ import java.net.URL
 import java.util._
 
 import javax.persistence._
+import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 import org.hibernate.validator.constraints.NotEmpty
@@ -83,6 +84,7 @@ class Technology {
     @BeanProperty
     var licenses:List[License] = _
 
+    @NotNull
     @Column
     @BeanProperty
     var status:Status = _

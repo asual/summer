@@ -5,7 +5,7 @@
     
     <p><a href="/technology">&larr; Back to List</a></p>
 
-    <form action="/technology" enctype="multipart/form-data" method="post">
+    <form action="/technology" method="post" enctype="multipart/form-data" data-ajax-validation="true">
 
         <h1>${messages.page.technology.add}</h1>
         
@@ -33,7 +33,7 @@
 
         <fieldset data-label="Status:">
             <select data-repeat="${statusList}" data-value="${technology.status}" 
-                data-empty-option="Select a status">
+                data-empty-option="Select a status" data-error="true">
                 <option value="${var.value}">${var.name}</option>
             </select>
         </fieldset>
