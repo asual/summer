@@ -38,19 +38,17 @@
             <label for="${cc.renderer.getFormId(cc)}" title="${cc.attrs.dataTitle}">${cc.attrs.dataLabel}</label>
         </ui:fragment>
         
-        <ui:fragment rendered="${not empty cc.attrs.dataRepeat}">
-            ${cc.renderer.beginElement(cc, 'select')}
-            <sc:repeat dataRepeat="${cc.attrs.dataRepeat}" dataValue="${cc.attrs.dataValue}" dataVar="${cc.attrs.dataVar}" 
-                dataVarStatus="${cc.attrs.dataVarStatus}" dataEmptyOption="${cc.attrs.dataEmptyOption}"
-                dataRepeatBegin="${empty cc.attrs.dataRepeatBegin ? 0 : cc.attrs.dataRepeatBegin}"
-                dataRepeatEnd="${empty cc.attrs.dataRepeatEnd ? objectUtils.size(cc.attrs.dataRepeat) - 1 : cc.attrs.dataRepeatEnd}">
-                <cs:insertChildren />
-            </sc:repeat>
-            ${cc.renderer.endElement(cc, 'select')}
-            <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.renderer.getFormId(cc))}"
-                value="${errors.get(cc.renderer.getFormId(cc)).message}" styleClass="error" />
-                
-        </ui:fragment>
+        ${cc.renderer.beginElement(cc, 'select')}
+        <sc:repeat dataRepeat="${empty cc.attrs.dataRepeat ? ''.split('') : cc.attrs.dataRepeat}" 
+            dataValue="${cc.attrs.dataValue}" dataEmptyOption="${cc.attrs.dataEmptyOption}" 
+            dataVar="${cc.attrs.dataVar}" dataVarStatus="${cc.attrs.dataVarStatus}"
+            dataRepeatBegin="${empty cc.attrs.dataRepeatBegin ? 0 : cc.attrs.dataRepeatBegin}"
+            dataRepeatEnd="${empty cc.attrs.dataRepeatEnd ? (empty cc.attrs.dataRepeat ? 1 : objectUtils.size(cc.attrs.dataRepeat)) - 1 : cc.attrs.dataRepeatEnd}">
+            <cs:insertChildren />
+        </sc:repeat>
+        ${cc.renderer.endElement(cc, 'select')}
+        <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.renderer.getFormId(cc))}"
+            value="${errors.get(cc.renderer.getFormId(cc)).message}" styleClass="error" />
         
     </cs:implementation>
     

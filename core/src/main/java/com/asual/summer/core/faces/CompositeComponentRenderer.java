@@ -194,10 +194,11 @@ public class CompositeComponentRenderer extends Renderer {
     
     public String getFormId(Component component) {
     	String id = component.getClientId();
-    	if (StringUtils.isEmpty(id)) {
+    	String name = (String) component.getAttributes().get("name");
+    	if (StringUtils.isEmpty(id) && StringUtils.isEmpty(name)) {
     		id = ComponentUtils.getValueId(component);
     	}
-    	if (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
+    	if (!StringUtils.isEmpty(id) && !id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
     		return id;
     	}
     	return null;

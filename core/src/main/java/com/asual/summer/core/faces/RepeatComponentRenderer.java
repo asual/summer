@@ -24,6 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -47,7 +48,7 @@ public class RepeatComponentRenderer extends Renderer {
 	        writeIdAttributeIfNecessary(context, writer, component);
 	        ComponentUtils.writeAttributes((Component) component, writer);
 	        Object value = repeatComponent.getValue();
-	        if (ObjectUtils.size(value) == 0 && repeatComponent.getEmpty() != null) {
+	        if (value != null && ObjectUtils.size(value) == 0 && repeatComponent.getEmpty() != null) {
 	        	if (componentTag.matches("tbody")) {
 	            	writer.startElement("tr", repeatComponent);
 	        	}
@@ -63,12 +64,12 @@ public class RepeatComponentRenderer extends Renderer {
 	        	}
 	        }
         }
-        if (repeatComponent.getDataEmptyOption() != null) {
+        if (!StringUtils.isEmpty(repeatComponent.getDataEmptyOption())) {
         	writer.startElement("option", repeatComponent);
         	writer.writeAttribute("value", "", null);
         	writer.write(repeatComponent.getDataEmptyOption());
         	writer.endElement("option");
-        }        
+        }
     }
     
     public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
