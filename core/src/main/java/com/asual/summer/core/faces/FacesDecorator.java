@@ -210,11 +210,16 @@ public final class FacesDecorator implements TagDecorator {
     	    					new TagAttributeImpl(location, attr.getNamespace(), replace, replace, attr.getValue()));
     	    		}
     			}
-    	    	if ("id".equals(attr.getQName()) && attr.getValue().contains("${")) {
-        			replaceAttr(attrs, attr, "id", "idx");
+    	    	if ("id".equals(attr.getQName())) {
+    	    		
+    	    		if (attr.getValue().contains("${")) {
+            			replaceAttr(attrs, attr, attr.getValue(), "id", "idx");
+    	    		} else {
+            			replaceAttr(attrs, attr, "${'" + attr.getValue() + "'}", "id", "idx");
+    	    		}
     			}
-    			replaceAttr(attrs, attr, "class", "styleClass");
-    			replaceAttr(attrs, attr, "data-rendered", "rendered");
+    			replaceAttr(attrs, attr, attr.getValue(), "class", "styleClass");
+    			replaceAttr(attrs, attr, attr.getValue(), "data-rendered", "rendered");
     		}
     		if (tagNameAttr != null) {
     			attrs.add(tagNameAttr);
@@ -237,10 +242,10 @@ public final class FacesDecorator implements TagDecorator {
     	return StringUtils.join(parts, "");
     }
     
-    private void replaceAttr(List<TagAttribute> attrs, TagAttribute attr, String search, String replace) {
+    private void replaceAttr(List<TagAttribute> attrs, TagAttribute attr, String value, String search, String replace) {
     	if (search.equals(attr.getQName())) {
 			attrs.set(attrs.indexOf(attr), new TagAttributeImpl(
-					attr.getLocation(), attr.getNamespace(), replace, replace, attr.getValue()));
+					attr.getLocation(), attr.getNamespace(), replace, replace, value));
 		}
     }    
 }

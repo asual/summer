@@ -17,6 +17,7 @@ package com.asual.summer.core.faces;
 import java.beans.BeanInfo;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -186,10 +187,12 @@ public class ComponentUtils {
     }
     
     static String getExprId(String expr) {
-    	String[] arr = expr.replaceAll("^(\\$|#)\\{|\\}$", "").split("\\.");
-		if (arr.length != 0) {
-			return arr[arr.length - 1];
-		}
+		List<String> values = Arrays.asList(expr.replaceAll("^(\\$|#)\\{|\\}$", "").split("\\."));
+    	if (values.size() > 1) {
+	    	return StringUtils.join(values.subList(1, values.size()), ".");
+    	} else if (values.size() > 0) {
+    		return values.get(0);
+    	}
 		return null;
     }    
 
