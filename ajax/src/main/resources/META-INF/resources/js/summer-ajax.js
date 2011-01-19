@@ -54,14 +54,7 @@
 		                tags = 'input, select, textarea',
 		                selector = '#' + ids.replace(/:/g, '\\:').split(' ').join(', #'),
 		                params = '_ajax=' + ids,
-		                regions = $(selector),
-		                find = function(arr, id) {
-                    		for (var i = 0; i < arr.length; i++) {
-                    			if (id == arr[i].getAttribute('id')) {
-                    				return arr[i];
-                    			}
-                    		}
-	                    };
+		                regions = $(selector);
 	                    
 		            if (o.is('a')) {
 		                url = o.attr('href');
@@ -117,19 +110,24 @@
 		                        			target = obj.is(tags) ? obj.parent() : obj;
 		                        		// TODO: Copy events for form element wrappers
 		                        		// obj.data('events');
-	                        			if (validation) {
-		                        			var source = elements.filter(':not(title)'),
-	                        					sourceForm = $(tags, source),
-	                        					targetForm = $(tags, target);
-	                        				sourceForm.replaceWith(targetForm);
-		                        			target.replaceWith(source);
-	                        				if (event.type != 'blur') {
-	                        					$(tags, source).trigger('focus');
-	                        				}	                        				
-	                        			} else {
-		                        			var source = elements.filter('#' + this.id);
-		                        			target.replaceWith(source);
-		                        			fn(source, ready);
+	                        			var source = elements.filter('[data-ajax-response=' + this.id + ']')
+	                        				.contents()
+	                        				.filter(function() {
+	                        					return this.nodeType != Node.TEXT_NODE;
+	                        				});
+	                        			if (source.size()) {
+		                        			if (validation) {
+			                        			var sourceForm = $(tags, source),
+		                        					targetForm = $(tags, target);
+		                        				sourceForm.replaceWith(targetForm);
+			                        			target.replaceWith(source);
+		                        				if (event.type != 'blur') {
+		                        					$(tags, source).trigger('focus');
+		                        				}	                        				
+		                        			} else {
+			                        			target.replaceWith(source);
+			                        			fn(source, ready);
+		                        			}
 	                        			}
 		                            });
 		                        	regions.trigger('success', [data, status, xhr]);
