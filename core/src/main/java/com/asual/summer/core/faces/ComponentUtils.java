@@ -31,6 +31,8 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
+import org.jboss.el.lang.EvaluationContext;
+
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.el.TagValueExpression;
@@ -110,9 +112,12 @@ public class ComponentUtils {
     	if (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
     		return id;
     	}
-    	String valueId = getValueId(component);
-    	if (valueId != null) {
-    		return valueId;
+    	String name = getAttrValue(component, "name");
+    	if (StringUtils.isEmpty(name)) {
+	    	String valueId = getValueId(component);
+	    	if (valueId != null) {
+	    		return valueId;
+	    	}
     	}
         return id;
     }
@@ -133,7 +138,21 @@ public class ComponentUtils {
         }
         return classes;
     }
-
+    
+    static String getAttrValue(Component component, String key) {
+    	Object value = component.getAttributes().get(key);
+    	if (value == null) {
+    		ValueExpression expr = component.getBindings().get(key);
+    		if (expr != null) {
+	    		value = expr.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
+    		}
+    	}
+    	if (value != null) {
+    		return value.toString();
+    	}
+    	return null;
+    }
+    
     static boolean shouldWriteAttribute(Component component, String key) {
         return !Pattern.compile(ATTRIBUTES + "|" + 
 			FacesDecorator.ATTRIBUTES + "|" + 

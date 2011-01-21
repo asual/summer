@@ -66,7 +66,7 @@ public class CompositeComponentRenderer extends Renderer {
 	        	
 	        	if (type != null && type.matches("checkbox|radio")) {
 	        		ComponentUtils.writeAttribute(writer, "name", getFormName(cc));
-		        	if (isMatch(cc) && getAttrValue(cc, "checked") == null) {
+		        	if (isMatch(cc) && ComponentUtils.getAttrValue(cc, "checked") == null) {
 		        		ComponentUtils.writeAttribute(writer, "checked", "checked");
 		        	}
 	        	} else {
@@ -75,7 +75,7 @@ public class CompositeComponentRenderer extends Renderer {
 	        	}
 	        	
 	        } else if ("option".equals(componentTag)) {
-	        	if (isMatch(cc) && getAttrValue(cc, "selected") == null) {
+	        	if (isMatch(cc) && ComponentUtils.getAttrValue(cc, "selected") == null) {
 	        		ComponentUtils.writeAttribute(writer, "selected", "selected");
 	        	}
 	        }
@@ -133,13 +133,13 @@ public class CompositeComponentRenderer extends Renderer {
         
         if ("form".equals(name)) {
 
-        	String action = getAttrValue(component, "action");
+        	String action = ComponentUtils.getAttrValue(component, "action");
         	attrs.put("action", StringUtils.isEmpty(action) ? RequestUtils.getRequestUri() : RequestUtils.contextRelative(action, true));
         	
-        	String method = getAttrValue(component, "method");
+        	String method = ComponentUtils.getAttrValue(component, "method");
         	attrs.put("method", StringUtils.isEmpty(method) ? "get" : (RequestUtils.isMethodBrowserSupported(method) ? method : "post"));
         	
-        	String enctype = getAttrValue(component, "enctype");
+        	String enctype = ComponentUtils.getAttrValue(component, "enctype");
         	attrs.put("enctype", StringUtils.isEmpty(enctype) ? "application/x-www-form-urlencoded" : enctype);
         	
         } else if ("input".equals(name)) {
@@ -149,7 +149,7 @@ public class CompositeComponentRenderer extends Renderer {
         	if (type != null && type.matches("checkbox|radio")) {
 	        	attrs.put("id", getFormId(component));
 	        	attrs.put("name", getFormName(component));
-	        	if (isMatch(component) && getAttrValue(component, "checked") == null) {
+	        	if (isMatch(component) && ComponentUtils.getAttrValue(component, "checked") == null) {
 	        		attrs.put("checked", "checked");
 	        	}
 			} else {
@@ -160,7 +160,7 @@ public class CompositeComponentRenderer extends Renderer {
         	
         	Map<String, Map<String, Object>> errors = BeanUtils.getBeanOfType(ErrorResolver.class).getErrors();
         	attrs.put("value", errors != null && errors.get(getFormId(component)) != null ? 
-        			errors.get(getFormId(component)).get("value") : getAttrValue(component, "value"));
+        			errors.get(getFormId(component)).get("value") : ComponentUtils.getAttrValue(component, "value"));
         	
         } else if ("select".equals(name) || "textarea".equals(name)) {
         	
@@ -194,8 +194,8 @@ public class CompositeComponentRenderer extends Renderer {
     
     public String getFormId(Component component) {
     	String id = component.getClientId();
-    	String name = (String) component.getAttributes().get("name");
-    	if (StringUtils.isEmpty(id) && StringUtils.isEmpty(name)) {
+    	String name = ComponentUtils.getAttrValue(component, "name");
+    	if ((StringUtils.isEmpty(id) || id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) && StringUtils.isEmpty(name)) {
     		id = ComponentUtils.getValueId(component);
     	}
     	if (!StringUtils.isEmpty(id) && !id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
@@ -205,7 +205,7 @@ public class CompositeComponentRenderer extends Renderer {
     }
     
     public String getFormName(Component component) {
-    	String name = (String) component.getAttributes().get("name");
+    	String name = ComponentUtils.getAttrValue(component, "name");
     	if (!StringUtils.isEmpty(name)) {
     		return name;
     	}
@@ -231,7 +231,7 @@ public class CompositeComponentRenderer extends Renderer {
                 logger.error(e.getMessage(), e);
             }
         }
-    }    
+    }
     
     private boolean shouldWriteIdAttribute(UIComponent component, String id) {
     	String componentTag = getComponentTag(component);
@@ -253,20 +253,6 @@ public class CompositeComponentRenderer extends Renderer {
     private Object getExpressionValue(String expr) {
 		return ExpressionBuilder.createNode(expr)
 			.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
-    }
-    
-    private String getAttrValue(Component component, String key) {
-    	Object value = component.getAttributes().get(key);
-    	if (value == null) {
-    		ValueExpression expr = component.getBindings().get(key);
-    		if (expr != null) {
-	    		value = expr.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
-    		}
-    	}
-    	if (value != null) {
-    		return value.toString();
-    	}
-    	return null;
     }
     
 	private boolean isMatch(Component component) {
