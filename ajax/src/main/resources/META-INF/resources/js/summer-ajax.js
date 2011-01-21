@@ -18,18 +18,28 @@
 	    
         (function(scope, ready) {
         	
-        	var fn = arguments.callee;
+        	var fn = arguments.callee,
+	            re = /^(get|post)$/i,
+	            inputs = 'input, select, textarea';
         	
-        	$('*', scope).filter(function(index) {
+        	$('*', scope).filter(function(i) {
         		
-        		return $(this).is('[data-ajax]') || ($(this).is(':input') && !$(this).is('[type=hidden]') && $(this).parents('form[data-ajax-validation]').size());
+        		return $(this).is('[data-ajax]') || 
+        			($(this).is(inputs) && !$(this).is('[type=hidden]') && $(this).parents('form[data-ajax-validation]').size());
         		
         	}).each(function() {
         		
+        		// TODO: Both data-ajax-disabled and data-ajax-validation should work as HTML5 boolean properties
+        		
         		var o = $(this),
         			event = o.attr('data-ajax-event'),
-        			validation = $(this).parents('form[data-ajax-validation]').attr('data-ajax-validation') == 'true';
+        			validation = $(this).parents('form[data-ajax-validation]').attr('data-ajax-validation') == 'true',
+	                ids = o.attr('data-ajax') ? o.attr('data-ajax') : (validation ? o.attr('id') : '');
         		
+	            if (!ids) {
+	            	return;
+	            }
+	            
         		if (!event) {
 	            	if (o.is(':text, textarea')) {
 	            		event = 'blur';
@@ -46,12 +56,9 @@
 
                     var url, 
 		                o = $(this), 
-		                re = /^(get|post)$/i,
-		                ids = o.attr('data-ajax') ? o.attr('data-ajax') : (validation ? o.attr('id') : ''),
 		                data = o.attr('data-ajax-params'),
 		                method = o.attr('data-ajax-method'),
 	        			disabled = o.attr('data-ajax-disabled'),
-		                tags = 'input, select, textarea',
 		                selector = '#' + ids.replace(/:/g, '\\:').split(' ').join(', #'),
 		                params = '_ajax=' + ids,
 		                regions = $(selector);
@@ -62,7 +69,7 @@
 		                if (!re.test(method)) {
 		                	data += (data ? '&' : '') + '_method=' + method;
 		                }
-	                } else if (o.is('button') || o.is(tags)) {
+	                } else if (o.is('button') || o.is(inputs)) {
 		                var form = o.parents('form');
 		                url = form.attr('action');
 		                data = (data ? data + '&' : '') + form.serialize();	            	
@@ -88,12 +95,12 @@
 	                                xhr.setRequestHeader('X-Requested-Operation', 'Validation');
 	                        	}
 	                            regions.trigger('beforeSend', [xhr]).each(function() {
-	                            	($(this).is(tags) ? $(this).parent() : $(this)).addClass('loading');
+	                            	($(this).is(inputs) ? $(this).parent() : $(this)).addClass('loading');
 	                            });
 	                        },
 	                        complete: function(xhr, status) {
 	                        	regions.trigger('complete', [xhr, status]).each(function() {
-	                        		($(this).is(tags) ? $(this).parent() : $(this)).removeClass('loading');
+	                        		($(this).is(inputs) ? $(this).parent() : $(this)).removeClass('loading');
 	                            });
 	                        },
 	                        error: function(xhr, status, error) {
@@ -107,7 +114,7 @@
 	                        	if (elements.size() > 0) {
 	                        		regions.each(function(i) {
 		                        		var obj = $(this),
-		                        			target = obj.is(tags) ? obj.parent() : obj;
+		                        			target = obj.is(inputs) ? obj.parent() : obj;
 		                        		// TODO: Copy events for form element wrappers
 		                        		// obj.data('events');
 	                        			var source = elements.filter('[data-ajax-response=' + this.id + ']')
@@ -117,12 +124,12 @@
 	                        				});
 	                        			if (source.size()) {
 		                        			if (validation) {
-			                        			var sourceForm = $(tags, source),
-		                        					targetForm = $(tags, target);
+			                        			var sourceForm = $(inputs, source),
+		                        					targetForm = $(inputs, target);
 		                        				sourceForm.replaceWith(targetForm);
 			                        			target.replaceWith(source);
 		                        				if (event.type != 'blur') {
-		                        					$(tags, source).trigger('focus');
+		                        					$(inputs, source).trigger('focus');
 		                        				}	                        				
 		                        			} else {
 			                        			target.replaceWith(source);
