@@ -120,7 +120,7 @@
 	                        			var source = elements.filter('[data-ajax-response=' + this.id + ']')
 	                        				.contents()
 	                        				.filter(function() {
-	                        					return this.nodeType != Node.TEXT_NODE;
+	                        					return this.nodeType !== 3;
 	                        				});
 	                        			if (source.size()) {
 		                        			if (validation) {
