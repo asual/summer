@@ -7,6 +7,10 @@ body, button, input, select, textarea {
     font: 14px 'Helvetica Neue', Arial, sans-serif;
 }
 
+html[data-client='webkit'] select {
+    font-size: 16px;
+}
+
 body, header, footer, section, p {
     display: block;
     margin: 0;
