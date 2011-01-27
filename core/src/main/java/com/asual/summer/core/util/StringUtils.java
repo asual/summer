@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import javax.inject.Named;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.WordUtils;
 
 /**
@@ -110,6 +111,22 @@ public class StringUtils {
 	    }
 	}
 
+	public static String escape(String value) {
+	    try {
+	        return StringEscapeUtils.escapeHtml(value);
+	    } catch (Exception e) {
+	    	return value;
+	    }
+	}
+
+	public static String unescape(String value) {
+	    try {
+	    	return StringEscapeUtils.unescapeHtml(value);
+	    } catch (Exception e) {
+	    	return value;
+	    }
+	}
+	
     public static String decorate(String str, Map<String, String> values) {
     	Matcher m = Pattern.compile("\\$\\{[^}]*\\}").matcher(str);
     	while (m.find()) {
