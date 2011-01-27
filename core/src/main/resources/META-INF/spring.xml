@@ -74,11 +74,11 @@
     <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" p:order="2147483646">
         <property name="urlMap">
             <map>
-                <entry key="/css**/*" value-ref="resourceHttpRequestHandler" />
-                <entry key="/font**/*" value-ref="resourceHttpRequestHandler" />
-                <entry key="/img**/*" value-ref="resourceHttpRequestHandler" />
-                <entry key="/js**/*" value-ref="resourceHttpRequestHandler" />
-                <entry key="/res**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/css/**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/font/**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/img/**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/js/**/*" value-ref="resourceHttpRequestHandler" />
+                <entry key="/res/**/*" value-ref="resourceHttpRequestHandler" />
                 <entry key="/favicon.ico" value-ref="resourceHttpRequestHandler" />
                 <entry key="/robots.txt" value-ref="resourceHttpRequestHandler" />
             </map>
@@ -88,6 +88,11 @@
     <bean id="resourceHttpRequestHandler" class="org.springframework.web.servlet.resource.ResourceHttpRequestHandler">
         <property name="locations">
             <list>
+                <value>classpath:META-INF/resources/css/</value>
+                <value>classpath:META-INF/resources/font/</value>
+                <value>classpath:META-INF/resources/img/</value>
+                <value>classpath:META-INF/resources/js/</value>
+                <value>classpath:META-INF/resources/res/</value>
                 <value>classpath:META-INF/resources/</value>
             </list>
         </property>
