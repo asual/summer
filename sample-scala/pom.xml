@@ -120,7 +120,7 @@
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
-                <version>2.15.0</version> 
+                <version>2.15.1</version> 
                 <executions>
                     <execution>
                         <phase>compile</phase>
@@ -150,20 +150,28 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.6</version>
-                <configuration>
-                    <target>    
-                        <taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties"
-                            classpathref="maven.plugin.classpath" />
-                        <iajc
-                            srcDir="src/main/scala"
-                            destDir="target/classes"
-                            inpath="target/classes"
-                            source="1.6"
-                            aspectPath="${org.springframework:spring-aspects:jar}"
-                            classpathRef="maven.compile.classpath"
-                            Xlint="ignore" />
-                    </target>
-                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>    
+                                <taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties"
+                                    classpathref="maven.plugin.classpath" />
+                                <iajc
+                                    srcDir="src/main/scala"
+                                    destDir="target/classes"
+                                    inpath="target/classes"
+                                    source="1.6"
+                                    aspectPath="${org.springframework:spring-aspects:jar}"
+                                    classpathRef="maven.compile.classpath"
+                                    Xlint="ignore" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
                 <dependencies>
                     <dependency>
                         <groupId>org.aspectj</groupId>
