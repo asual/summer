@@ -39,7 +39,7 @@ public class FacesStreamHandler extends URLStreamHandler {
 		this.resource = resource;
 	}
 	
-    protected URLConnection openConnection(URL u) throws IOException {
+    protected URLConnection openConnection(final URL u) throws IOException {
     	
         return new URLConnection(u) {
         	
@@ -52,7 +52,7 @@ public class FacesStreamHandler extends URLStreamHandler {
                         URLConnection urlc = resource.openConnection();
                         InputStream in = urlc.getInputStream();
                         try {
-                            bytes = FacesResourceProcessor.execute(in);
+                            bytes = FacesResourceProcessor.execute(u, in);
                         } finally {
                             in.close();
                         }

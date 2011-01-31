@@ -23,6 +23,9 @@ import java.util.Map;
 import javax.faces.FacesException;
 import javax.faces.view.facelets.ResourceResolver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.asual.summer.core.util.ResourceUtils;
 
 /**
@@ -32,17 +35,22 @@ import com.asual.summer.core.util.ResourceUtils;
  */
 public class FacesResourceResolver extends ResourceResolver {
     
+	private final Log logger = LogFactory.getLog(getClass());
     private Map<String, URL> resources = new HashMap<String, URL>();
     
     public URL resolveUrl(String path) {
         if (!resources.containsKey(path)) {
             URL url = ResourceUtils.getClasspathResource("/".equals(path) ? "META-INF/" : path.replaceAll("^/", ""));
-            try {
-                url = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(url));
-            } catch (AccessControlException e) {
-            } catch (NoClassDefFoundError e) {
-            } catch (MalformedURLException e) {
-                throw new FacesException(e);
+            if (url != null) {
+	            try {
+	                url = new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getFile(), new FacesStreamHandler(url));
+	            } catch (AccessControlException e) {
+	            } catch (NoClassDefFoundError e) {
+	            } catch (MalformedURLException e) {
+	                throw new FacesException(e);
+	            }
+            } else {
+            	logger.warn("The requested resource [" + path + "] cannot be resolved.");
             }
             resources.put(path, url);
         }

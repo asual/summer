@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PushbackInputStream;
 import java.io.Reader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -33,12 +34,12 @@ import com.asual.summer.core.util.StringUtils;
  */
 public class FacesResourceProcessor {
 
-	public static byte[] execute(InputStream input) throws IOException {
+	public static byte[] execute(URL url, InputStream input) throws IOException {
     	
 		byte[] bytes;
 		
         try {
-            StringBuffer sb = new StringBuffer(1024);
+        	StringBuilder sb = new StringBuilder();
             UnicodeReader reader = new UnicodeReader(input, StringUtils.getEncoding());
             try {
                 char[] cbuf = new char[32];
@@ -46,8 +47,14 @@ public class FacesResourceProcessor {
                 while ((r = reader.read(cbuf, 0, 32)) != -1) {
                     sb.append(cbuf, 0, r);
                 }
-            	Pattern p = Pattern.compile("&(\\w*);");
-            	Matcher m = p.matcher(sb.toString());
+                String str = sb.toString();
+                if (url.getFile().contains("META-INF/templates")) {
+                	str = "<ui:component xmlns:ui=\"http://java.sun.com/jsf/facelets\">" + 
+                		Pattern.compile("(<!DOCTYPE html>)|(</?html>)|(<title>[^<]*</title>)", 
+                			Pattern.CASE_INSENSITIVE).matcher(str).replaceAll("").replaceAll(
+                					"\\$\\{template\\.body\\}", "<ui:insert />") + "</ui:component>";
+                }
+            	Matcher m = Pattern.compile("&(\\w*);").matcher(str);
         		StringBuffer b = new StringBuffer();
         		while (m.find()) {
         			m.appendReplacement(b, "&#" + entities.get(m.group(1)) + ";");
@@ -59,7 +66,7 @@ public class FacesResourceProcessor {
             }
         } catch (IOException e) {
             throw e;
-        }    	
+        }
         
         return bytes;
 	}
