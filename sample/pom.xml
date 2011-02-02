@@ -20,6 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>com.asual.summer</groupId>
+            <artifactId>summer-core</artifactId>
+            <version>1.0.0.M2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.asual.summer</groupId>
             <artifactId>summer-ajax</artifactId>
             <version>1.0.0.M2-SNAPSHOT</version>
         </dependency>
@@ -30,7 +35,12 @@
         </dependency>
         <dependency>
             <groupId>com.asual.summer</groupId>
-            <artifactId>summer-core</artifactId>
+            <artifactId>summer-json</artifactId>
+            <version>1.0.0.M2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.asual.summer</groupId>
+            <artifactId>summer-xml</artifactId>
             <version>1.0.0.M2-SNAPSHOT</version>
         </dependency>
         <dependency>

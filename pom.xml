@@ -257,8 +257,10 @@
         <module>core</module>
         <module>el</module>
         <module>jquery</module>
+        <module>json</module>
         <module>sample</module>
         <module>sample-scala</module>
+        <module>xml</module>
     </modules>
     
 </project>

@@ -32,12 +32,12 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.asual.summer.core.ResponseViews;
 import com.asual.summer.core.ViewNotFoundException;
 import com.asual.summer.core.view.AbstractResponseView;
-import com.asual.summer.core.view.JsonView;
-import com.asual.summer.core.view.XmlView;
+import com.asual.summer.json.JsonView;
 import com.asual.summer.sample.domain.License;
 import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
 import com.asual.summer.sample.domain.Technology.Image;
+import com.asual.summer.xml.XmlView;
 
 /**
  * 

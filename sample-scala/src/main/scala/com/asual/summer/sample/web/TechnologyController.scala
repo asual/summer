@@ -16,6 +16,8 @@ package com.asual.summer.sample.web
 
 import com.asual.summer.core._
 import com.asual.summer.core.view._
+import com.asual.summer.json.JsonView
+import com.asual.summer.xml.XmlView
 
 import com.asual.summer.sample.domain._
 

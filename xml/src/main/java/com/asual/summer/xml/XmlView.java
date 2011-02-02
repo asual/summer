@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.asual.summer.core.view;
+package com.asual.summer.xml;
 
 import java.util.Map;
 
@@ -24,6 +24,7 @@ import org.codehaus.jackson.JsonGenerator.Feature;
 import org.codehaus.jackson.map.SerializationConfig;
 
 import com.asual.summer.core.util.StringUtils;
+import com.asual.summer.core.view.AbstractResponseView;
 import com.fasterxml.jackson.xml.XmlMapper;
 import com.fasterxml.jackson.xml.ser.ToXmlGenerator;
 
