@@ -224,10 +224,7 @@ public class ComponentUtils {
         	
         	String method = ComponentUtils.getAttrValue(component, "method");
         	attrs.put("method", StringUtils.isEmpty(method) ? "get" : (RequestUtils.isMethodBrowserSupported(method) ? method : "post"));
-        	
-        	String enctype = ComponentUtils.getAttrValue(component, "enctype");
-        	attrs.put("enctype", StringUtils.isEmpty(enctype) ? "application/x-www-form-urlencoded" : enctype);
-        	
+        	        	
         } else if ("input".equals(name)) {
         	
         	attrs.put("id", getFormId(component));
@@ -237,7 +234,7 @@ public class ComponentUtils {
         	
         	if ("checkbox".equals(type) || "radio".equals(type)) {
 	        	if (isMatch(component) && ComponentUtils.getAttrValue(component, "checked") == null) {
-	        		attrs.put("checked", "");
+	        		attrs.put("checked", "checked");
 	        	}
 			}
         	
@@ -253,7 +250,7 @@ public class ComponentUtils {
         } else if ("option".equals(name)) {
         	
         	if (isMatch(component) && ComponentUtils.getAttrValue(component, "selected") == null) {
-        		attrs.put("selected", "");
+        		attrs.put("selected", "selected");
         	}
         }
         

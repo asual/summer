@@ -19,19 +19,16 @@
     xmlns:cs="http://java.sun.com/jsf/composite"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
     
-    <cs:interface componentType="summer.faces.CompositeComponent" componentWrapper="true">
-        <cs:attribute name="target" required="false" />
+    <cs:interface componentType="summer.faces.CompositeComponent" componentTag="form">
         <cs:attribute name="method" required="false" />
     </cs:interface>
     
     <cs:implementation>
-        ${cc.renderer.beginElement(cc, 'form')}
-            <cs:insertChildren />
-            <input type="hidden" name="_form" value="${empty request.getRequestURI() ? '/' : request.getRequestURI()}" />
-            <ui:fragment rendered="${not empty cc.attrs.method and not requestUtils.isMethodBrowserSupported(cc.attrs.method)}">
-                <input type="hidden" name="_method" value="${cc.attrs.method}" />
-            </ui:fragment>
-        ${cc.renderer.endElement(cc, 'form')}
+        <cs:insertChildren />
+        <input type="hidden" name="_form" value="${empty request.getRequestURI() ? '/' : requestUtils.contextRelative(request.getRequestURI(), false)}" />
+        <ui:fragment rendered="${not empty cc.attrs.method and not requestUtils.isMethodBrowserSupported(cc.attrs.method)}">
+            <input type="hidden" name="_method" value="${cc.attrs.method}" />
+        </ui:fragment>
     </cs:implementation>
 
 </ui:component>

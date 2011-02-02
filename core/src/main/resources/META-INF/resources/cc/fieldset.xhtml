@@ -20,17 +20,15 @@
     xmlns:cs="http://java.sun.com/jsf/composite"
     xmlns:ui="http://java.sun.com/jsf/facelets">
     
-    <cs:interface componentType="summer.faces.CompositeComponent" componentWrapper="true">
+    <cs:interface componentType="summer.faces.CompositeComponent" componentTag="fieldset">
         <cs:attribute name="dataLabel" required="false" />
     </cs:interface>
     
     <cs:implementation>
-        ${cc.renderer.beginElement(cc, 'fieldset')}
-            <ui:fragment rendered="${not empty cc.attrs.dataLegend}">
-                <legend>${cc.attrs.dataLegend}</legend>
-            </ui:fragment>
-            <cs:insertChildren />
-        ${cc.renderer.endElement(cc, 'fieldset')}
+        <ui:fragment rendered="${not empty cc.attrs.dataLegend}">
+            <legend>${cc.attrs.dataLegend}</legend>
+        </ui:fragment>
+        <cs:insertChildren />
     </cs:implementation>
     
 </ui:component>
