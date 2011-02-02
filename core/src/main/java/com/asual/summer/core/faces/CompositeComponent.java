@@ -67,7 +67,15 @@ public class CompositeComponent extends UINamingContainer implements Component {
     public String getClientId(FacesContext context) {
     	return ComponentUtils.getClientId(this);
     }
-
+    
+    public String getFormId() {
+    	return ComponentUtils.getFormId(this);
+    }
+    
+    public String getFormName() {
+    	return ComponentUtils.getFormName(this);
+    }
+    
     public void setValueExpression(String name, ValueExpression binding) {
     	super.setValueExpression(name, binding);
     	bindings.put(name, binding);

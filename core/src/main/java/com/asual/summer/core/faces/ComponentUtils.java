@@ -18,6 +18,7 @@ import java.beans.BeanInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +29,14 @@ import javax.faces.application.Resource;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UINamingContainer;
 import javax.faces.component.UIViewRoot;
+import javax.faces.component.behavior.ClientBehaviorHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.jboss.el.lang.EvaluationContext;
 
+import com.asual.summer.core.ErrorResolver;
+import com.asual.summer.core.util.BeanUtils;
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.el.TagValueExpression;
@@ -153,6 +157,109 @@ public class ComponentUtils {
     	return null;
     }
     
+    static String getFormId(Component component) {
+    	String id = component.getClientId();
+    	String name = ComponentUtils.getAttrValue(component, "name");
+    	if ((StringUtils.isEmpty(id) || id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) && StringUtils.isEmpty(name)) {
+    		id = ComponentUtils.getValueId(component);
+    	}
+    	if (!StringUtils.isEmpty(id) && !id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
+    		return id;
+    	}
+    	return null;
+    }
+        
+    static String getFormName(Component component) {
+    	String name = ComponentUtils.getAttrValue(component, "name");
+    	if (!StringUtils.isEmpty(name)) {
+    		return name;
+    	}
+    	try {
+	    	return ComponentUtils.getExprId(ComponentUtils.getRepeatComponent(component).getBindings().get("dataValue").getExpressionString());
+    	} catch (Exception e) {
+        	return getFormId(component);
+    	}
+    }
+    
+    static boolean shouldWriteIdAttribute(Component component, String id) {
+    	String componentTag = getComponentTag((UIComponent) component);
+        return (id != null && (isComponentWrapper((UIComponent) component) || componentTag != null) && !"option".equals(componentTag) &&
+                    (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX) ||
+                        ((component instanceof ClientBehaviorHolder) &&
+                          !((ClientBehaviorHolder) component).getClientBehaviors().isEmpty())));
+    }
+    
+    static String getComponentTag(UIComponent component) {
+    	return (String) ComponentUtils.getConfig((Component) component, "componentTag");
+    }
+    
+    static boolean isComponentWrapper(UIComponent component) {
+    	Object config = ComponentUtils.getConfig((Component) component, "componentWrapper");
+    	if (config != null) {
+    		return config instanceof String ? Boolean.valueOf((String) config) : Boolean.valueOf((Boolean) config);
+    	}
+    	return false;
+    }
+    
+    static Map<String, Object> getAttributes(Component component, String name) {
+    	
+        Map<String, Object> attrs = new HashMap<String, Object>(component.getAttributes());
+        
+        String id = component.getClientId();
+        if (shouldWriteIdAttribute(component, id)) {
+        	attrs.put("id", id);
+        }
+        
+    	Map<String, ValueExpression> bindings = component.getBindings();
+        for (String key : bindings.keySet()) {
+    		if (ComponentUtils.shouldWriteAttribute(component, key)) {
+				attrs.put(key, bindings.get(key).getValue(FacesContext.getCurrentInstance().getELContext()));
+        	}
+        }
+    	
+        if ("form".equals(name)) {
+
+        	String action = ComponentUtils.getAttrValue(component, "action");
+        	attrs.put("action", StringUtils.isEmpty(action) ? RequestUtils.getRequestUri() : RequestUtils.contextRelative(action, true));
+        	
+        	String method = ComponentUtils.getAttrValue(component, "method");
+        	attrs.put("method", StringUtils.isEmpty(method) ? "get" : (RequestUtils.isMethodBrowserSupported(method) ? method : "post"));
+        	
+        	String enctype = ComponentUtils.getAttrValue(component, "enctype");
+        	attrs.put("enctype", StringUtils.isEmpty(enctype) ? "application/x-www-form-urlencoded" : enctype);
+        	
+        } else if ("input".equals(name)) {
+        	
+        	attrs.put("id", getFormId(component));
+        	attrs.put("name", getFormName(component));
+        	
+        	String type = (String) attrs.get("type");
+        	
+        	if ("checkbox".equals(type) || "radio".equals(type)) {
+	        	if (isMatch(component) && ComponentUtils.getAttrValue(component, "checked") == null) {
+	        		attrs.put("checked", "");
+	        	}
+			}
+        	
+        	Map<String, Map<String, Object>> errors = BeanUtils.getBeanOfType(ErrorResolver.class).getErrors();
+        	attrs.put("value", errors != null && errors.get(getFormId(component)) != null ? 
+        			errors.get(getFormId(component)).get("value") : ComponentUtils.getAttrValue(component, "value"));
+        	
+        } else if ("select".equals(name) || "textarea".equals(name)) {
+        	
+        	attrs.put("id", getFormId(component));
+        	attrs.put("name", getFormName(component));
+        	
+        } else if ("option".equals(name)) {
+        	
+        	if (isMatch(component) && ComponentUtils.getAttrValue(component, "selected") == null) {
+        		attrs.put("selected", "");
+        	}
+        }
+        
+    	return attrs;
+    }
+    
     static boolean shouldWriteAttribute(Component component, String key) {
         return !Pattern.compile(ATTRIBUTES + "|" + 
 			FacesDecorator.ATTRIBUTES + "|" + 
@@ -162,32 +269,6 @@ public class ComponentUtils {
 			UIComponent.BEANINFO_KEY + "|" + 
 			UIComponent.FACETS_KEY + "|" + 
 			UIComponent.VIEW_LOCATION_KEY, Pattern.CASE_INSENSITIVE).matcher(key).matches();
-    }
-    
-    static void writeAttributes(Component component, ResponseWriter writer) throws IOException {
-
-        if (ComponentUtils.getComponentClass(component) == null) {
-        	
-        	Map<String, ValueExpression> bindings = component.getBindings();
-	        for (String key : bindings.keySet()) {
-	    		if (shouldWriteAttribute(component, key)) {
-		        	writeAttribute(writer, key, bindings.get(key).getValue(FacesContext.getCurrentInstance().getELContext()));
-	        	}
-	        }
-	        
-	        Map<String, Object> attrs = component.getAttributes();
-	        for (String key : attrs.keySet()) {
-	    		if (shouldWriteAttribute(component, key)) {
-	            	writeAttribute(writer, key, attrs.get(key));
-	        	}
-			}
-        }
-        
-        List<String> classes = ComponentUtils.getComponentClasses(component);
-        if (classes.size() != 0) {
-        	writeAttribute(writer, "class", StringUtils.join(classes, " "));
-        }
-    	
     }
     
     static String contextAttribute(String name, Object value) {
@@ -214,5 +295,27 @@ public class ComponentUtils {
     	}
 		return null;
     }    
-
+    
+	static boolean isMatch(Component component) {
+    	try {
+    		RepeatComponent repeatComponent = getRepeatComponent(component);
+			Map<String, ValueExpression> bindings = repeatComponent.getBindings();
+			FacesContext context = FacesContext.getCurrentInstance();
+			Object dataValue = bindings.get("dataValue").getValue(context.getELContext());
+        	Map<String, Map<String, Object>> errors = BeanUtils.getBeanOfType(ErrorResolver.class).getErrors();
+			if (errors != null && errors.get(getFormName(component)) != null) {
+				dataValue = errors.get(getFormName(component)).get("value");
+			}
+			Object valueAttr = RequestUtils.getAttribute(repeatComponent.getVar());
+			if (dataValue instanceof List<?>) {
+			 	return ((List<?>) dataValue).contains(valueAttr);
+			} else if (dataValue instanceof Boolean) {
+				return dataValue.equals(Boolean.valueOf(valueAttr.toString()));
+			} else {
+				return dataValue.equals(valueAttr);
+			}
+    	} catch (Exception e) {
+    		return false;
+    	}
+    } 
 }

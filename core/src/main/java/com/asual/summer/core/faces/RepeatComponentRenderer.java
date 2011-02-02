@@ -15,18 +15,17 @@
 package com.asual.summer.core.faces;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.faces.component.UIComponent;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.behavior.ClientBehaviorHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import com.asual.summer.core.util.ObjectUtils;
 
@@ -36,17 +35,36 @@ import com.asual.summer.core.util.ObjectUtils;
  *
  */
 public class RepeatComponentRenderer extends Renderer {
-	
-    private final Log logger = LogFactory.getLog(getClass());
     
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
-		String componentTag = getComponentTag(component);
+		
+    	String componentTag = (String) component.getAttributes().get(FacesDecorator.QNAME);
         RepeatComponent repeatComponent = ((RepeatComponent) component);
         ResponseWriter writer = context.getResponseWriter();
+        
         if (componentTag != null) {
+        	
 	        writer.startElement(componentTag, component);
-	        writeIdAttributeIfNecessary(context, writer, component);
-	        ComponentUtils.writeAttributes((Component) component, writer);
+	        
+	        Map<String, Object> attrs;
+	        
+	        if (ComponentUtils.getComponentClass((Component) component) == null) {
+	        	attrs = ComponentUtils.getAttributes((Component) component, componentTag);
+	        } else {
+	        	attrs = new HashMap<String, Object>();
+	        }
+	        
+	        List<String> classes = ComponentUtils.getComponentClasses((Component) component);
+	        if (classes.size() != 0) {
+	        	attrs.put("class", StringUtils.join(classes, " "));
+	        }
+	        
+	        for (String key : attrs.keySet()) {
+	    		if (ComponentUtils.shouldWriteAttribute((Component) component, key) && attrs.get(key) != null) {
+		        	ComponentUtils.writeAttribute(writer, key, attrs.get(key));
+	    		}
+	        }
+	        
 	        Object value = repeatComponent.getValue();
 	        if (value != null && ObjectUtils.size(value) == 0 && repeatComponent.getEmpty() != null) {
 	        	if (componentTag.matches("tbody")) {
@@ -64,6 +82,7 @@ public class RepeatComponentRenderer extends Renderer {
 	        	}
 	        }
         }
+        
         if (!StringUtils.isEmpty(repeatComponent.getDataEmptyOption())) {
         	writer.startElement("option", repeatComponent);
         	writer.writeAttribute("value", "", null);
@@ -82,7 +101,7 @@ public class RepeatComponentRenderer extends Renderer {
     }
 
     public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-		String componentTag = getComponentTag(component);
+		String componentTag = (String) component.getAttributes().get(FacesDecorator.QNAME);
         if (componentTag != null) {
         	ResponseWriter writer = context.getResponseWriter();
             writer.endElement(componentTag);
@@ -91,30 +110,6 @@ public class RepeatComponentRenderer extends Renderer {
     
     public boolean getRendersChildren() {
         return true;
-    }
-    
-    private String getComponentTag(UIComponent component) {
-    	return (String) component.getAttributes().get(FacesDecorator.QNAME);
-    }
-    
-    private void writeIdAttributeIfNecessary(FacesContext context,
-            ResponseWriter writer,
-            UIComponent component) {
-        String id = component.getClientId();
-        if (shouldWriteIdAttribute(component, id)) {
-            try {
-            	writer.writeAttribute("id", id, "id");
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
-            }
-        }
-    }
-    
-    private boolean shouldWriteIdAttribute(UIComponent component, String id) {
-        return (id != null && 
-                    (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX) ||
-                        ((component instanceof ClientBehaviorHolder) &&
-                          !((ClientBehaviorHolder) component).getClientBehaviors().isEmpty())));
     }
 
 }

@@ -19,23 +19,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIPanel;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.behavior.ClientBehaviorHolder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jboss.el.lang.EvaluationContext;
 import org.jboss.el.lang.ExpressionBuilder;
 
-import com.asual.summer.core.ErrorResolver;
-import com.asual.summer.core.util.BeanUtils;
-import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.compiler.UIInstructions;
 
@@ -46,38 +38,31 @@ import com.sun.faces.facelets.compiler.UIInstructions;
  */
 public class CompositeComponentRenderer extends Renderer {
 
-    private final Log logger = LogFactory.getLog(getClass());
-
     public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
         
-    	if (!isComponentWrapper(component)) {
+    	if (!ComponentUtils.isComponentWrapper(component)) {
     		
-    		String componentTag = getComponentTag(component);
+    		String componentTag = ComponentUtils.getComponentTag(component);
 	        ResponseWriter writer = context.getResponseWriter();
 	        writer.startElement(componentTag == null ? "div" : componentTag, component);
-	        writeIdAttributeIfNecessary(context, writer, component);
-	        ComponentUtils.writeAttributes((Component) component, writer);
 	        
-        	CompositeComponent cc = (CompositeComponent) component;
+	        Map<String, Object> attrs;
 	        
-	        if ("input".equals(componentTag)) {
-
-	        	String type = (String) component.getAttributes().get("type");
-	        	
-	        	if (type != null && type.matches("checkbox|radio")) {
-	        		ComponentUtils.writeAttribute(writer, "name", getFormName(cc));
-		        	if (isMatch(cc) && ComponentUtils.getAttrValue(cc, "checked") == null) {
-		        		ComponentUtils.writeAttribute(writer, "checked", "checked");
-		        	}
-	        	} else {
-					// TODO: Handle the case where only name is provided instead of an id
-	        		ComponentUtils.writeAttribute(writer, "name", getFormId(cc));
-	        	}
-	        	
-	        } else if ("option".equals(componentTag)) {
-	        	if (isMatch(cc) && ComponentUtils.getAttrValue(cc, "selected") == null) {
-	        		ComponentUtils.writeAttribute(writer, "selected", "selected");
-	        	}
+	        if (ComponentUtils.getComponentClass((Component) component) == null) {
+	        	attrs = ComponentUtils.getAttributes((Component) component, componentTag);
+	        } else {
+	        	attrs = new HashMap<String, Object>();
+	        }
+	        
+	        List<String> classes = ComponentUtils.getComponentClasses((Component) component);
+	        if (classes.size() != 0) {
+	        	attrs.put("class", StringUtils.join(classes, " "));
+	        }
+	        
+	        for (String key : attrs.keySet()) {
+	    		if (ComponentUtils.shouldWriteAttribute((Component) component, key) && attrs.get(key) != null) {
+		        	ComponentUtils.writeAttribute(writer, key, attrs.get(key));
+	    		}
 	        }
     	}
     }
@@ -87,7 +72,7 @@ public class CompositeComponentRenderer extends Renderer {
         Map<String,UIComponent> facets = component.getFacets();
         UIComponent compositeRoot = facets.get(UIComponent.COMPOSITE_FACET_NAME);
         if (null == compositeRoot) {
-            throw new IOException("Unable to find element " + component.getClientId());
+            throw new IOException("Unable to find element [" + component.getClientId() + "].");
         }
         
         Map<String, Object> attrs = component.getAttributes();
@@ -96,7 +81,8 @@ public class CompositeComponentRenderer extends Renderer {
 	        	UIPanel panel = (UIPanel) component.getFacet(UIComponent.COMPOSITE_FACET_NAME);
 	        	if (panel.getChildCount() == 1 && panel.getChildren().get(0) instanceof UIInstructions) {
 		            ResponseWriter writer = context.getResponseWriter();
-		            writer.write((String) getExpressionValue(panel.getChildren().get(0).toString()));
+		            writer.write((String) ExpressionBuilder.createNode(panel.getChildren().get(0).toString())
+		        			.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null)));
 		            return;
 	        	}
 	        }
@@ -109,8 +95,8 @@ public class CompositeComponentRenderer extends Renderer {
           throws IOException {
     	
         ResponseWriter writer = context.getResponseWriter();
-    	if (!isComponentWrapper(component)) {
-    		String componentTag = getComponentTag(component);
+    	if (!ComponentUtils.isComponentWrapper(component)) {
+    		String componentTag = ComponentUtils.getComponentTag(component);
 	        writer.endElement(componentTag == null ? "div" : componentTag);
     	}
     }
@@ -122,53 +108,9 @@ public class CompositeComponentRenderer extends Renderer {
         writer.write("<");
         writer.write(name);
 
-        Map<String, Object> attrs = new HashMap<String, Object>(component.getAttributes());
+        Map<String, Object> attrs = ComponentUtils.getAttributes(component, name);
         
-    	Map<String, ValueExpression> bindings = component.getBindings();
-        for (String key : bindings.keySet()) {
-    		if (ComponentUtils.shouldWriteAttribute(component, key)) {
-				attrs.put(key, bindings.get(key).getValue(FacesContext.getCurrentInstance().getELContext()));
-        	}
-        }
-        
-        if ("form".equals(name)) {
-
-        	String action = ComponentUtils.getAttrValue(component, "action");
-        	attrs.put("action", StringUtils.isEmpty(action) ? RequestUtils.getRequestUri() : RequestUtils.contextRelative(action, true));
-        	
-        	String method = ComponentUtils.getAttrValue(component, "method");
-        	attrs.put("method", StringUtils.isEmpty(method) ? "get" : (RequestUtils.isMethodBrowserSupported(method) ? method : "post"));
-        	
-        	String enctype = ComponentUtils.getAttrValue(component, "enctype");
-        	attrs.put("enctype", StringUtils.isEmpty(enctype) ? "application/x-www-form-urlencoded" : enctype);
-        	
-        } else if ("input".equals(name)) {
-        	
-        	String type = (String) attrs.get("type");
-        	
-        	if (type != null && type.matches("checkbox|radio")) {
-	        	attrs.put("id", getFormId(component));
-	        	attrs.put("name", getFormName(component));
-	        	if (isMatch(component) && ComponentUtils.getAttrValue(component, "checked") == null) {
-	        		attrs.put("checked", "checked");
-	        	}
-			} else {
-				// TODO: Handle the case where only name is provided instead of an id
-	        	attrs.put("id", getFormId(component));
-	        	attrs.put("name", getFormId(component));
-			}
-        	
-        	Map<String, Map<String, Object>> errors = BeanUtils.getBeanOfType(ErrorResolver.class).getErrors();
-        	attrs.put("value", errors != null && errors.get(getFormId(component)) != null ? 
-        			errors.get(getFormId(component)).get("value") : ComponentUtils.getAttrValue(component, "value"));
-        	
-        } else if ("select".equals(name) || "textarea".equals(name)) {
-        	
-        	attrs.put("id", getFormId(component));
-        	attrs.put("name", getFormId(component));
-        }
-		
-        if (isComponentWrapper((UIComponent) component)) {
+        if (ComponentUtils.isComponentWrapper((UIComponent) component)) {
         	attrs.put("class", component.getStyleClass());
         }
         
@@ -191,91 +133,5 @@ public class CompositeComponentRenderer extends Renderer {
     public boolean getRendersChildren() {
         return true;
     }
-    
-    public String getFormId(Component component) {
-    	String id = component.getClientId();
-    	String name = ComponentUtils.getAttrValue(component, "name");
-    	if ((StringUtils.isEmpty(id) || id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) && StringUtils.isEmpty(name)) {
-    		id = ComponentUtils.getValueId(component);
-    	}
-    	if (!StringUtils.isEmpty(id) && !id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX)) {
-    		return id;
-    	}
-    	return null;
-    }
-    
-    public String getFormName(Component component) {
-    	String name = ComponentUtils.getAttrValue(component, "name");
-    	if (!StringUtils.isEmpty(name)) {
-    		return name;
-    	}
-    	try {
-	    	return ComponentUtils.getExprId(ComponentUtils.getRepeatComponent(component).getBindings().get("dataValue").getExpressionString());
-    	} catch (Exception e) {
-        	return getFormId(component);
-    	}
-    }
-    
-    private String getComponentTag(UIComponent component) {
-    	return (String) ComponentUtils.getConfig((Component) component, "componentTag");
-    }
-    
-    private void writeIdAttributeIfNecessary(FacesContext context,
-            ResponseWriter writer,
-            UIComponent component) {
-        String id = component.getClientId();
-        if (shouldWriteIdAttribute(component, id)) {
-            try {
-            	writer.writeAttribute("id", id, "id");
-            } catch (IOException e) {
-                logger.error(e.getMessage(), e);
-            }
-        }
-    }
-    
-    private boolean shouldWriteIdAttribute(UIComponent component, String id) {
-    	String componentTag = getComponentTag(component);
-        return (id != null && (isComponentWrapper(component) || componentTag != null) && 
-        			!"option".equals(componentTag) &&
-                    (!id.startsWith(UIViewRoot.UNIQUE_ID_PREFIX) ||
-                        ((component instanceof ClientBehaviorHolder) &&
-                          !((ClientBehaviorHolder) component).getClientBehaviors().isEmpty())));
-    }
-    
-    private boolean isComponentWrapper(UIComponent component) {
-    	Object config = ComponentUtils.getConfig((Component) component, "componentWrapper");
-    	if (config != null) {
-    		return config instanceof String ? Boolean.valueOf((String) config) : Boolean.valueOf((Boolean) config);
-    	}
-    	return false;
-    }
-    
-    private Object getExpressionValue(String expr) {
-		return ExpressionBuilder.createNode(expr)
-			.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
-    }
-    
-	private boolean isMatch(Component component) {
-    	try {
-    		RepeatComponent repeatComponent = ComponentUtils.getRepeatComponent(component);
-			Map<String, ValueExpression> bindings = repeatComponent.getBindings();
-			FacesContext context = FacesContext.getCurrentInstance();
-			Object dataValue = bindings.get("dataValue").getValue(context.getELContext());
-        	Map<String, Map<String, Object>> errors = BeanUtils.getBeanOfType(ErrorResolver.class).getErrors();
-			if (errors != null && errors.get(getFormName(component)) != null) {
-				dataValue = errors.get(getFormName(component)).get("value");
-			}
-			Object valueAttr = RequestUtils.getAttribute(repeatComponent.getVar());
-			if (dataValue instanceof List<?>) {
-			 	return ((List<?>) dataValue).contains(valueAttr);
-			} else if (dataValue instanceof Boolean) {
-				return dataValue.equals(Boolean.valueOf(valueAttr.toString()));
-			} else {
-				return dataValue.equals(valueAttr);
-			}
-    	} catch (Exception e) {
-    		return false;
-    	}
-    }    
 
 }
