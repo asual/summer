@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jsoup.Jsoup;
+
 import com.asual.summer.core.util.StringUtils;
 
 /**
@@ -48,11 +50,24 @@ public class FacesResourceProcessor {
                     sb.append(cbuf, 0, r);
                 }
                 String str = sb.toString();
-                if (url.getFile().contains("META-INF/templates")) {
-                	str = "<ui:component xmlns:ui=\"http://java.sun.com/jsf/facelets\">" + 
-                		Pattern.compile("(<!DOCTYPE html>)|(</?html>)|(<title>[^<]*</title>)", 
-                			Pattern.CASE_INSENSITIVE).matcher(str).replaceAll("").replaceAll(
-                					"\\$\\{template\\.body\\}", "<ui:insert />") + "</ui:component>";
+                if (!str.contains("ui:component")) {
+	                boolean hasHead = str.contains("</head>");
+	                boolean hasBody = str.contains("</body>");
+	                str = Jsoup.parse(str).html();
+	                if (!hasHead) {
+	                	str = Pattern.compile("</?head[^>]*>", 
+	                			Pattern.CASE_INSENSITIVE).matcher(str).replaceAll("");
+	                }
+	                if (!hasBody) {
+	                	str = Pattern.compile("</?body[^>]*>", 
+	                			Pattern.CASE_INSENSITIVE).matcher(str).replaceAll("");
+	                }
+	                if (url.getFile().contains("META-INF/templates")) {
+	                	str = "<ui:component xmlns:ui=\"http://java.sun.com/jsf/facelets\">" + 
+	                		Pattern.compile("(<\\!DOCTYPE html>)|(</?html[^>]*>)|(<title>[^<]*</title>)", 
+	                			Pattern.CASE_INSENSITIVE).matcher(str).replaceAll("").replaceAll(
+	                					"\\$\\{template\\.body\\}", "<ui:insert />") + "</ui:component>";
+	                }
                 }
             	Matcher m = Pattern.compile("&(\\w*);").matcher(str);
         		StringBuffer b = new StringBuffer();
