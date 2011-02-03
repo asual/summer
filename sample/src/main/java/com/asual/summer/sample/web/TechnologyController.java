@@ -100,9 +100,9 @@ public class TechnologyController {
         return new ModelAndView("/edit", model);
     }
     
-    @RequestMapping("/{value}/image")
-    public void image(@PathVariable("value") String value, HttpServletResponse response) throws IOException {
-		Image image = Technology.find(value).getImage();
+    @RequestMapping("/image/{hashCode}")
+    public void image(@PathVariable("hashCode") String hashCode, HttpServletResponse response) throws IOException {
+		Image image = Image.find(hashCode);
 		if (image != null) {
 			response.setContentLength(image.getBytes().length);
 			response.setContentType(image.getContentType());
@@ -112,5 +112,6 @@ public class TechnologyController {
 		}
 		response.getOutputStream().flush();
 		response.getOutputStream().close();
-    }    
+    }
+    
 }

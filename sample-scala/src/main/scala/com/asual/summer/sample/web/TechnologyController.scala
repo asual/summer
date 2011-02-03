@@ -20,9 +20,11 @@ import com.asual.summer.json.JsonView
 import com.asual.summer.xml.XmlView
 
 import com.asual.summer.sample.domain._
+import com.asual.summer.sample.domain.Technology.Image
 
 import java.util.Arrays
 
+import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
 import org.springframework.stereotype.Controller
@@ -92,4 +94,17 @@ class TechnologyController {
         return new ModelAndView("/edit", model)
     }
     
+    @RequestMapping(Array("/image/{hashCode}"))
+    def image(@PathVariable("hashCode") hashCode:String, response:HttpServletResponse) {
+		var image:Image = Image.find(hashCode);
+		if (image != null) {
+			response.setContentLength(image.getBytes().length);
+			response.setContentType(image.contentType);
+			response.getOutputStream().write(image.getBytes());
+		} else {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		}
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+    }    
 }

@@ -15,7 +15,9 @@
 package com.asual.summer.sample.domain
 
 import com.asual.summer.core.util.StringUtils
+import com.asual.summer.sample.domain.Technology.TechnologyListener
 
+import java.io._
 import java.lang.Integer
 import java.net.URL
 import java.util._
@@ -38,6 +40,7 @@ import scala.reflect.BeanProperty
  */
 @Configurable
 @Entity
+@EntityListeners(Array(classOf[TechnologyListener]))
 @Table
 @SerialVersionUID(1L)
 @serializable
@@ -206,9 +209,17 @@ object Technology {
 	    @BeanProperty
 	    var contentType:String = _
 	    
-	    @BeanProperty
 	    var bytes:Array[Byte] = _
 	    
+        def getBytes():Array[Byte] = {
+            return bytes
+        }
+        
+        def setBytes(bytes:Array[Byte]) = {
+            this.bytes = bytes
+            flush()
+        }
+    
 		override def hashCode = {
 			41 * Arrays.hashCode(bytes)
 		}
@@ -223,10 +234,41 @@ object Technology {
 		def canEqual(other:Any) = {
 			other.isInstanceOf[Image]
 		}
-		
-    	value = file.getOriginalFilename()
-    	contentType = file.getContentType()
-    	bytes = file.getBytes()
+    	
+        def flush() = {
+			var file:File = new File(new File(System.getProperty("java.io.tmpdir")), String.valueOf(hashCode()))
+			if (!file.exists()) {
+                var fos:FileOutputStream = new FileOutputStream(file)
+                var oos:ObjectOutputStream = new ObjectOutputStream(fos)
+                oos.writeObject(this)
+                oos.flush()
+                fos.close()
+			}
+	    }
 	    
-	}    
+    	value = file.getOriginalFilename()
+    	contentType = file.getContentType()    	
+    	setBytes(file.getBytes())
+
+	}
+	
+    object Image {
+    
+        def find(hashCode:String):Image = {
+            var file:File = new File(new File(System.getProperty("java.io.tmpdir")), hashCode)
+            var fis:FileInputStream = new FileInputStream(file)
+            var ois:ObjectInputStream = new ObjectInputStream(fis)
+            return ois.readObject().asInstanceOf[Image]
+        }
+        
+    }
+	    
+    class TechnologyListener {
+	    
+    	@PostLoad
+    	def postLoad(technology:Technology) = {
+    		technology.getImage().flush();
+    	}    	
+    }
+    
 }

@@ -20,7 +20,7 @@
         </fieldset>
         
         <fieldset data-label="Image:">
-            <img src="data:${technology.image.contentType};base64,${objectUtils.encodeBase64(technology.image.bytes)}" 
+            <img src="/technology/image/${technology.image.hashCode()}" 
                 alt="${technology.name}" width="128" height="128" data-rendered="${not empty technology.image}" />
             <input type="file" value="${technology.image}" data-error="true" />
         </fieldset>
