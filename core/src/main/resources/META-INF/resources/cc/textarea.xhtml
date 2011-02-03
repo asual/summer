@@ -31,10 +31,10 @@
             <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
         </ui:fragment>
 
-        ${cc.renderer.beginElement(cc, 'textarea')}<ui:fragment rendered="${not empty errors.get(cc.formName)}">${errors.get(cc.formName).value}</ui:fragment>
-<ui:fragment id="value" rendered="${empty errors.get(cc.formName)}"><cs:insertChildren /></ui:fragment>${cc.renderer.endElement(cc, 'textarea')}
+        ${cc.renderer.beginElement(cc, 'textarea')}<ui:fragment rendered="${not empty cc.formName and not empty errors.get(cc.formName)}">${errors.get(cc.formName).value}</ui:fragment>
+<ui:fragment id="value" rendered="${not (not empty cc.formName and not empty errors.get(cc.formName))}"><cs:insertChildren /></ui:fragment>${cc.renderer.endElement(cc, 'textarea')}
         
-        <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.formName)}"
+        <h:outputText rendered="${cc.attrs.dataError and not empty cc.formName and not empty errors.get(cc.formName)}"
             value="${errors.get(cc.formName).message}" styleClass="error" escape="false" />
         
     </cs:implementation>

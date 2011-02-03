@@ -47,7 +47,7 @@
             <cs:insertChildren />
         </sc:repeat>
         ${cc.renderer.endElement(cc, 'select')}
-        <h:outputText rendered="${not empty cc.clientId and not empty errors.get(cc.formName)}"
+        <h:outputText rendered="${cc.attrs.dataError and not empty cc.formName and not empty errors.get(cc.formName)}"
             value="${errors.get(cc.formName).message}" styleClass="error" />
         
     </cs:implementation>

@@ -21,7 +21,6 @@
     xmlns:ui="http://java.sun.com/jsf/facelets">
     
     <cs:interface componentType="summer.faces.CompositeComponent" componentClass="${empty cc.attrs.type ? 'text' : cc.attrs.type}">
-        <cs:attribute name="dataFalse" required="false" />
         <cs:attribute name="dataLabel" required="false" />
         <cs:attribute name="size" required="false" />
         <cs:attribute name="title" required="false" />
@@ -43,7 +42,7 @@
             <ui:fragment rendered="${not empty cc.attrs.dataLabel}">
                 <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
             </ui:fragment>
-            <h:outputText rendered="${not empty cc.formName and not empty errors.get(cc.formName)}"
+            <h:outputText rendered="${cc.attrs.dataError and not empty cc.formName and not empty errors.get(cc.formName)}"
                 value="${errors.get(cc.formName).message}" styleClass="error" escape="false" />
         </ui:fragment>
         
@@ -52,7 +51,7 @@
                 <label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
             </ui:fragment>
             ${cc.renderer.beginElement(cc, 'input')}
-            <h:outputText rendered="${not empty cc.formId and not empty errors.get(cc.formName)}"
+            <h:outputText rendered="${cc.attrs.dataError and not empty cc.formName and not empty errors.get(cc.formName)}"
                 value="${errors.get(cc.formName).message}" styleClass="error" escape="false" />
         </ui:fragment>
             
