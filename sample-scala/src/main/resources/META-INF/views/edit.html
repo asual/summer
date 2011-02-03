@@ -5,45 +5,45 @@
     
     <p><a href="/technology/${technology.value}">&larr; Back to Details</a></p>
     
-    <form action="/technology/${technology.value}" method="put" enctype="multipart/form-data" data-ajax-validation>
+    <form action="/technology/${technology.value}" method="put" enctype="multipart/form-data" data-ajax-validation="true">
     
         <h1>${technology.name}</h1>
 
-        <input type="hidden" value="${technology.id}">
-        <input type="hidden" value="${technology.value}">
+        <input type="hidden" value="${technology.id}" />
+        <input type="hidden" value="${technology.value}" />
         
         <fieldset data-legend="General information:">
-            <input type="text" value="${technology.name}" size="48" data-label="Name:">
-            <input type="text" value="${technology.homepage}" size="48" data-label="Homepage:">
-            <input type="text" value="${technology.version}" size="16" data-label="Version:">
+            <input type="text" value="${technology.name}" size="48" data-label="Name:" />
+            <input type="text" value="${technology.homepage}" size="48" data-label="Homepage:" />
+            <input type="text" value="${technology.version}" size="16" data-label="Version:" />
         </fieldset>
 
         <fieldset data-legend="Description:">
-            <textarea cols="60" rows="10" data-error>${technology.description}</textarea>
+            <textarea cols="60" rows="10" data-error="true">${technology.description}</textarea>
         </fieldset>
 
         <fieldset data-legend="Image:">
             <img src="data:${technology.image.contentType};base64,${objectUtils.encodeBase64(technology.image.bytes)}" 
-                alt="${technology.name}" width="128" height="128" data-rendered="${not empty technology.image}">
-            <input id="image" type="file" data-error>
+                alt="${technology.name}" width="128" height="128" data-rendered="${not empty technology.image}" />
+            <input id="image" type="file" data-error="true" />
         </fieldset>
         
         <fieldset data-legend="Licenses:">
             <div data-repeat="${licenseList}" data-value="${technology.licenses}">
-                <input type="checkbox" value="${var.value}" data-label="${var.name}">
+                <input type="checkbox" value="${var.value}" data-label="${var.name}" />
             </div>
         </fieldset>
 
         <fieldset data-legend="Status:">
             <select data-repeat="${statusList}" data-value="${technology.status}" 
-                data-empty-option="Select a status" data-error>
+                data-empty-option="Select a status" data-error="true">
                 <option value="${var.value}">${var.name}</option>
             </select>
         </fieldset>
         
         <fieldset data-legend="Required:">
             <div data-repeat="${'true,false'.split(',')}" data-value="${technology.required}">
-                <input type="radio" value="${var}" data-label="${var ? 'Yes' : 'No'}">
+                <input type="radio" value="${var}" data-label="${var ? 'Yes' : 'No'}" />
             </div>
         </fieldset>
         
