@@ -21,7 +21,7 @@
         
         <fieldset data-label="Image:">
             <img src="/technology/image/${technology.image.hashCode()}" 
-                alt="${technology.name}" width="128" height="128" data-rendered="${not empty technology.image}" />
+                alt="${technology.name}" width="128" height="128" data-rendered="${not empty technology and not empty technology.image}" />
             <input type="file" value="${technology.image}" data-error="true" />
         </fieldset>
         
