@@ -44,11 +44,11 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 					String prop = (String) property;
 					if (base == null && (MESSAGES.equals(prop) || PROPERTIES.equals(prop))) {
 						elContext.setPropertyResolved(true);
+						keyHolder.set(null);
 						return new String(prop);
 					}
 					if (base instanceof String) {
 						String bs = (String) base;
-						boolean keyStored = false;
 						if (MESSAGES.equals(bs)) {
 							elContext.setPropertyResolved(true);
 							String messageResult = ResourceUtils.getMessage(prop);
@@ -57,9 +57,9 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 							elContext.setPropertyResolved(true);
 							Object propertyResult = ResourceUtils.getProperty(prop);
 							return propertyResult != null ? propertyResult : "{" + prop + "}";
-						} else if (bs.startsWith("{") && bs.endsWith("}") || (keyStored = keyHolder.get() != null)) {
+						} else if (bs.startsWith("{") && bs.endsWith("}") || keyHolder.get() != null) {
 							elContext.setPropertyResolved(true);
-							if (keyStored) {
+							if (keyHolder.get() != null) {
 								bs = "{" + keyHolder.get() + "}";
 							}
 							keyHolder.set(bs.substring(1, bs.length() - 1) + "." + prop);
