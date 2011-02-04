@@ -36,7 +36,7 @@ public class DefaultMultipartRequest extends DefaultMultipartHttpServletRequest 
 		Map<String, String[]> multipartParameters = super.getMultipartParameters();
 		for (String key : multipartParameters.keySet()) {
 			for (int i = 0; i < multipartParameters.get(key).length; i++) {
-				multipartParameters.get(key)[i] = RequestFilter.encode(multipartParameters.get(key)[i]);
+				multipartParameters.get(key)[i] = multipartParameters.get(key)[i];
 			}
 		}
     }
@@ -59,14 +59,6 @@ public class DefaultMultipartRequest extends DefaultMultipartHttpServletRequest 
     
     public String getServerName() {
     	return RequestFilter.getServerName(getRequest());
-    }
-    
-    public String getRequestURI() {
-        return RequestFilter.getRequestURI(getRequest());
-    }
-
-    public String getServletPath() {
-        return RequestFilter.getServletPath(getRequest());
     }
     
     public String getHeader(String name) {

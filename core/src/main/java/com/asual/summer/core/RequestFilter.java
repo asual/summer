@@ -15,9 +15,7 @@
 package com.asual.summer.core;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -90,43 +88,12 @@ public class RequestFilter extends OncePerRequestFilter {
         return result;			
 	}
 	
-	static String getParameter(HttpServletRequest request, String paramName) {
-        return encode(request.getParameter(paramName));
-    }
-	
-	static String[] getParameterValues(HttpServletRequest request, String paramName) {
-        String values[] = request.getParameterValues(paramName);
-        if (values != null) {
-            int length = values.length;
-            for (int i = 0; i < length; i++) {
-                values[i] = encode(values[i]);
-            }
-        }
-        return values;        	
-    }
-	
-    static Map<String, String[]> getParameterMap(HttpServletRequest request) {
-        Map<String, String[]> map = new HashMap<String, String[]>();
-        for (Object name : request.getParameterMap().keySet()) {
-            map.put((String) name, getParameterValues(request, (String) name));
-        }
-        return map;
-    }
-	
     static String getMethod(HttpServletRequest request, String requestMethod, Map<String, String[]> map) {
     	String method = map.get("_method") != null ? map.get("_method")[0] : null;
     	if ("POST".equalsIgnoreCase(requestMethod) && !StringUtils.isEmpty(method)) {
     		return method.toUpperCase(Locale.ENGLISH);
     	}
         return requestMethod;
-    }
-    
-    static String getRequestURI(HttpServletRequest request) {
-        return encode(request.getRequestURI().replaceFirst("/$", ""));
-    }
-
-    static String getServletPath(HttpServletRequest request) {
-        return encode(request.getServletPath());
     }
     
 	// TODO: Remove when https://bugs.webkit.org/show_bug.cgi?id=27267 gets fixed.
@@ -136,24 +103,6 @@ public class RequestFilter extends OncePerRequestFilter {
     	}
     	return request.getHeader(name);
     }
-    
-	static String encode(String input) {
-		if (!StringUtils.isEmpty(input)) {
-            try {
-            	String encoding = StringUtils.getEncoding();
-                String utf8 = new String(input.getBytes(encoding), encoding);
-                String western = new String(input.getBytes("ISO-8859-1"), encoding);
-                if (utf8.length() > western.length()) {
-                    return western;
-                } else {
-                    return input;
-                }
-            } catch (UnsupportedEncodingException e) {
-                return input;
-            }
-        }
-        return input;
-	}
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
     		FilterChain filterChain) throws ServletException, IOException {

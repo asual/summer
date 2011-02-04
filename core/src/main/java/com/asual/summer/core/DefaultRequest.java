@@ -14,8 +14,6 @@
 
 package com.asual.summer.core;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
@@ -52,32 +50,12 @@ public class DefaultRequest extends HttpServletRequestWrapper {
     	return RequestFilter.getServerName(getRequest());
     }
     
-    public String getRequestURI() {
-        return RequestFilter.getRequestURI(getRequest());
-    }
-
-    public String getServletPath() {
-        return RequestFilter.getServletPath(getRequest());
-    }
-    
     public String getHeader(String name) {
         return RequestFilter.getHeader(getRequest(), name);
     }
     
     public String getMethod() {
     	return RequestFilter.getMethod(getRequest(), super.getMethod(), getParameterMap());
-    }
-    
-    public String getParameter(String paramName) {
-        return RequestFilter.getParameter(getRequest(), paramName);
-    }
-    
-    public String[] getParameterValues(String paramName) {
-        return RequestFilter.getParameterValues(getRequest(), paramName);
-    }
-    
-    public Map<String, String[]> getParameterMap() {
-        return RequestFilter.getParameterMap(getRequest());
     }
     
 }
