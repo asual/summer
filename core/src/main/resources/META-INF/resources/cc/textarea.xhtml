@@ -34,7 +34,7 @@
         ${cc.renderer.beginElement(cc, 'textarea')}<ui:fragment rendered="${not empty cc.formName and not empty errors.get(cc.formName)}">${errors.get(cc.formName).value}</ui:fragment>
 <ui:fragment id="value" rendered="${not (not empty cc.formName and not empty errors.get(cc.formName))}"><cs:insertChildren /></ui:fragment>${cc.renderer.endElement(cc, 'textarea')}
         
-        <h:outputText rendered="${cc.attrs.dataError and not empty cc.formName and not empty errors.get(cc.formName)}"
+        <h:outputText rendered="${(empty cc.attrs.dataError or cc.attrs.dataError) and not empty cc.formName and not empty errors.get(cc.formName)}"
             value="${errors.get(cc.formName).message}" styleClass="error" escape="false" />
         
     </cs:implementation>
