@@ -50,7 +50,7 @@ class TechnologyController {
     
     @RequestMapping(method=Array(RequestMethod.POST))
     def persist(@Valid @ModelAttribute technology:Technology):ModelAndView = {
-    	technology.persist()
+    	technology.merge()
         return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true))
     }
     

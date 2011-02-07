@@ -370,8 +370,11 @@ public class Technology implements Serializable {
 	    
     	@PostLoad
     	public void postLoad(Technology technology) {
-    		technology.getImage().flush();
-    	}    	
+    		Image image = technology.getImage();
+    		if (image != null) {
+    			image.flush();
+    		}
+    	}
     }
     
 }

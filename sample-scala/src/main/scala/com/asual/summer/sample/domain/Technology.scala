@@ -267,7 +267,10 @@ object Technology {
 	    
     	@PostLoad
     	def postLoad(technology:Technology) = {
-    		technology.getImage().flush();
+    		var image:Image = technology.getImage()
+    		if (image != null) {
+    			image.flush()
+    		}
     	}    	
     }
     
