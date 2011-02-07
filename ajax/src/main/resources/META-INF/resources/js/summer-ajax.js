@@ -61,7 +61,10 @@
 	        			disabled = o.attr('data-ajax-disabled'),
 		                selector = '#' + ids.replace(/:/g, '\\:').split(' ').join(', #'),
 		                params = '_ajax=' + ids,
-		                regions = $(selector);
+		                regions = $(selector),
+		                wrapper = function(o) {
+                    		return $(o).is(inputs) ? ($(o).parent().hasClass('beauty') ? $(o).parent().parent() : $(o).parent()) : $(o);
+                    	};
 	                    
 		            if (o.is('a')) {
 		                url = o.attr('href');
@@ -84,7 +87,6 @@
 		            }
 		            
 		            if (disabled != 'true') {
-		            	
 	                    $.ajax({
 	                        url: url,
 	                        type: re.test(method) ? method : 'post',
@@ -95,12 +97,12 @@
 	                                xhr.setRequestHeader('X-Requested-Operation', 'Validation');
 	                        	}
 	                            regions.trigger('beforeSend', [xhr]).each(function() {
-	                            	($(this).is(inputs) ? $(this).parent() : $(this)).addClass('loading');
+	                            	wrapper(this).addClass('loading');
 	                            });
 	                        },
 	                        complete: function(xhr, status) {
 	                        	regions.trigger('complete', [xhr, status]).each(function() {
-	                        		($(this).is(inputs) ? $(this).parent() : $(this)).removeClass('loading');
+	                        		wrapper(this).removeClass('loading');
 	                            });
 	                        },
 	                        error: function(xhr, status, error) {
@@ -114,7 +116,7 @@
 	                        	if (elements.size() > 0) {
 	                        		regions.each(function(i) {
 		                        		var obj = $(this),
-		                        			target = obj.is(inputs) ? obj.parent() : obj;
+		                        			target = wrapper(obj);
 		                        		// TODO: Copy events for form element wrappers
 		                        		// obj.data('events');
 	                        			var source = elements.filter('[data-ajax-response=' + this.id + ']')
@@ -130,7 +132,7 @@
 			                        			target.replaceWith(source);
 		                        				if (event.type != 'blur') {
 		                        					$(inputs, source).trigger('focus');
-		                        				}	                        				
+		                        				}
 		                        			} else {
 			                        			target.replaceWith(source);
 			                        			fn(source, ready);
