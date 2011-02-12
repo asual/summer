@@ -1,9 +1,9 @@
-# Summer - The HTML5 Library for Java
+# Summer - The HTML5 Library for Java and Scala
 
 Summer is the next generation presentation layer library for Spring MVC. It provides the world's best HTML5 template 
-engine and takes advantage of many Spring 3 features like content negotiation, REST support, resource handling and 
-various others. In addition out of the box it supports a number of Java EE 6 specifications like Servlet 3.0, JPA 2, 
-Bean Validation and EL 2.2.
+engine and takes advantage of many Spring features like MVC annotations and data binding, content negotiation, 
+REST support, conversion and various others. In addition out of the box it supports a number of Java EE 6 specifications 
+like Servlet 3.0, JPA 2, Bean Validation and EL 2.2.
 
 Summer enables the creation of true web modules that package every required static resource. It also makes AJAX 
 really simple by providing partial page rendering capabilities. Support for HTML5 WebSockets is available through the 
@@ -39,13 +39,18 @@ In order to use Summer you need the following records to your Maven 2 POM file:
 
 ## Changes
     
-### 10/10/2010 - 1.0.0.M2
+### 02/11/2011 - 1.0.0-SNAPSHOT
 
-- Support for Commons FileUpload Streaming API.
-- Support for XML Resource Bundles.
-- Switched to JavaEE 6 Annotations.
-- Updated Atmosphere Version.
-- Improved Sample.
+* New pure Scala sample.
+* Improved AJAX support.
+* AJAX powered form validation.
+* Support for parameterized HTML templates.
+* Support for Commons FileUpload Streaming API.
+* Support for XML resource bundles.
+* Switched to JavaEE 6 annotations.
+* Separate JSON and XML view modules.
+* XStream replaced by the FasterXML Databind package.
+* Updated jQuery and Atmosphere versions.
 
 ### 10/01/2010 - 1.0.0.M1
 
