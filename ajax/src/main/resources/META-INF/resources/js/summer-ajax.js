@@ -30,7 +30,6 @@
         	}).each(function() {
         		
         		// TODO: Both data-ajax-disabled and data-ajax-validation should work as HTML5 boolean properties
-        		
         		var o = $(this),
         			event = o.attr('data-ajax-event'),
         			validation = $(this).parents('form[data-ajax-validation]').attr('data-ajax-validation') == 'true',
@@ -45,7 +44,7 @@
 	            		event = 'blur';
 	            	} else if (o.is('select, :file')) {
 	            		event = 'change';
-	            	} else if (o.is(':checkbox, :radio, :submit, :reset, a, button')) {
+	            	} else if (o.is(':checkbox, :radio, :button, a')) {
 	            		event = 'click';
 	            	} else {
 	            		event = 'ready';
@@ -126,13 +125,16 @@
 	                        				});
 	                        			if (source.size()) {
 		                        			if (validation) {
-			                        			var sourceForm = $(inputs, source),
-		                        					targetForm = $(inputs, target);
-		                        				sourceForm.replaceWith(targetForm);
-			                        			target.replaceWith(source);
-		                        				if (event.type != 'blur') {
-		                        					$(inputs, source).trigger('focus');
-		                        				}
+			                        			var selector = '.error',
+			                        				sourceError = $(selector, source),
+	                        						targetError = $(selector, target);
+			                        			if (sourceError.size() && targetError.size()) {
+			                        				targetError.replaceWith(sourceError);
+			                        			} else if (sourceError.size()) {
+			                        				target.append(sourceError);
+			                        			} else if (targetError.size()) {
+			                        				targetError.remove();
+			                        			}
 		                        			} else {
 			                        			target.replaceWith(source);
 			                        			fn(source, ready);
