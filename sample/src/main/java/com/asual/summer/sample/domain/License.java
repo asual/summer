@@ -42,10 +42,10 @@ import com.asual.summer.core.util.StringUtils;
 @Entity
 @Table
 public class License implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
-    private static final long serialVersionUID = 1L;
-
-    @PersistenceContext
+	@PersistenceContext
     private transient EntityManager entityManager;
     
     @Id

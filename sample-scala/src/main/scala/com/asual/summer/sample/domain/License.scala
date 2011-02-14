@@ -35,7 +35,7 @@ import scala.reflect.BeanProperty
 @Configurable
 @Entity
 @Table
-@SerialVersionUID(1L) 
+@SerialVersionUID(1L)
 @serializable
 class License {
 

@@ -30,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile
  *
  */
 @Named
-class MultipartFileToTechnologyImageConverter extends Converter[MultipartFile, Technology.Image] {
+class MultipartFileToImageConverter extends Converter[MultipartFile, Technology.Image] {
 
     private val logger:Log = LogFactory.getLog(getClass())
     

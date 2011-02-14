@@ -15,7 +15,6 @@
 package com.asual.summer.sample.domain
 
 import com.asual.summer.core.util.StringUtils
-import com.asual.summer.sample.domain.Technology.TechnologyListener
 
 import java.io._
 import java.lang.Integer
@@ -40,7 +39,6 @@ import scala.reflect.BeanProperty
  */
 @Configurable
 @Entity
-@EntityListeners(Array(classOf[TechnologyListener]))
 @Table
 @SerialVersionUID(1L)
 @serializable
@@ -109,22 +107,26 @@ class Technology {
         }
         this.name = name
     }
-
+    
     def getImage():Technology.Image = {
+    	setImage(image)
     	return image
     }
     
     def setImage(image:Technology.Image) = {
-    	if (image == null) {
-			var technology:Technology = Technology.find(value)
-			if (technology != null) {
-	    		this.image = technology.getImage()
-			}
-    	} else {
-    		this.image = image
+    	if (image != null) {
+			val file = new File(new File(System.getProperty("java.io.tmpdir")), value)
+			val fos = new FileOutputStream(file)
+	    	val oos = new ObjectOutputStream(fos)
+	    	oos.writeObject(image)
+	    	oos.flush
+	    	fos.close
+	    	this.image = image
+    	} else if (value != null) {
+    		this.image = Technology.findImage(value)
     	}
     }
-
+    
 	override def hashCode = {
 		41 * value.hashCode
 	}
@@ -148,7 +150,7 @@ class Technology {
     @Transactional
     def merge():Technology = {
         var merged:Technology = entityManager.merge(this)
-        entityManager.flush()
+        entityManager.flush
         return merged
     }
     
@@ -164,7 +166,7 @@ class Technology {
     
     @Transactional
     def flush() = {
-    	entityManager.flush()
+    	entityManager.flush
     }
     
 }
@@ -189,6 +191,16 @@ object Technology {
     	return null
     }
     
+    def findImage(value:String):Technology.Image = {
+    	if (value != null) {
+			val file = new File(new File(System.getProperty("java.io.tmpdir")), value)
+	    	val fis = new FileInputStream(file)
+		    val ois = new ObjectInputStream(fis)
+		    return ois.readObject().asInstanceOf[Technology.Image]
+    	}
+		return null;
+    }
+    
     def list():List[Technology] = { 
     	return entityManager().createQuery("select o from Technology o").getResultList().asInstanceOf[List[Technology]]
     }
@@ -198,8 +210,8 @@ object Technology {
     		.setFirstResult(firstResult)
     		.setMaxResults(maxResults).getResultList().asInstanceOf[List[Technology]]
 	}
-
-	@SerialVersionUID(1L)
+    
+    @SerialVersionUID(1L)
 	@serializable
 	class Image(file:MultipartFile) {
 	
@@ -217,61 +229,12 @@ object Technology {
         
         def setBytes(bytes:Array[Byte]) = {
             this.bytes = bytes
-            flush()
         }
-    
-		override def hashCode = {
-			41 * Arrays.hashCode(bytes)
-		}
-		
-		override def equals(other:Any) = other match {
-			case that: Image => 
-				(that canEqual this) && (this.bytes == that.bytes)
-			case _ => 
-				false
-		} 
-		
-		def canEqual(other:Any) = {
-			other.isInstanceOf[Image]
-		}
-    	
-        def flush() = {
-			var file:File = new File(new File(System.getProperty("java.io.tmpdir")), String.valueOf(hashCode()))
-			if (!file.exists()) {
-                var fos:FileOutputStream = new FileOutputStream(file)
-                var oos:ObjectOutputStream = new ObjectOutputStream(fos)
-                oos.writeObject(this)
-                oos.flush()
-                fos.close()
-			}
-	    }
 	    
-    	value = file.getOriginalFilename()
-    	contentType = file.getContentType()    	
+    	value = file.getOriginalFilename
+    	contentType = file.getContentType
     	setBytes(file.getBytes())
 
 	}
-	
-    object Image {
-    
-        def find(hashCode:String):Image = {
-            var file:File = new File(new File(System.getProperty("java.io.tmpdir")), hashCode)
-            var fis:FileInputStream = new FileInputStream(file)
-            var ois:ObjectInputStream = new ObjectInputStream(fis)
-            return ois.readObject().asInstanceOf[Image]
-        }
-        
-    }
-	    
-    class TechnologyListener {
-	    
-    	@PostLoad
-    	def postLoad(technology:Technology) = {
-    		var image:Image = technology.getImage()
-    		if (image != null) {
-    			image.flush()
-    		}
-    	}    	
-    }
     
 }

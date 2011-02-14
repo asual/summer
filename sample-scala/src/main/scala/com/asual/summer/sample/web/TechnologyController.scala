@@ -94,9 +94,9 @@ class TechnologyController {
         return new ModelAndView("/edit", model)
     }
     
-    @RequestMapping(Array("/image/{hashCode}"))
-    def image(@PathVariable("hashCode") hashCode:String, response:HttpServletResponse) {
-		var image:Image = Image.find(hashCode);
+    @RequestMapping(Array("/image/{value}"))
+    def image(@PathVariable("value") value:String, response:HttpServletResponse) {
+		var image:Image = Technology.findImage(value);
 		if (image != null) {
 			response.setContentLength(image.getBytes().length);
 			response.setContentType(image.contentType);

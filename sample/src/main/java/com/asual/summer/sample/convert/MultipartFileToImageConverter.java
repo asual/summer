@@ -32,7 +32,7 @@ import com.asual.summer.sample.domain.Technology.Image;
  *
  */
 @Named
-public class MultipartFileToTechnologyImageConverter implements Converter<MultipartFile, Image> {
+public class MultipartFileToImageConverter implements Converter<MultipartFile, Image> {
 
     private final Log logger = LogFactory.getLog(getClass());
     

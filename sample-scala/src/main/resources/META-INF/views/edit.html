@@ -23,7 +23,7 @@
         </fieldset>
 
         <fieldset data-legend="Image:">
-            <img src="/technology/image/${technology.image.hashCode()}" 
+            <img src="/technology/image/${technology.value}" 
                 alt="${technology.name}" width="128" height="128" data-rendered="${not empty technology.image}" />
             <input id="image" type="file" data-error="true" />
         </fieldset>
@@ -50,5 +50,5 @@
         <button>Update</button>
         
     </form>
-	
+    
 </html>

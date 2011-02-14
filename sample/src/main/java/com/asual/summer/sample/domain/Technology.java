@@ -24,13 +24,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -40,18 +38,18 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.asual.summer.core.util.StringUtils;
-import com.asual.summer.sample.domain.Technology.TechnologyListener;
 
 /**
  * 
@@ -60,11 +58,12 @@ import com.asual.summer.sample.domain.Technology.TechnologyListener;
  */
 @Configurable
 @Entity
-@EntityListeners(TechnologyListener.class)
 @Table
 public class Technology implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
-    private static final long serialVersionUID = 1L;
+	private static final Log logger = LogFactory.getLog(Technology.class);
     
     @PersistenceContext
     private transient EntityManager entityManager;
@@ -188,17 +187,26 @@ public class Technology implements Serializable {
     }
 
     public Image getImage() {
+		setImage(image);
     	return image;
     }
     
     public void setImage(Image image) {
-    	if (image == null) {
-			Technology technology = find(value);
-			if (technology != null) {
-	    		image = technology.getImage();
+    	if (image != null) {
+			File file = new File(new File(System.getProperty("java.io.tmpdir")), value);
+			try {
+				FileOutputStream fos = new FileOutputStream(file);
+		    	ObjectOutputStream oos = new ObjectOutputStream(fos);
+		    	oos.writeObject(image);
+		    	oos.flush();
+		    	fos.close();
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
 			}
+    	} else if (value != null) {
+    		image = findImage(value);
     	}
-        this.image = image;
+		this.image = image;
     }
     
 	public int hashCode() {
@@ -250,8 +258,8 @@ public class Technology implements Serializable {
     public void flush() {
         entityManager.flush();
     }
-
-    public static final EntityManager entityManager() {
+    
+    private static final EntityManager entityManager() {
         EntityManager em = new Technology().entityManager;
         if (em == null) {
         	throw new IllegalStateException("Entity manager has not been injected.");
@@ -267,6 +275,20 @@ public class Technology implements Serializable {
     		return technologies.get(0);
     	}
     	return null;
+    }
+    
+    public static Image findImage(String value) {
+    	if (value != null) {
+	    	try {
+				File file = new File(new File(System.getProperty("java.io.tmpdir")), value);
+		    	FileInputStream fis = new FileInputStream(file);
+			    ObjectInputStream ois = new ObjectInputStream(fis);
+			    return (Image) ois.readObject();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+    	}
+		return null;
     }
     
     @SuppressWarnings("unchecked")
@@ -315,66 +337,8 @@ public class Technology implements Serializable {
         
         public void setBytes(byte[] bytes) {
             this.bytes = bytes;
-        	flush();
         }
-        
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + Arrays.hashCode(bytes);
-			return result;
-		}
-		
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Image other = (Image) obj;
-			if (!Arrays.equals(bytes, other.bytes))
-				return false;
-			return true;
-		}
 	    
-	    public void flush() {
-			File file = new File(new File(System.getProperty("java.io.tmpdir")), String.valueOf(hashCode()));
-			if (!file.exists()) {
-				try {
-					FileOutputStream fos = new FileOutputStream(file);
-			    	ObjectOutputStream oos = new ObjectOutputStream(fos);
-			    	oos.writeObject(this);
-			    	oos.flush();
-			    	fos.close();
-				} catch (IOException e) {
-				}
-			}
-	    }
-	    
-	    public static Image find(String hashCode) {
-	    	try {
-				File file = new File(new File(System.getProperty("java.io.tmpdir")), hashCode);
-		    	FileInputStream fis = new FileInputStream(file);
-			    ObjectInputStream ois = new ObjectInputStream(fis);
-			    return (Image) ois.readObject();
-			} catch (IOException e) {
-			} catch (ClassNotFoundException e) {    
-			}
-			return null;
-	    }
-	    
-    }
-    
-    public static class TechnologyListener {
-	    
-    	@PostLoad
-    	public void postLoad(Technology technology) {
-    		Image image = technology.getImage();
-    		if (image != null) {
-    			image.flush();
-    		}
-    	}
     }
     
 }
