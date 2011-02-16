@@ -77,8 +77,11 @@ public class TechnologyController {
 	}
 	
 	@RequestMapping(value="/{value}", method=RequestMethod.DELETE)
-	public ModelAndView remove(@Valid @ModelAttribute Technology technology) {
-		technology.remove();
+	public ModelAndView remove(@PathVariable("value") String value) {
+		Technology technology = Technology.find(value);
+		if (technology != null) {
+			technology.remove();
+		}
 		return new ModelAndView(new RedirectView("/technology", true));
 	}
 	

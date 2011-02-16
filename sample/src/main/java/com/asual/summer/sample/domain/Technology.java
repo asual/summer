@@ -26,7 +26,6 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -81,7 +80,7 @@ public class Technology implements Serializable {
 	@Column(length=128)
 	private String name;
 	
-	@Size(min=128, max=512)
+	@Size(min=32, max=512)
 	@Column(length=512)
 	private String description;
 
@@ -92,7 +91,7 @@ public class Technology implements Serializable {
 	@Column
 	private URL homepage;
 
-	@ManyToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="technology_license",	
 			joinColumns={ @JoinColumn(name="technology_id") },  
 			inverseJoinColumns={ @JoinColumn(name="license_id") })
@@ -281,9 +280,11 @@ public class Technology implements Serializable {
 		if (value != null) {
 			try {
 				File file = new File(new File(System.getProperty("java.io.tmpdir")), value);
-				FileInputStream fis = new FileInputStream(file);
-				ObjectInputStream ois = new ObjectInputStream(fis);
-				return (Image) ois.readObject();
+				if (file.exists()) {
+					FileInputStream fis = new FileInputStream(file);
+					ObjectInputStream ois = new ObjectInputStream(fis);
+					return (Image) ois.readObject();
+				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 			}

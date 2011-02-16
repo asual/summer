@@ -57,7 +57,7 @@ header a {
 
 footer {
     margin: 0 auto;
-    padding: 0 0 40px;
+    padding: 20px 0 40px;
     font-size: 11px;
     line-height: 15px;
 }
@@ -91,6 +91,10 @@ fieldset img {
 
 form div {
     margin: 0 0 10px;
+}
+
+form button {
+	float: left;
 }
 
 table {
@@ -182,10 +186,6 @@ table .even {
 
 .add, .edit {
     clear: both;
-}
-
-.button {
-    margin: 20px 0;
 }
 
 .clock {

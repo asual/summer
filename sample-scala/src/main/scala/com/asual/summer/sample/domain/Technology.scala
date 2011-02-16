@@ -64,7 +64,7 @@ class Technology {
     @Column(length=128)
     var name:String = _
     
-    @Size(min=128, max=512)
+    @Size(min=32, max=512)
     @Column(length=512)
     @BeanProperty
     var description:String = _
@@ -78,7 +78,7 @@ class Technology {
     @BeanProperty 
     var homepage:URL = _
 
-    @ManyToMany(cascade=Array(CascadeType.ALL), fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name="technology_license",    
             joinColumns=Array(new JoinColumn(name="technology_id")),  
             inverseJoinColumns=Array(new JoinColumn(name="license_id")))
@@ -194,9 +194,11 @@ object Technology {
     def findImage(value:String):Technology.Image = {
     	if (value != null) {
 			val file = new File(new File(System.getProperty("java.io.tmpdir")), value)
-	    	val fis = new FileInputStream(file)
-		    val ois = new ObjectInputStream(fis)
-		    return ois.readObject().asInstanceOf[Technology.Image]
+			if (file.exists) {
+		    	val fis = new FileInputStream(file)
+			    val ois = new ObjectInputStream(fis)
+			    return ois.readObject().asInstanceOf[Technology.Image]
+			}
     	}
 		return null;
     }

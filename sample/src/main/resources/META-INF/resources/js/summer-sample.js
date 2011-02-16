@@ -9,8 +9,7 @@
 					$('span', clock).html(response.responseBody);
 				}
 			}, $.atmosphere.request = {
-				logLevel: 'none',
-				transport: 'websocket'
+				logLevel: 'none'
 			});
 		}, 200);
 	});

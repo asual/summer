@@ -70,11 +70,14 @@ class TechnologyController {
         return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true))
     }
     
-    @RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.DELETE))
-    def remove(@Valid @ModelAttribute technology:Technology):ModelAndView = {
-    	technology.remove()
+	@RequestMapping(value=Array("/{value}"), method=RequestMethod.DELETE)
+	def remove(@PathVariable("value") value:String):ModelAndView = {
+    	var technology:Technology = Technology.find(value)
+		if (technology != null) {
+			technology.remove()
+		}
         return new ModelAndView(new RedirectView("/technology", true))
-    }
+	}
     
     @RequestMapping(Array("/add"))
     def add():ModelAndView = {
