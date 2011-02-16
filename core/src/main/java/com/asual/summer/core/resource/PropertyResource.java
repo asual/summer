@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,31 +39,31 @@ import org.springframework.util.ResourceUtils;
  */
 public class PropertyResource extends AbstractResource implements BeanFactoryPostProcessor {
 
-    private ExtendedPropertyPlaceholderConfigurer eppc;
-    private final Log logger = LogFactory.getLog(getClass());
-    
+	private ExtendedPropertyPlaceholderConfigurer eppc;
+	private final Log logger = LogFactory.getLog(getClass());
+	
 	public PropertyResource() {
 		setOrder(Ordered.HIGHEST_PRECEDENCE);
 		eppc = new ExtendedPropertyPlaceholderConfigurer();
 		eppc.setOrder(getOrder());
 	}
 
-    public Object getProperty(String key) {
-    	return eppc.getProperty(key);
-    }
-    
-    public String getStringArraySeparator() {
-        return eppc.getStringArraySeparator();
-    }
+	public Object getProperty(String key) {
+		return eppc.getProperty(key);
+	}
+	
+	public String getStringArraySeparator() {
+		return eppc.getStringArraySeparator();
+	}
 
-    public void setStringArraySeparator(String stringArraySeparator) {
-    	eppc.setStringArraySeparator(stringArraySeparator);
-    }
+	public void setStringArraySeparator(String stringArraySeparator) {
+		eppc.setStringArraySeparator(stringArraySeparator);
+	}
 	
 	public void setLocations(String[] locations) {
 		setWildcardLocations(locations);
 	}
-    
+	
 	public void setWildcardLocations(String[] locations) {
 		
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
@@ -121,41 +121,41 @@ public class PropertyResource extends AbstractResource implements BeanFactoryPos
 	private class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
 		private Properties properties;
-	    private String stringArraySeparator;
-	    
+		private String stringArraySeparator;
+		
 		protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties properties) throws BeansException {
-	        this.properties = properties;
-	        super.processProperties(beanFactoryToProcess, properties);
-	    }	
+			this.properties = properties;
+			super.processProperties(beanFactoryToProcess, properties);
+		}	
 
-	    public Object getProperty(String key) {
-	        String value = super.resolvePlaceholder(key, properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
-	        if (value != null) {
-	        	String separator = stringArraySeparator;
-	    		if (separator == null) {
-	    			separator = (String) super.resolvePlaceholder("app.stringArraySeparator", properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
-	    		}
-	            if (separator != null && value.indexOf(separator) != -1) {
-	                String[] arr = value.split(separator);
-	                for (int i = 0; i < arr.length; i++) {
-	                    arr[i] = arr[i].trim();
-	                }
-	                return arr;
-	            } else {
-	                return value.trim();
-	            }
-	        }
-	        return null;
-	    }
-	    
-	    public String getStringArraySeparator() {
-	        return stringArraySeparator;
-	    }
+		public Object getProperty(String key) {
+			String value = super.resolvePlaceholder(key, properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
+			if (value != null) {
+				String separator = stringArraySeparator;
+				if (separator == null) {
+					separator = (String) super.resolvePlaceholder("app.stringArraySeparator", properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
+				}
+				if (separator != null && value.indexOf(separator) != -1) {
+					String[] arr = value.split(separator);
+					for (int i = 0; i < arr.length; i++) {
+						arr[i] = arr[i].trim();
+					}
+					return arr;
+				} else {
+					return value.trim();
+				}
+			}
+			return null;
+		}
+		
+		public String getStringArraySeparator() {
+			return stringArraySeparator;
+		}
 
-	    public void setStringArraySeparator(String stringArraySeparator) {
-	        this.stringArraySeparator = stringArraySeparator;
-	    }
-	    
+		public void setStringArraySeparator(String stringArraySeparator) {
+			this.stringArraySeparator = stringArraySeparator;
+		}
+		
 	}
 
 }

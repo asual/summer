@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,19 +28,19 @@ import org.jboss.el.lang.EvaluationContext;
  */
 @SuppressWarnings("rawtypes")
 public final class AstNot extends SimpleNode {
-    public AstNot(int id) {
-        super(id);
-    }
+	public AstNot(int id) {
+		super(id);
+	}
 
-    public Class getType(EvaluationContext ctx)
-            throws ELException {
-        return Boolean.class;
-    }
+	public Class getType(EvaluationContext ctx)
+			throws ELException {
+		return Boolean.class;
+	}
 
-    public Object getValue(EvaluationContext ctx)
-            throws ELException {
-        Object obj = this.children[0].getValue(ctx);
-        Boolean b = coerceToBoolean(obj);
-        return Boolean.valueOf(!b.booleanValue());
-    }
+	public Object getValue(EvaluationContext ctx)
+			throws ELException {
+		Object obj = this.children[0].getValue(ctx);
+		Boolean b = coerceToBoolean(obj);
+		return Boolean.valueOf(!b.booleanValue());
+	}
 }

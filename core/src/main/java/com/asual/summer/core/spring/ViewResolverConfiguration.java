@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,42 +36,42 @@ import com.asual.summer.core.ViewNotFoundException;
  */
 public class ViewResolverConfiguration extends ContentNegotiatingViewResolver {
 	
-    private List<ViewResolver> viewResolvers;
-    private ConcurrentMap<String, String> mediaTypes = new ConcurrentHashMap<String, String>();
+	private List<ViewResolver> viewResolvers;
+	private ConcurrentMap<String, String> mediaTypes = new ConcurrentHashMap<String, String>();
 	private String parameterName = "format";
 	private boolean favorPathExtension = true;
 	private boolean favorParameter = false;
 	private boolean ignoreAcceptHeader = false;
 	
-    public List<MediaType> getMediaTypes(HttpServletRequest request) {
-        return super.getMediaTypes(request);
-    }
+	public List<MediaType> getMediaTypes(HttpServletRequest request) {
+		return super.getMediaTypes(request);
+	}
 	
 	public void setMediaTypes(Map<String, String> mediaTypes) {
 		this.mediaTypes.putAll(mediaTypes);
 		super.setMediaTypes(mediaTypes);
 	}
 	
-    public MediaType getMediaTypeFromFilename(String filename) {
-        return super.getMediaTypeFromFilename(filename);
-    }
+	public MediaType getMediaTypeFromFilename(String filename) {
+		return super.getMediaTypeFromFilename(filename);
+	}
 
-    public List<ViewResolver> getViewResolvers() {
-        return viewResolvers;
-    }
-    
-    public void setViewResolvers(List<ViewResolver> viewResolvers) {
-        this.viewResolvers = viewResolvers;
-        super.setViewResolvers(viewResolvers);
-    }
+	public List<ViewResolver> getViewResolvers() {
+		return viewResolvers;
+	}
+	
+	public void setViewResolvers(List<ViewResolver> viewResolvers) {
+		this.viewResolvers = viewResolvers;
+		super.setViewResolvers(viewResolvers);
+	}
 
-    public View resolveViewName(String viewName, Locale locale) throws Exception {
-        View view = super.resolveViewName(viewName, locale);
-        if (view == null) {
-            throw new ViewNotFoundException();
-        }
-        return view;
-    }
+	public View resolveViewName(String viewName, Locale locale) throws Exception {
+		View view = super.resolveViewName(viewName, locale);
+		if (view == null) {
+			throw new ViewNotFoundException();
+		}
+		return view;
+	}
 	
 	public boolean getFavorPathExtension() {
 		return favorPathExtension;

@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,14 +34,14 @@ import org.jboss.el.util.ReflectionUtil;
  */
 @SuppressWarnings("rawtypes")
 public final class AstBracketSuffix extends ValueSuffixNode {
-    public AstBracketSuffix(int id) {
-        super(id);
-    }
+	public AstBracketSuffix(int id) {
+		super(id);
+	}
 
-    public Object getValue(EvaluationContext ctx)
-            throws ELException {
-        return this.children[0].getValue(ctx);
-    }
+	public Object getValue(EvaluationContext ctx)
+			throws ELException {
+		return this.children[0].getValue(ctx);
+	}
 
 	public MethodInfo getMethodInfo(Object base, EvaluationContext ctx, Class[] paramTypes) throws ELException {
 		return ReflectionUtil.getMethodInfo(base, this.getValue(ctx), paramTypes);

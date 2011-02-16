@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -128,11 +128,11 @@ public final class ExpressionBuilder implements NodeVisitor {
 	}
 
 	private void prepare(Node node) throws ELException {
-        try {
-            node.accept(this);
-        } catch (Exception e) {
-            throw (ELException) e;
-        }
+		try {
+			node.accept(this);
+		} catch (Exception e) {
+			throw (ELException) e;
+		}
 		if (this.fnMapper instanceof FunctionMapperFactory) {
 			this.fnMapper = ((FunctionMapperFactory) this.fnMapper).create();
 		}
@@ -170,7 +170,7 @@ public final class ExpressionBuilder implements NodeVisitor {
 			if (fnMapper instanceof ExtendedFunctionMapper)
 			{
 			   m = ((ExtendedFunctionMapper) fnMapper).resolveFunction(funcNode.getPrefix(), 
-			         funcNode.getLocalName(), node.jjtGetNumChildren());    
+					 funcNode.getLocalName(), node.jjtGetNumChildren());	
 			}
 			else
 			{

@@ -1,19 +1,19 @@
 <facelet-taglib
-    xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
-        http://java.sun.com/xml/ns/javaee 
-        http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
-    version="2.0">
-    
-    <namespace>http://www.asual.com/summer/standard</namespace>
-    
-    <tag>
-        <tag-name>repeat</tag-name>
-        <component>
-            <component-type>summer.faces.RepeatComponent</component-type>
-            <renderer-type>facelets.ui.Repeat</renderer-type>
-        </component>
-    </tag>
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://java.sun.com/xml/ns/javaee 
+		http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
+	version="2.0">
+	
+	<namespace>http://www.asual.com/summer/standard</namespace>
+	
+	<tag>
+		<tag-name>repeat</tag-name>
+		<component>
+			<component-type>summer.faces.RepeatComponent</component-type>
+			<renderer-type>facelets.ui.Repeat</renderer-type>
+		</component>
+	</tag>
 
 </facelet-taglib>

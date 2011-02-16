@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,15 +43,15 @@ import com.asual.summer.core.util.RequestUtils;
 @Named
 public class HtmlView extends InternalResourceView implements ResponseView {
 
-    private static final String DEFAULT_EXTENSION = "html";
+	private static final String DEFAULT_EXTENSION = "html";
 	private static LifecycleFactory lifecycleFactory;
 
-    private String extension;
-    
-    public HtmlView() {
-    	super();
-    	setExtension(DEFAULT_EXTENSION);
-    }
+	private String extension;
+	
+	public HtmlView() {
+		super();
+		setExtension(DEFAULT_EXTENSION);
+	}
 
 	public String getExtension() {
 		return extension;
@@ -61,7 +61,7 @@ public class HtmlView extends InternalResourceView implements ResponseView {
 		this.extension = extension;
 	}
 	
-    protected boolean isUrlRequired() {
+	protected boolean isUrlRequired() {
 		return false;
 	}
 	
@@ -76,9 +76,9 @@ public class HtmlView extends InternalResourceView implements ResponseView {
 		FacesContext facesContext = facesContextFactory.getFacesContext(
 				RequestUtils.getServletContext(), request, response, lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE));
 		facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
-        facesContext.getExternalContext().getFlash().doPrePhaseActions(facesContext);
-        
-        Map<String, Object> requestMap = facesContext.getExternalContext().getRequestMap();
+		facesContext.getExternalContext().getFlash().doPrePhaseActions(facesContext);
+		
+		Map<String, Object> requestMap = facesContext.getExternalContext().getRequestMap();
 		Iterator<String> i = model.keySet().iterator();
 		while (i.hasNext()) {
 			String key = i.next().toString();

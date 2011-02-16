@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,51 +41,51 @@ public class ViewNameTranslator extends DefaultRequestToViewNameTranslator {
 	
 	private String findViewName(String prefix, String path, String suffix, boolean greedy) {
 
-    	URL uri = ResourceUtils.getClasspathResource(prefix.replaceAll("^/", "") + path + suffix);
-        if (uri != null) {
-            return path;
-        }
-        
-        uri = ResourceUtils.getClasspathResource(prefix.replaceAll("^/", "") + path + INDEX + suffix);
-        if (uri != null) {
-            return path + INDEX;
-        }
-        
-        if (greedy && path.lastIndexOf("/") != -1) {
-            return findViewName(prefix, path.substring(0, path.lastIndexOf("/")), suffix, greedy);
-        }
-        
-	    return null;
+		URL uri = ResourceUtils.getClasspathResource(prefix.replaceAll("^/", "") + path + suffix);
+		if (uri != null) {
+			return path;
+		}
+		
+		uri = ResourceUtils.getClasspathResource(prefix.replaceAll("^/", "") + path + INDEX + suffix);
+		if (uri != null) {
+			return path + INDEX;
+		}
+		
+		if (greedy && path.lastIndexOf("/") != -1) {
+			return findViewName(prefix, path.substring(0, path.lastIndexOf("/")), suffix, greedy);
+		}
+		
+		return null;
 	}
 	
-    public String getViewName(HttpServletRequest request) {
+	public String getViewName(HttpServletRequest request) {
 
-        String uri = StringUtils.stripFilenameExtension(
-        		RequestUtils.contextRelative(request.getRequestURI().replaceAll("/+", "/"), false)).replaceFirst("/$", "");
+		String uri = StringUtils.stripFilenameExtension(
+				RequestUtils.contextRelative(request.getRequestURI().replaceAll("/+", "/"), false)).replaceFirst("/$", "");
 
-        ExtendedInternalResourceViewResolver pagesResolver = null;
-        
-        ViewResolverConfiguration viewResolverConfiguraton = BeanUtils.getBeanOfType(ViewResolverConfiguration.class);
-        List<ViewResolver> viewResolvers = viewResolverConfiguraton.getViewResolvers();
-        
-        for (ViewResolver vr : viewResolvers) {
-            if (vr instanceof ExtendedInternalResourceViewResolver) {
-            	ExtendedInternalResourceViewResolver resolver = (ExtendedInternalResourceViewResolver) vr;
-            	if (resolver.getPrefix().endsWith("/pages")) {
-	            	pagesResolver = resolver;
-            	}
-            }
-        }
-        
-        String prefix = pagesResolver.getPrefix().replaceAll("/$", "");
-        String suffix = pagesResolver.getSuffix();
-        
-        String viewName = findViewName(prefix, uri, suffix, false);
-        if (viewName != null) {
-            return viewName;
-        }
-        
-        throw new ViewNotFoundException();
-    }
-    
+		ExtendedInternalResourceViewResolver pagesResolver = null;
+		
+		ViewResolverConfiguration viewResolverConfiguraton = BeanUtils.getBeanOfType(ViewResolverConfiguration.class);
+		List<ViewResolver> viewResolvers = viewResolverConfiguraton.getViewResolvers();
+		
+		for (ViewResolver vr : viewResolvers) {
+			if (vr instanceof ExtendedInternalResourceViewResolver) {
+				ExtendedInternalResourceViewResolver resolver = (ExtendedInternalResourceViewResolver) vr;
+				if (resolver.getPrefix().endsWith("/pages")) {
+					pagesResolver = resolver;
+				}
+			}
+		}
+		
+		String prefix = pagesResolver.getPrefix().replaceAll("/$", "");
+		String suffix = pagesResolver.getSuffix();
+		
+		String viewName = findViewName(prefix, uri, suffix, false);
+		if (viewName != null) {
+			return viewName;
+		}
+		
+		throw new ViewNotFoundException();
+	}
+	
 }

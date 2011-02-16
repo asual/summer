@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,20 +27,20 @@ import org.jboss.el.lang.EvaluationContext;
  * @version $Change: 181177 $$DateTime: 2001/06/26 08:45:09 $$Author: markt $
  */
 public final class AstGreaterThanEqual extends BooleanNode {
-    public AstGreaterThanEqual(int id) {
-        super(id);
-    }
+	public AstGreaterThanEqual(int id) {
+		super(id);
+	}
 
-    public Object getValue(EvaluationContext ctx)
-            throws ELException {
-        Object obj0 = this.children[0].getValue(ctx);
-        Object obj1 = this.children[1].getValue(ctx);
-        if (obj0 == obj1) {
-            return Boolean.TRUE;
-        }
-        if (obj0 == null || obj1 == null) {
-            return Boolean.FALSE;
-        }
-        return (compare(obj0, obj1) >= 0) ? Boolean.TRUE : Boolean.FALSE;
-    }
+	public Object getValue(EvaluationContext ctx)
+			throws ELException {
+		Object obj0 = this.children[0].getValue(ctx);
+		Object obj1 = this.children[1].getValue(ctx);
+		if (obj0 == obj1) {
+			return Boolean.TRUE;
+		}
+		if (obj0 == null || obj1 == null) {
+			return Boolean.FALSE;
+		}
+		return (compare(obj0, obj1) >= 0) ? Boolean.TRUE : Boolean.FALSE;
+	}
 }

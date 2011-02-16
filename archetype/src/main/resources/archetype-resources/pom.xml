@@ -1,105 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project 
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
 #set($dollar = '$')
 #set($packageAsDirectory = $package.replace('.', '/').concat('/').concat($artifactId.replace('-', '_')))
 #set($packageWithId = $packageAsDirectory.replace('/', '.'))
-        http://maven.apache.org/POM/4.0.0 
-        http://maven.apache.org/maven-v4_0_0.xsd">
-        
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>$groupId</groupId>
-    <artifactId>$artifactId</artifactId>
-    <packaging>war</packaging>
-    <version>$version</version>
+		http://maven.apache.org/POM/4.0.0 
+		http://maven.apache.org/maven-v4_0_0.xsd">
+		
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>$groupId</groupId>
+	<artifactId>$artifactId</artifactId>
+	<packaging>war</packaging>
+	<version>$version</version>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
-    
-    <repositories>
-        <repository>
-            <id>org.springframework.maven.release</id>
-            <name>Spring Framework Repository</name>
-            <url>http://maven.springframework.org/release</url>
-        </repository>
-        <repository>
-            <id>net.java.download.maven</id>
-            <name>Java.net Repository</name>
-            <url>http://download.java.net/maven/2</url>
-        </repository>
-        <repository>
-            <id>org.glassfish.maven</id>
-            <name>GlassFish Repository</name>
-            <url>http://maven.glassfish.org/content/groups/glassfish</url>
-        </repository>
-        <repository>
-            <id>com.jboss.repository</id>
-            <name>JBoss Maven Repository</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/public</url>
-        </repository>
-        <repository>
-            <id>org.codehaus.repository</id>
-            <name>Codehaus Repository</name>
-            <url>http://repository.codehaus.org</url>
-        </repository>
-        <repository>
-            <id>com.asual.repositories.public</id>
-            <name>Asual Public Repository</name>
-            <url>http://www.asual.com/maven/content/groups/public</url>
-        </repository>
-    </repositories>
-    
-    <dependencies>
-        <dependency>
-            <groupId>com.asual.summer</groupId>
-            <artifactId>summer-ajax</artifactId>
-            <version>1.0.0.M2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.asual.summer</groupId>
-            <artifactId>summer-core</artifactId>
-            <version>1.0.0.M2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-    </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>8.0.0.M1</version>
-                <configuration>
-                    <webAppConfig>
-                        <jettyEnvXml>${dollar}{basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
-                    </webAppConfig>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.mortbay.jetty</groupId>
-                        <artifactId>servlet-api</artifactId>
-                        <version>3.0.20100224</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
-    
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	
+	<repositories>
+		<repository>
+			<id>org.springframework.maven.release</id>
+			<name>Spring Framework Repository</name>
+			<url>http://maven.springframework.org/release</url>
+		</repository>
+		<repository>
+			<id>net.java.download.maven</id>
+			<name>Java.net Repository</name>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+		<repository>
+			<id>org.glassfish.maven</id>
+			<name>GlassFish Repository</name>
+			<url>http://maven.glassfish.org/content/groups/glassfish</url>
+		</repository>
+		<repository>
+			<id>com.jboss.repository</id>
+			<name>JBoss Maven Repository</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/public</url>
+		</repository>
+		<repository>
+			<id>org.codehaus.repository</id>
+			<name>Codehaus Repository</name>
+			<url>http://repository.codehaus.org</url>
+		</repository>
+		<repository>
+			<id>com.asual.repositories.public</id>
+			<name>Asual Public Repository</name>
+			<url>http://www.asual.com/maven/content/groups/public</url>
+		</repository>
+	</repositories>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.asual.summer</groupId>
+			<artifactId>summer-ajax</artifactId>
+			<version>1.0.0.M2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.asual.summer</groupId>
+			<artifactId>summer-core</artifactId>
+			<version>1.0.0.M2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>8.0.0.M1</version>
+				<configuration>
+					<webAppConfig>
+						<jettyEnvXml>${dollar}{basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
+					</webAppConfig>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>servlet-api</artifactId>
+						<version>3.0.20100224</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+	
 </project>

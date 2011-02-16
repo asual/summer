@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,30 +30,30 @@ import org.jboss.el.lang.EvaluationContext;
  */
 @SuppressWarnings("rawtypes")
 public final class AstFloatingPoint extends SimpleNode {
-    public AstFloatingPoint(int id) {
-        super(id);
-    }
+	public AstFloatingPoint(int id) {
+		super(id);
+	}
 
-    private Number number;
+	private Number number;
 
-    public Number getFloatingPoint() {
-        if (this.number == null) {
-            try {
-                this.number = new Double(this.image);
-            } catch (ArithmeticException e0) {
-                this.number = new BigDecimal(this.image);
-            }
-        }
-        return this.number;
-    }
+	public Number getFloatingPoint() {
+		if (this.number == null) {
+			try {
+				this.number = new Double(this.image);
+			} catch (ArithmeticException e0) {
+				this.number = new BigDecimal(this.image);
+			}
+		}
+		return this.number;
+	}
 
-    public Object getValue(EvaluationContext ctx)
-            throws ELException {
-        return this.getFloatingPoint();
-    }
+	public Object getValue(EvaluationContext ctx)
+			throws ELException {
+		return this.getFloatingPoint();
+	}
 
-    public Class getType(EvaluationContext ctx)
-            throws ELException {
-        return this.getFloatingPoint().getClass();
-    }
+	public Class getType(EvaluationContext ctx)
+			throws ELException {
+		return this.getFloatingPoint().getClass();
+	}
 }

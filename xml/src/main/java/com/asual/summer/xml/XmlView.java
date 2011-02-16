@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,27 +36,27 @@ import com.fasterxml.jackson.xml.ser.ToXmlGenerator;
 @Named
 public class XmlView extends AbstractResponseView {
 
-    private static final String DEFAULT_CONTENT_TYPE = "application/xml";
-    private static final String DEFAULT_EXTENSION = "xml";
+	private static final String DEFAULT_CONTENT_TYPE = "application/xml";
+	private static final String DEFAULT_EXTENSION = "xml";
 
-    public XmlView() {
-        super();
-        setContentType(DEFAULT_CONTENT_TYPE);
-        setExtension(DEFAULT_EXTENSION);
-    }
+	public XmlView() {
+		super();
+		setContentType(DEFAULT_CONTENT_TYPE);
+		setExtension(DEFAULT_EXTENSION);
+	}
 	
-    protected void renderMergedOutputModel(Map<String, Object> model,
-            HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-        
-        response.setContentType(getContentType());
-        response.setCharacterEncoding(StringUtils.getEncoding());
-    	
-        XmlMapper mapper = new XmlMapper();
-        mapper.configure(Feature.AUTO_CLOSE_TARGET, false);
+	protected void renderMergedOutputModel(Map<String, Object> model,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		response.setContentType(getContentType());
+		response.setCharacterEncoding(StringUtils.getEncoding());
+		
+		XmlMapper mapper = new XmlMapper();
+		mapper.configure(Feature.AUTO_CLOSE_TARGET, false);
 		mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
-        mapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
-        mapper.writeValue(response.getOutputStream(), filterModel(model));
+		mapper.configure(ToXmlGenerator.Feature.WRITE_XML_DECLARATION, true);
+		mapper.writeValue(response.getOutputStream(), filterModel(model));
 	}
 
 }

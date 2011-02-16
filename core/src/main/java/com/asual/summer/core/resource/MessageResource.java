@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,7 +38,7 @@ import org.springframework.util.ResourceUtils;
 public class MessageResource extends AbstractResource {
 
 	private ReloadableResourceBundleMessageSource rbms;
-    private final Log logger = LogFactory.getLog(getClass());
+	private final Log logger = LogFactory.getLog(getClass());
 	
 	public MessageResource() {
 		setOrder(Ordered.HIGHEST_PRECEDENCE);
@@ -52,7 +52,7 @@ public class MessageResource extends AbstractResource {
 	public void setLocations(String[] locations) {
 		setWildcardLocations(locations);
 	}
-    
+	
 	public void setWildcardLocations(String[] locations) {
 		
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();

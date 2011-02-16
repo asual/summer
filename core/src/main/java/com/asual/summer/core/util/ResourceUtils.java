@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -53,17 +53,17 @@ public class ResourceUtils {
 	private static List<ScriptResource> scriptResources = null;
 	
 	public static String getMessage(String key) {
-    	return getMessage(key, new Object[] {}, LocaleContextHolder.getLocale());
-    }
-    
-    public static String getMessage(String key, Locale locale) {
-    	return getMessage(key, new Object[] {}, locale);
-    }
+		return getMessage(key, new Object[] {}, LocaleContextHolder.getLocale());
+	}
+	
+	public static String getMessage(String key, Locale locale) {
+		return getMessage(key, new Object[] {}, locale);
+	}
 
 	public static String getMessage(String key, Object[] args) {
 		return getMessage(key, args, LocaleContextHolder.getLocale());
 	}
-    
+	
 	public static String getMessage(String key, Object[] args, Locale locale) {
 	
 		if (messageResources == null) {
@@ -71,13 +71,13 @@ public class ResourceUtils {
 		}
 		
 		for (MessageResource bean : messageResources) {
-	        try {
-	    		return bean.getMessage(key, args, locale);
-	        } catch (NoSuchMessageException e) {
+			try {
+				return bean.getMessage(key, args, locale);
+			} catch (NoSuchMessageException e) {
 			}
-		}    	
+		}		
 		
-	    return null;
+		return null;
 	}
 
 	public static Object getProperty(String key) {
@@ -96,14 +96,14 @@ public class ResourceUtils {
 		}
 		
 		if (property != null) {
-	        if (property instanceof String) {
-	            return ObjectUtils.convert((String) property);
-	        } else {
-	            return property;
-	        }
+			if (property instanceof String) {
+				return ObjectUtils.convert((String) property);
+			} else {
+				return property;
+			}
 		}
 		
-	    return null;
+		return null;
 	}
 	
 	public static List<ScriptResource> getScripts() {
@@ -119,71 +119,71 @@ public class ResourceUtils {
 		}
 		return stylesheetResources;
 	}
-    
-    public static String getManifestAttribute(String key) {
-        try {
-        	if (!attributes.containsKey(key)) {
-            	String path = "META-INF/MANIFEST.MF";
-                Manifest mf = new Manifest();
-                URL resource = RequestUtils.getServletContext().getResource("/" + path);
-                if (resource == null) {
-                	resource = getClasspathResources(path, false).get(0);
-                }
-    			mf.read(new FileInputStream(resource.getFile()));
-    			attributes.put(key, mf.getMainAttributes().getValue(key));
-        	}
-        	return attributes.get(key);
+	
+	public static String getManifestAttribute(String key) {
+		try {
+			if (!attributes.containsKey(key)) {
+				String path = "META-INF/MANIFEST.MF";
+				Manifest mf = new Manifest();
+				URL resource = RequestUtils.getServletContext().getResource("/" + path);
+				if (resource == null) {
+					resource = getClasspathResources(path, false).get(0);
+				}
+				mf.read(new FileInputStream(resource.getFile()));
+				attributes.put(key, mf.getMainAttributes().getValue(key));
+			}
+			return attributes.get(key);
 		} catch (Exception e) {
 			return "";
 		}
-    }
-    
-    public static boolean exists(String name) {
-    	return getClasspathResource(name) != null;
-    }
-    
-    public static URL getClasspathResource(String name) {
-    	return getClasspathResource(name, true);
-    }
-    
-    public static URL getClasspathResource(String name, boolean jarURL) {
-    	List<URL> list = getClasspathResources(name, jarURL);
-    	if (list.size() != 0) {
-    		return getClasspathResources(name, jarURL).get(0);
-    	}
-    	return null;
-    }
-    
-    public static List<URL> getClasspathResources(String name) {
-    	return getClasspathResources(name, true);
-    }
-    
-    public static List<URL> getClasspathResources(String name, boolean jarURL) {
-    	
-    	List<URL> list = new ArrayList<URL>();
-    	try {
-	    	Enumeration<URL> resources = RequestUtils.class.getClassLoader().getResources(name);
-	    	while(resources.hasMoreElements()) {
-	    		URL resource = resources.nextElement();
-	    		if (jarURL || jarURL == org.springframework.util.ResourceUtils.isJarURL(resource)) {
-	    			list.add(resource);
-	    		}
-	    	}
-    	} catch (Exception e) {
-    	}
-    	
-    	Collections.sort(list, new Comparator<URL>() {
-    		
-    		private static final String PREFIX = "/summer-";
-    		
+	}
+	
+	public static boolean exists(String name) {
+		return getClasspathResource(name) != null;
+	}
+	
+	public static URL getClasspathResource(String name) {
+		return getClasspathResource(name, true);
+	}
+	
+	public static URL getClasspathResource(String name, boolean jarURL) {
+		List<URL> list = getClasspathResources(name, jarURL);
+		if (list.size() != 0) {
+			return getClasspathResources(name, jarURL).get(0);
+		}
+		return null;
+	}
+	
+	public static List<URL> getClasspathResources(String name) {
+		return getClasspathResources(name, true);
+	}
+	
+	public static List<URL> getClasspathResources(String name, boolean jarURL) {
+		
+		List<URL> list = new ArrayList<URL>();
+		try {
+			Enumeration<URL> resources = RequestUtils.class.getClassLoader().getResources(name);
+			while(resources.hasMoreElements()) {
+				URL resource = resources.nextElement();
+				if (jarURL || jarURL == org.springframework.util.ResourceUtils.isJarURL(resource)) {
+					list.add(resource);
+				}
+			}
+		} catch (Exception e) {
+		}
+		
+		Collections.sort(list, new Comparator<URL>() {
+			
+			private static final String PREFIX = "/summer-";
+			
 			public int compare(URL o1, URL o2) {
 				return o1.getPath().indexOf(PREFIX) - o2.getPath().indexOf(PREFIX);
 			}
 			
-    	});
-    	
-    	return list;
-    }
+		});
+		
+		return list;
+	}
 
 	@SuppressWarnings("unchecked")
 	private static <T> List<T> getResources(Class<T> clazz) {

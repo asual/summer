@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,53 +22,53 @@ import javax.el.VariableMapper;
 @SuppressWarnings("rawtypes")
 public final class EvaluationContext extends ELContext {
 
-    private final ELContext elContext;
+	private final ELContext elContext;
 
-    private final FunctionMapper fnMapper;
+	private final FunctionMapper fnMapper;
 
-    private VariableMapper varMapper;
+	private VariableMapper varMapper;
 
-    public EvaluationContext(ELContext elContext, FunctionMapper fnMapper,
-            VariableMapper varMapper) {
-        this.elContext = elContext;
-        this.fnMapper = fnMapper;
-        this.varMapper = varMapper;
-    }
+	public EvaluationContext(ELContext elContext, FunctionMapper fnMapper,
+			VariableMapper varMapper) {
+		this.elContext = elContext;
+		this.fnMapper = fnMapper;
+		this.varMapper = varMapper;
+	}
 
-    public ELContext getELContext() {
-        return this.elContext;
-    }
+	public ELContext getELContext() {
+		return this.elContext;
+	}
 
-    public FunctionMapper getFunctionMapper() {
-        return this.fnMapper;
-    }
+	public FunctionMapper getFunctionMapper() {
+		return this.fnMapper;
+	}
 
-    public VariableMapper getVariableMapper() {
-        return this.varMapper;
-    }
+	public VariableMapper getVariableMapper() {
+		return this.varMapper;
+	}
 
-    public Object getContext(Class key) {
-        return this.elContext.getContext(key);
-    }
+	public Object getContext(Class key) {
+		return this.elContext.getContext(key);
+	}
 
-    public ELResolver getELResolver() {
-        return this.elContext.getELResolver();
-    }
+	public ELResolver getELResolver() {
+		return this.elContext.getELResolver();
+	}
 
-    public boolean isPropertyResolved() {
-        return this.elContext.isPropertyResolved();
-    }
+	public boolean isPropertyResolved() {
+		return this.elContext.isPropertyResolved();
+	}
 
-    public void putContext(Class key, Object contextObject) {
-        this.elContext.putContext(key, contextObject);
-    }
+	public void putContext(Class key, Object contextObject) {
+		this.elContext.putContext(key, contextObject);
+	}
 
-    public void setPropertyResolved(boolean resolved) {
-        this.elContext.setPropertyResolved(resolved);
-    }
-    
-    public void setVariableMapper(VariableMapper varMapper) {
-        this.varMapper = varMapper;
-    }
-        
+	public void setPropertyResolved(boolean resolved) {
+		this.elContext.setPropertyResolved(resolved);
+	}
+	
+	public void setVariableMapper(VariableMapper varMapper) {
+		this.varMapper = varMapper;
+	}
+		
 }

@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project 
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
-        http://maven.apache.org/POM/4.0.0 
-        http://maven.apache.org/maven-v4_0_0.xsd">
-        
-    <name>Summer Atmosphere</name>
-    <artifactId>summer-atmosphere</artifactId>
-    <packaging>jar</packaging>
-    <modelVersion>4.0.0</modelVersion>
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://maven.apache.org/POM/4.0.0 
+		http://maven.apache.org/maven-v4_0_0.xsd">
+		
+	<name>Summer Atmosphere</name>
+	<artifactId>summer-atmosphere</artifactId>
+	<packaging>jar</packaging>
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.asual.summer</groupId>
-        <artifactId>summer-parent</artifactId>
-        <version>1.0.0.M2-SNAPSHOT</version>
-    </parent>
-    
-    <dependencies>
-        <dependency>
-            <groupId>com.asual.summer</groupId>
-            <artifactId>summer-core</artifactId>
-            <version>1.0.0.M2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.asual.summer</groupId>
-            <artifactId>summer-jquery</artifactId>
-            <version>1.0.0.M2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.atmosphere</groupId>
-            <artifactId>atmosphere-jersey</artifactId>
-            <version>0.6.4</version>
-        </dependency>
-    </dependencies>
-    
+	<parent>
+		<groupId>com.asual.summer</groupId>
+		<artifactId>summer-parent</artifactId>
+		<version>1.0.0.M2-SNAPSHOT</version>
+	</parent>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.asual.summer</groupId>
+			<artifactId>summer-core</artifactId>
+			<version>1.0.0.M2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.asual.summer</groupId>
+			<artifactId>summer-jquery</artifactId>
+			<version>1.0.0.M2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.atmosphere</groupId>
+			<artifactId>atmosphere-jersey</artifactId>
+			<version>0.6.4</version>
+		</dependency>
+	</dependencies>
+	
 </project>

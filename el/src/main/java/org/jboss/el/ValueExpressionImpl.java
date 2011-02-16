@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -89,174 +89,174 @@ import org.jboss.el.util.ReflectionUtil;
  */
 @SuppressWarnings("rawtypes")
 public final class ValueExpressionImpl extends ValueExpression implements
-        Externalizable {
+		Externalizable {
 
-    private Class expectedType;
+	private Class expectedType;
 
-    private String expr;
+	private String expr;
 
-    private FunctionMapper fnMapper;
+	private FunctionMapper fnMapper;
 
-    private VariableMapper varMapper;
+	private VariableMapper varMapper;
 
-    private transient Node node;
+	private transient Node node;
 
-    public ValueExpressionImpl() {
+	public ValueExpressionImpl() {
 
-    }
+	}
 
-    /**
-     * 
-     */
-    public ValueExpressionImpl(String expr, Node node, FunctionMapper fnMapper,
-            VariableMapper varMapper, Class expectedType) {
-        this.expr = expr;
-        this.node = node;
-        this.fnMapper = fnMapper;
-        this.varMapper = varMapper;
-        this.expectedType = expectedType;
-    }
+	/**
+	 * 
+	 */
+	public ValueExpressionImpl(String expr, Node node, FunctionMapper fnMapper,
+			VariableMapper varMapper, Class expectedType) {
+		this.expr = expr;
+		this.node = node;
+		this.fnMapper = fnMapper;
+		this.varMapper = varMapper;
+		this.expectedType = expectedType;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public boolean equals(Object obj) {
-        return (obj instanceof ValueExpressionImpl && obj.hashCode() == this
-                .hashCode());
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		return (obj instanceof ValueExpressionImpl && obj.hashCode() == this
+				.hashCode());
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.el.ValueExpression#getExpectedType()
-     */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.el.ValueExpression#getExpectedType()
+	 */
 	public Class<?> getExpectedType() {
-        return this.expectedType;
-    }
+		return this.expectedType;
+	}
 
-    /**
-     * Returns the type the result of the expression will be coerced to after
-     * evaluation.
-     * 
-     * @return the <code>expectedType</code> passed to the
-     *         <code>ExpressionFactory.createValueExpression</code> method
-     *         that created this <code>ValueExpression</code>.
-     * 
-     * @see javax.el.Expression#getExpressionString()
-     */
-    public String getExpressionString() {
-        return this.expr;
-    }
+	/**
+	 * Returns the type the result of the expression will be coerced to after
+	 * evaluation.
+	 * 
+	 * @return the <code>expectedType</code> passed to the
+	 *		 <code>ExpressionFactory.createValueExpression</code> method
+	 *		 that created this <code>ValueExpression</code>.
+	 * 
+	 * @see javax.el.Expression#getExpressionString()
+	 */
+	public String getExpressionString() {
+		return this.expr;
+	}
 
-    /**
-     * @return
-     * @throws ELException
-     */
-    private Node getNode() throws ELException {
-        if (this.node == null) {
-            this.node = ExpressionBuilder.createNode(this.expr);
-        }
-        return this.node;
-    }
+	/**
+	 * @return
+	 * @throws ELException
+	 */
+	private Node getNode() throws ELException {
+		if (this.node == null) {
+			this.node = ExpressionBuilder.createNode(this.expr);
+		}
+		return this.node;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.el.ValueExpression#getType(javax.el.ELContext)
-     */
-    public Class<?> getType(ELContext context) throws PropertyNotFoundException,
-            ELException {
-        EvaluationContext ctx = new EvaluationContext(context, this.fnMapper,
-                this.varMapper);
-        return this.getNode().getType(ctx);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.el.ValueExpression#getType(javax.el.ELContext)
+	 */
+	public Class<?> getType(ELContext context) throws PropertyNotFoundException,
+			ELException {
+		EvaluationContext ctx = new EvaluationContext(context, this.fnMapper,
+				this.varMapper);
+		return this.getNode().getType(ctx);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.el.ValueExpression#getValue(javax.el.ELContext)
-     */
-    public Object getValue(ELContext context) throws PropertyNotFoundException,
-            ELException {
-        EvaluationContext ctx = new EvaluationContext(context, this.fnMapper,
-                this.varMapper);
-        Object value = this.getNode().getValue(ctx);
-        if (this.expectedType != null) {
-            return ELSupport.coerceToType(value, this.expectedType);
-        }
-        return value;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.el.ValueExpression#getValue(javax.el.ELContext)
+	 */
+	public Object getValue(ELContext context) throws PropertyNotFoundException,
+			ELException {
+		EvaluationContext ctx = new EvaluationContext(context, this.fnMapper,
+				this.varMapper);
+		Object value = this.getNode().getValue(ctx);
+		if (this.expectedType != null) {
+			return ELSupport.coerceToType(value, this.expectedType);
+		}
+		return value;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
-    public int hashCode() {
-        return this.expr.hashCode();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return this.expr.hashCode();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.el.ValueExpression#isLiteralText()
-     */
-    public boolean isLiteralText() {
-        try {
-            return this.getNode() instanceof AstLiteralExpression;
-        } catch (ELException ele) {
-            return false;
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.el.ValueExpression#isLiteralText()
+	 */
+	public boolean isLiteralText() {
+		try {
+			return this.getNode() instanceof AstLiteralExpression;
+		} catch (ELException ele) {
+			return false;
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.el.ValueExpression#isReadOnly(javax.el.ELContext)
-     */
-    public boolean isReadOnly(ELContext context)
-            throws PropertyNotFoundException, ELException {
-        EvaluationContext ctx = new EvaluationContext(context, this.fnMapper,
-                this.varMapper);
-        return this.getNode().isReadOnly(ctx);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.el.ValueExpression#isReadOnly(javax.el.ELContext)
+	 */
+	public boolean isReadOnly(ELContext context)
+			throws PropertyNotFoundException, ELException {
+		EvaluationContext ctx = new EvaluationContext(context, this.fnMapper,
+				this.varMapper);
+		return this.getNode().isReadOnly(ctx);
+	}
 
-    public void readExternal(ObjectInput in) throws IOException,
-            ClassNotFoundException {
-        this.expr = in.readUTF();
-        String type = in.readUTF();
-        if (!"".equals(type)) {
-            this.expectedType = ReflectionUtil.forName(type);
-        }
-        this.fnMapper = (FunctionMapper) in.readObject();
-        this.varMapper = (VariableMapper) in.readObject();
-    }
+	public void readExternal(ObjectInput in) throws IOException,
+			ClassNotFoundException {
+		this.expr = in.readUTF();
+		String type = in.readUTF();
+		if (!"".equals(type)) {
+			this.expectedType = ReflectionUtil.forName(type);
+		}
+		this.fnMapper = (FunctionMapper) in.readObject();
+		this.varMapper = (VariableMapper) in.readObject();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.el.ValueExpression#setValue(javax.el.ELContext,
-     *      java.lang.Object)
-     */
-    public void setValue(ELContext context, Object value)
-            throws PropertyNotFoundException, PropertyNotWritableException,
-            ELException {
-        EvaluationContext ctx = new EvaluationContext(context, this.fnMapper,
-                this.varMapper);
-        this.getNode().setValue(ctx, value);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.el.ValueExpression#setValue(javax.el.ELContext,
+	 *	  java.lang.Object)
+	 */
+	public void setValue(ELContext context, Object value)
+			throws PropertyNotFoundException, PropertyNotWritableException,
+			ELException {
+		EvaluationContext ctx = new EvaluationContext(context, this.fnMapper,
+				this.varMapper);
+		this.getNode().setValue(ctx, value);
+	}
 
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeUTF(this.expr);
-        out.writeUTF((this.expectedType != null) ? this.expectedType.getName()
-                : "");
-        out.writeObject(this.fnMapper);
-        out.writeObject(this.varMapper);
-    }
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeUTF(this.expr);
+		out.writeUTF((this.expectedType != null) ? this.expectedType.getName()
+				: "");
+		out.writeObject(this.fnMapper);
+		out.writeObject(this.varMapper);
+	}
 
-    public String toString() {
-        return "ValueExpression["+this.expr+"]";
-    }
+	public String toString() {
+		return "ValueExpression["+this.expr+"]";
+	}
 }

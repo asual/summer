@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,26 +27,26 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class ResourceEditorRegistrarFactoryBean implements FactoryBean<ResourceEditorRegistrar>,ApplicationContextAware {
 
-    private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
-    @Override
-    public ResourceEditorRegistrar getObject() throws Exception {
-        return new ResourceEditorRegistrar(applicationContext);
-    }
+	@Override
+	public ResourceEditorRegistrar getObject() throws Exception {
+		return new ResourceEditorRegistrar(applicationContext);
+	}
 
-    @Override
-    public Class<?> getObjectType() {
-        return ResourceEditorRegistrar.class;
-    }
+	@Override
+	public Class<?> getObjectType() {
+		return ResourceEditorRegistrar.class;
+	}
 
-    @Override
-    public boolean isSingleton() {
-        return true;
-    }
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
 }

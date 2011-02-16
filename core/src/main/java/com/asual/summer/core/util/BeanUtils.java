@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,31 +55,31 @@ public class BeanUtils implements BeanFactoryPostProcessor {
 		return null;
 	}
 	
-    public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
-    	return beanFactory.getBeansOfType(clazz);
-    }
-    
-    public static <T> T getBeansOfType(ConfigurableListableBeanFactory beanFactory, Class<T> clazz) {
-        Map<String, T> beans = beanFactory.getBeansOfType(clazz);
-        Iterator<Entry<String, T>> iterator = beans.entrySet().iterator();
-        if (iterator.hasNext()) {
-            return iterator.next().getValue();
-        }
-        return null;
-    }
+	public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
+		return beanFactory.getBeansOfType(clazz);
+	}
+	
+	public static <T> T getBeansOfType(ConfigurableListableBeanFactory beanFactory, Class<T> clazz) {
+		Map<String, T> beans = beanFactory.getBeansOfType(clazz);
+		Iterator<Entry<String, T>> iterator = beans.entrySet().iterator();
+		if (iterator.hasNext()) {
+			return iterator.next().getValue();
+		}
+		return null;
+	}
 
-    public static String[] getBeanNames(Class<?> clazz) {
-    	return beanFactory.getBeanNamesForType(clazz);
-    }
-    
-    public static Object getBean(String name) {
-        return beanFactory.getBean(name);
-    }
-    
-    public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) {
-    	return beanFactory.getBeansWithAnnotation(annotationType);
-    }
-    
+	public static String[] getBeanNames(Class<?> clazz) {
+		return beanFactory.getBeanNamesForType(clazz);
+	}
+	
+	public static Object getBean(String name) {
+		return beanFactory.getBean(name);
+	}
+	
+	public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) {
+		return beanFactory.getBeansWithAnnotation(annotationType);
+	}
+	
 	public void postProcessBeanFactory(
 			ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		BeanUtils.beanFactory = beanFactory;

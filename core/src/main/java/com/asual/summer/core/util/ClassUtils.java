@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,88 +30,88 @@ import org.springframework.util.ReflectionUtils;
  */
 @Named
 public class ClassUtils {
-    
+	
 	public static boolean isInstance(Object obj, String clazz) {
-    	try {
+		try {
 			return Class.forName(clazz).isInstance(obj);
 		} catch (ClassNotFoundException e) {
 			return false;
 		}
-    }
+	}
 
-    public static Object newInstance(String clazz, Object[] parameters) throws SecurityException, ClassNotFoundException {
-    	Class<?>[] classParameters = new Class[parameters == null ? 0 : parameters.length];
-    	for (int i = 0; i < classParameters.length; i++) {
-    		classParameters[i] = parameters[i].getClass();
-    	}
-    	Object instance = null;
-    	try {
-    		instance = Class.forName(clazz).getConstructor(classParameters).newInstance(parameters == null ? new Object[] {} : parameters.length);
-    	} catch (Exception e) {
-    		Constructor<?>[] constructors = Class.forName(clazz).getConstructors();
-    		for (Constructor<?> constructor : constructors) {
-    			Class<?>[] types = constructor.getParameterTypes();
-    			if (types.length == parameters.length) {
-    				Object[] params = new Object[parameters.length];
-    				for (int i = 0; i < parameters.length; i++) {
-    					if (types[i] == boolean.class || types[i] == Boolean.class) {
-    						params[i] = Boolean.valueOf((String) parameters[i]);
-    					} else if (types[i] == int.class || types[i] == Integer.class) {
-    						params[i] = Integer.valueOf((String) parameters[i]);
-    					} else {
-    						params[i] = types[i].cast(parameters[i]);
-    					}
-    				}
-    				try {
-    					instance = constructor.newInstance(params);
-    					break;
-    				} catch (Exception ex) {
-    					continue;
-    				}
-    			}
-    		}
-    	}
-    	return instance;
-    }
+	public static Object newInstance(String clazz, Object[] parameters) throws SecurityException, ClassNotFoundException {
+		Class<?>[] classParameters = new Class[parameters == null ? 0 : parameters.length];
+		for (int i = 0; i < classParameters.length; i++) {
+			classParameters[i] = parameters[i].getClass();
+		}
+		Object instance = null;
+		try {
+			instance = Class.forName(clazz).getConstructor(classParameters).newInstance(parameters == null ? new Object[] {} : parameters.length);
+		} catch (Exception e) {
+			Constructor<?>[] constructors = Class.forName(clazz).getConstructors();
+			for (Constructor<?> constructor : constructors) {
+				Class<?>[] types = constructor.getParameterTypes();
+				if (types.length == parameters.length) {
+					Object[] params = new Object[parameters.length];
+					for (int i = 0; i < parameters.length; i++) {
+						if (types[i] == boolean.class || types[i] == Boolean.class) {
+							params[i] = Boolean.valueOf((String) parameters[i]);
+						} else if (types[i] == int.class || types[i] == Integer.class) {
+							params[i] = Integer.valueOf((String) parameters[i]);
+						} else {
+							params[i] = types[i].cast(parameters[i]);
+						}
+					}
+					try {
+						instance = constructor.newInstance(params);
+						break;
+					} catch (Exception ex) {
+						continue;
+					}
+				}
+			}
+		}
+		return instance;
+	}
 
-    public static Object invokeMethod(Object target, final String methodName, final Object[] parameters) {
-        if (target != null) {
-            final List<Method> matches = new ArrayList<Method>();
-            ReflectionUtils.doWithMethods(target.getClass(), new ReflectionUtils.MethodCallback() {
-                public void doWith(Method method) throws IllegalArgumentException,
-                        IllegalAccessException {
-                    matches.add(method);
-                }
-            }, 
-            new ReflectionUtils.MethodFilter() {
-                public boolean matches(Method method) {
-                    if (method.getName().equals(methodName)) {
-                        Class<?>[] types = method.getParameterTypes();
-                        if (parameters == null && types.length == 0) {
-                            return true;
-                        }
-                        if (types.length != parameters.length) {
-                            return false;
-                        }
-                        for (int i = 0; i < types.length; i++) {
-                            if (!types[i].isInstance(parameters[i])) {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            if (matches.size() > 0) {
-                if (parameters == null) {
-                    return ReflectionUtils.invokeMethod(matches.get(0), target);
-                } else {
-                    return ReflectionUtils.invokeMethod(matches.get(0), target, parameters);                
-                }
-            }
-        }
-        return null;
-    }
-    
+	public static Object invokeMethod(Object target, final String methodName, final Object[] parameters) {
+		if (target != null) {
+			final List<Method> matches = new ArrayList<Method>();
+			ReflectionUtils.doWithMethods(target.getClass(), new ReflectionUtils.MethodCallback() {
+				public void doWith(Method method) throws IllegalArgumentException,
+						IllegalAccessException {
+					matches.add(method);
+				}
+			}, 
+			new ReflectionUtils.MethodFilter() {
+				public boolean matches(Method method) {
+					if (method.getName().equals(methodName)) {
+						Class<?>[] types = method.getParameterTypes();
+						if (parameters == null && types.length == 0) {
+							return true;
+						}
+						if (types.length != parameters.length) {
+							return false;
+						}
+						for (int i = 0; i < types.length; i++) {
+							if (!types[i].isInstance(parameters[i])) {
+								return false;
+							}
+						}
+						return true;
+					}
+					return false;
+				}
+			});
+			if (matches.size() > 0) {
+				if (parameters == null) {
+					return ReflectionUtils.invokeMethod(matches.get(0), target);
+				} else {
+					return ReflectionUtils.invokeMethod(matches.get(0), target, parameters);				
+				}
+			}
+		}
+		return null;
+	}
+	
 }

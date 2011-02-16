@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,30 +30,30 @@ import org.jboss.el.lang.EvaluationContext;
  */
 @SuppressWarnings("rawtypes")
 public final class AstInteger extends SimpleNode {
-    public AstInteger(int id) {
-        super(id);
-    }
+	public AstInteger(int id) {
+		super(id);
+	}
 
-    private Number number;
+	private Number number;
 
-    protected Number getInteger() {
-        if (this.number == null) {
-            try {
-                this.number = new Long(this.image);
-            } catch (ArithmeticException e1) {
-                this.number = new BigInteger(this.image);
-            }
-        }
-        return number;
-    }
+	protected Number getInteger() {
+		if (this.number == null) {
+			try {
+				this.number = new Long(this.image);
+			} catch (ArithmeticException e1) {
+				this.number = new BigInteger(this.image);
+			}
+		}
+		return number;
+	}
 
-    public Class getType(EvaluationContext ctx)
-            throws ELException {
-        return this.getInteger().getClass();
-    }
+	public Class getType(EvaluationContext ctx)
+			throws ELException {
+		return this.getInteger().getClass();
+	}
 
-    public Object getValue(EvaluationContext ctx)
-            throws ELException {
-        return this.getInteger();
-    }
+	public Object getValue(EvaluationContext ctx)
+			throws ELException {
+		return this.getInteger();
+	}
 }

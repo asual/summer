@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -70,7 +70,7 @@ public class Token {
    */
   public String toString()
   {
-     return image;
+	 return image;
   }
 
   /**
@@ -80,17 +80,17 @@ public class Token {
    * For example, if you have a subclass of Token called IDToken that
    * you want to create if ofKind is ID, simlpy add something like :
    *
-   *    case MyParserConstants.ID : return new IDToken();
+   *	case MyParserConstants.ID : return new IDToken();
    *
    * to the following switch statement. Then you can cast matchedToken
    * variable to the appropriate type and use it in your lexical actions.
    */
   public static final Token newToken(int ofKind)
   {
-     switch(ofKind)
-     {
-       default : return new Token();
-     }
+	 switch(ofKind)
+	 {
+	   default : return new Token();
+	 }
   }
 
 }

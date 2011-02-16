@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,36 +35,36 @@ import com.asual.summer.core.view.AbstractResponseView;
 @Named
 public class JsonView extends AbstractResponseView {
 
-    private static final String DEFAULT_CONTENT_TYPE = "application/json";
-    private static final String DEFAULT_EXTENSION = "json";
+	private static final String DEFAULT_CONTENT_TYPE = "application/json";
+	private static final String DEFAULT_EXTENSION = "json";
 
-    public JsonView() {
-        super();
-        setContentType(DEFAULT_CONTENT_TYPE);
-        setExtension(DEFAULT_EXTENSION);
-    }
+	public JsonView() {
+		super();
+		setContentType(DEFAULT_CONTENT_TYPE);
+		setExtension(DEFAULT_EXTENSION);
+	}
 	
-    protected void renderMergedOutputModel(Map<String, Object> model,
-            HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+	protected void renderMergedOutputModel(Map<String, Object> model,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 
-        response.setContentType(getContentType());
-        response.setCharacterEncoding(StringUtils.getEncoding());
-    	
-        String callback = (String) request.getParameter("callback");
-        if (callback != null) {
-        	response.getOutputStream().write((callback + " && " + callback + "(").getBytes(StringUtils.getEncoding()));
-        }
-        
-        ObjectMapper mapper = new ObjectMapper();
+		response.setContentType(getContentType());
+		response.setCharacterEncoding(StringUtils.getEncoding());
+		
+		String callback = (String) request.getParameter("callback");
+		if (callback != null) {
+			response.getOutputStream().write((callback + " && " + callback + "(").getBytes(StringUtils.getEncoding()));
+		}
+		
+		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(Feature.AUTO_CLOSE_TARGET, false);
 		mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
-        mapper.writeValue(response.getOutputStream(), filterModel(model));
+		mapper.writeValue(response.getOutputStream(), filterModel(model));
 
-        if (callback != null) {
-        	response.getOutputStream().write(");".getBytes(StringUtils.getEncoding()));
-        }
+		if (callback != null) {
+			response.getOutputStream().write(");".getBytes(StringUtils.getEncoding()));
+		}
 
-    }
+	}
 
 }

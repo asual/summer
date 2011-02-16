@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,139 +30,139 @@ import org.jboss.el.lang.EvaluationContext;
 
 @SuppressWarnings({"rawtypes", "static-access", "unchecked"})
 public final class AstClosureSuffix extends ValueSuffixNode {
-    
-    public AstClosureSuffix(int id) {
-        super(id);
-    }
-    
-    protected final AstClosure closure() {
-        return (AstClosure) this.children[0];
-    }
-    
-    protected static final Collection toCollection(Object base, boolean force) {
-        if (base == null) {
-            return null;
-        } else if (base instanceof Collection) {
-            return (Collection) base;
-        } else if (base instanceof Map) {
-            return ((Map) base).entrySet();
-        } else if (base.getClass().isArray()) {
-            return Arrays.asList((Object[]) base);
-        } else if (force) {
-            throw new ELException(base.getClass().getName() + " is not an instance of Iterable or cannot be coerced to Iterable.");
-        } else {
-            return null;
-        }
-    }
-    
-    protected static final Collection toCollection(Object base) {
-        return toCollection(base, true);
-    }
+	
+	public AstClosureSuffix(int id) {
+		super(id);
+	}
+	
+	protected final AstClosure closure() {
+		return (AstClosure) this.children[0];
+	}
+	
+	protected static final Collection toCollection(Object base, boolean force) {
+		if (base == null) {
+			return null;
+		} else if (base instanceof Collection) {
+			return (Collection) base;
+		} else if (base instanceof Map) {
+			return ((Map) base).entrySet();
+		} else if (base.getClass().isArray()) {
+			return Arrays.asList((Object[]) base);
+		} else if (force) {
+			throw new ELException(base.getClass().getName() + " is not an instance of Iterable or cannot be coerced to Iterable.");
+		} else {
+			return null;
+		}
+	}
+	
+	protected static final Collection toCollection(Object base) {
+		return toCollection(base, true);
+	}
 
-     public boolean isReadOnly(Object base, EvaluationContext ctx) throws ELException {
-        Collection c = this.toCollection(base);
-        if (c == null || c.isEmpty()) {
-            return true;
-        } else {
-            AstClosure closure = this.closure();
-            Object first = c.iterator().next();
-            return closure.isReadOnly(first, ctx);
-        }
-    }
-    
-    public Object getValue(Object base, EvaluationContext ctx) throws ELException {
-        Collection c = this.toCollection(base);
-        if (c == null) {
-            return null;
-        } else if (c.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        } else {
-            Object v;
-            Collection r = new ClosureList(c.size());
-            AstClosure closure = this.closure();
-            for (Object o : c) {
-                v = closure.getValue(o, ctx);
-                if (v instanceof ClosureList) {
-                    r.addAll((ClosureList) v);
-                } else {
-                    r.add(v);
-                }
-            }
-            return r;
-        }
-    }
-    
-    public Class getType(Object base, EvaluationContext ctx) throws ELException {
-        return Collection.class;
-    }
-    
-    public Object getTarget(Object base, EvaluationContext ctx) throws ELException {
-        Collection c = this.toCollection(base);
-        if (c == null || c.isEmpty()) {
-            return null;
-        } else {
-            Object v;
-            Collection r = new ClosureList(c.size());
-            AstClosure closure = this.closure();
-            for (Object o : c) {
-                v = closure.getValue(o, ctx);
-                if (v instanceof ClosureList) {
-                    r.addAll((ClosureList) v);
-                } else {
-                    r.add(v);
-                }
-            }
-            return r;
-        }
-    }
-    
-    public MethodInfo getMethodInfo(Object base, EvaluationContext ctx, Class[] paramTypes) throws ELException {
-        Collection c = this.toCollection(base);
-        if (c == null || c.isEmpty()) {
-            return null;
-        } else {
-            AstClosure closure = this.closure();
-            Object first = c.iterator().next();
-            return closure.getMethodInfo(first, ctx, paramTypes);
-        }
-    }
-    
-    public Object invoke(Object base, EvaluationContext ctx, Class[] paramTypes, Object[] paramValues) throws ELException {
-        Collection c = this.toCollection(base);
-        if (c == null) {
-            return null;
-        } else if (c.isEmpty()) {
-            return Collections.EMPTY_LIST;
-        } else {
-            Object v;
-            Collection r = new ClosureList(c.size());
-            AstClosure closure = this.closure();
-            for (Object o : c) {
-                v = closure.invoke(o, ctx, paramTypes, paramValues);
-                if (v instanceof ClosureList) {
-                    r.addAll((ClosureList) v);
-                } else {
-                    r.add(v);
-                }
-            }
-            return r;
-        }
-    }
-    
-    public void setValue(Object base, EvaluationContext ctx, Object value) throws ELException {
-        Collection c = this.toCollection(base);
-        if (c != null && !c.isEmpty()) {
-            AstClosure closure = this.closure();
-            for (Object o : c) {
-                closure.setValue(o, ctx, value);
-            }
-        }
-    }
-    
-    @SuppressWarnings("serial")
+	 public boolean isReadOnly(Object base, EvaluationContext ctx) throws ELException {
+		Collection c = this.toCollection(base);
+		if (c == null || c.isEmpty()) {
+			return true;
+		} else {
+			AstClosure closure = this.closure();
+			Object first = c.iterator().next();
+			return closure.isReadOnly(first, ctx);
+		}
+	}
+	
+	public Object getValue(Object base, EvaluationContext ctx) throws ELException {
+		Collection c = this.toCollection(base);
+		if (c == null) {
+			return null;
+		} else if (c.isEmpty()) {
+			return Collections.EMPTY_LIST;
+		} else {
+			Object v;
+			Collection r = new ClosureList(c.size());
+			AstClosure closure = this.closure();
+			for (Object o : c) {
+				v = closure.getValue(o, ctx);
+				if (v instanceof ClosureList) {
+					r.addAll((ClosureList) v);
+				} else {
+					r.add(v);
+				}
+			}
+			return r;
+		}
+	}
+	
+	public Class getType(Object base, EvaluationContext ctx) throws ELException {
+		return Collection.class;
+	}
+	
+	public Object getTarget(Object base, EvaluationContext ctx) throws ELException {
+		Collection c = this.toCollection(base);
+		if (c == null || c.isEmpty()) {
+			return null;
+		} else {
+			Object v;
+			Collection r = new ClosureList(c.size());
+			AstClosure closure = this.closure();
+			for (Object o : c) {
+				v = closure.getValue(o, ctx);
+				if (v instanceof ClosureList) {
+					r.addAll((ClosureList) v);
+				} else {
+					r.add(v);
+				}
+			}
+			return r;
+		}
+	}
+	
+	public MethodInfo getMethodInfo(Object base, EvaluationContext ctx, Class[] paramTypes) throws ELException {
+		Collection c = this.toCollection(base);
+		if (c == null || c.isEmpty()) {
+			return null;
+		} else {
+			AstClosure closure = this.closure();
+			Object first = c.iterator().next();
+			return closure.getMethodInfo(first, ctx, paramTypes);
+		}
+	}
+	
+	public Object invoke(Object base, EvaluationContext ctx, Class[] paramTypes, Object[] paramValues) throws ELException {
+		Collection c = this.toCollection(base);
+		if (c == null) {
+			return null;
+		} else if (c.isEmpty()) {
+			return Collections.EMPTY_LIST;
+		} else {
+			Object v;
+			Collection r = new ClosureList(c.size());
+			AstClosure closure = this.closure();
+			for (Object o : c) {
+				v = closure.invoke(o, ctx, paramTypes, paramValues);
+				if (v instanceof ClosureList) {
+					r.addAll((ClosureList) v);
+				} else {
+					r.add(v);
+				}
+			}
+			return r;
+		}
+	}
+	
+	public void setValue(Object base, EvaluationContext ctx, Object value) throws ELException {
+		Collection c = this.toCollection(base);
+		if (c != null && !c.isEmpty()) {
+			AstClosure closure = this.closure();
+			for (Object o : c) {
+				closure.setValue(o, ctx, value);
+			}
+		}
+	}
+	
+	@SuppressWarnings("serial")
 	private static class ClosureList extends ArrayList {
-        public ClosureList(int size) {
-            super(size);
-        }
-    }
+		public ClosureList(int size) {
+			super(size);
+		}
+	}
 }

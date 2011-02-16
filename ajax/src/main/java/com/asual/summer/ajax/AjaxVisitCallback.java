@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,27 +34,27 @@ import org.apache.commons.logging.LogFactory;
  */
 public class AjaxVisitCallback implements VisitCallback {
 
-    private PhaseId phaseId;
-    private final Log logger = LogFactory.getLog(getClass());
+	private PhaseId phaseId;
+	private final Log logger = LogFactory.getLog(getClass());
 
-    public AjaxVisitCallback(PhaseId phaseId) {
-        this.phaseId = phaseId;
-    }
+	public AjaxVisitCallback(PhaseId phaseId) {
+		this.phaseId = phaseId;
+	}
 
-    public VisitResult visit(VisitContext visitContext, UIComponent component) {
-    	FacesContext ctx = FacesContext.getCurrentInstance();
-        if (phaseId == PhaseId.RENDER_RESPONSE) {
-            try {
-                ResponseWriter writer = ((AjaxViewContextImpl) ctx.getPartialViewContext()).getResponseWriter();
-                writer.startElement("div", null);
-                writer.writeAttribute("data-ajax-response", component.getClientId(ctx), null);
-                component.encodeAll(ctx);
-                writer.endElement("div"); 
-            } catch (IOException e) {
-            	logger.error(e.getMessage(), e);
-            }
-        }
+	public VisitResult visit(VisitContext visitContext, UIComponent component) {
+		FacesContext ctx = FacesContext.getCurrentInstance();
+		if (phaseId == PhaseId.RENDER_RESPONSE) {
+			try {
+				ResponseWriter writer = ((AjaxViewContextImpl) ctx.getPartialViewContext()).getResponseWriter();
+				writer.startElement("div", null);
+				writer.writeAttribute("data-ajax-response", component.getClientId(ctx), null);
+				component.encodeAll(ctx);
+				writer.endElement("div"); 
+			} catch (IOException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
 
-        return VisitResult.REJECT;
-    }
+		return VisitResult.REJECT;
+	}
 }

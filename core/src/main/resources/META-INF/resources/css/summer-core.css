@@ -1,7 +1,7 @@
 .button, .checkbox, .radio, .select, .text, .textarea {
-    display: inline;
+	display: inline;
 }
 
 .stack-trace {
-    font-family: monospace;
+	font-family: monospace;
 }

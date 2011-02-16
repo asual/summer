@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,39 +39,39 @@ public class FacesStreamHandler extends URLStreamHandler {
 		this.resource = resource;
 	}
 	
-    protected URLConnection openConnection(final URL u) throws IOException {
-    	
-        return new URLConnection(u) {
-        	
-            public void connect() throws IOException {
-            }
-            
-            public InputStream getInputStream() throws IOException {
-            	if (bytes == null || (FacesContext.getCurrentInstance().isProjectStage(ProjectStage.Development) && lastModified < getLastModified())) {
-                    try {
-                        URLConnection urlc = resource.openConnection();
-                        InputStream in = urlc.getInputStream();
-                        try {
-                            bytes = FacesResourceProcessor.execute(u, in);
-                        } finally {
-                            in.close();
-                        }
-                    } catch (IOException e) {
-                        throw e;
-                    }
-                    lastModified = getLastModified();
-            	}
-            	
-                return new ByteArrayInputStream(bytes);
-            }
-            
-            public long getLastModified() {
-        		try {
-    				return resource.openConnection().getLastModified();
-    			} catch (IOException e) {
-    				return -1;
-    			}
-            }
-        };
-    }
+	protected URLConnection openConnection(final URL u) throws IOException {
+		
+		return new URLConnection(u) {
+			
+			public void connect() throws IOException {
+			}
+			
+			public InputStream getInputStream() throws IOException {
+				if (bytes == null || (FacesContext.getCurrentInstance().isProjectStage(ProjectStage.Development) && lastModified < getLastModified())) {
+					try {
+						URLConnection urlc = resource.openConnection();
+						InputStream in = urlc.getInputStream();
+						try {
+							bytes = FacesResourceProcessor.execute(u, in);
+						} finally {
+							in.close();
+						}
+					} catch (IOException e) {
+						throw e;
+					}
+					lastModified = getLastModified();
+				}
+				
+				return new ByteArrayInputStream(bytes);
+			}
+			
+			public long getLastModified() {
+				try {
+					return resource.openConnection().getLastModified();
+				} catch (IOException e) {
+					return -1;
+				}
+			}
+		};
+	}
 }

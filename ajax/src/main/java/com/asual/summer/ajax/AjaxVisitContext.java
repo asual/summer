@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,36 +32,36 @@ import com.sun.faces.component.visit.PartialVisitContext;
  *
  */
 public class AjaxVisitContext extends PartialVisitContext {
-    
-    private Collection<String> unvisitedClientIds;
-    
-    public AjaxVisitContext(Collection<String> clientIds, Set<VisitHint> hints) {
-        super(FacesContext.getCurrentInstance(), clientIds, hints);
-        unvisitedClientIds = new HashSet<String>(clientIds);
-    }
+	
+	private Collection<String> unvisitedClientIds;
+	
+	public AjaxVisitContext(Collection<String> clientIds, Set<VisitHint> hints) {
+		super(FacesContext.getCurrentInstance(), clientIds, hints);
+		unvisitedClientIds = new HashSet<String>(clientIds);
+	}
 
-    public VisitResult invokeVisitCallback(UIComponent component, 
-            VisitCallback callback) {
-        
-        String clientId = component.getClientId();
-        
-        if (!getIdsToVisit().contains(clientId)) {
-            clientId = null;
-            return VisitResult.ACCEPT;
-        }
-        
-        VisitResult result = callback.visit(this, component);
-        unvisitedClientIds.remove(clientId);
-        
-        if (unvisitedClientIds.isEmpty()) {
-            return VisitResult.COMPLETE;
-        }
-        
-        return result;
-    }
-    
-    public Collection<String> getSubtreeIdsToVisit(UIComponent component) {
-        return getIdsToVisit();     
-    }
+	public VisitResult invokeVisitCallback(UIComponent component, 
+			VisitCallback callback) {
+		
+		String clientId = component.getClientId();
+		
+		if (!getIdsToVisit().contains(clientId)) {
+			clientId = null;
+			return VisitResult.ACCEPT;
+		}
+		
+		VisitResult result = callback.visit(this, component);
+		unvisitedClientIds.remove(clientId);
+		
+		if (unvisitedClientIds.isEmpty()) {
+			return VisitResult.COMPLETE;
+		}
+		
+		return result;
+	}
+	
+	public Collection<String> getSubtreeIdsToVisit(UIComponent component) {
+		return getIdsToVisit();	 
+	}
 
 }

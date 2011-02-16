@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,27 +29,27 @@ import org.jboss.el.lang.EvaluationContext;
 @SuppressWarnings("rawtypes")
 public final class AstCompositeExpression extends SimpleNode {
 
-    public AstCompositeExpression(int id) {
-        super(id);
-    }
+	public AstCompositeExpression(int id) {
+		super(id);
+	}
 
-    public Class getType(EvaluationContext ctx)
-            throws ELException {
-        return String.class;
-    }
+	public Class getType(EvaluationContext ctx)
+			throws ELException {
+		return String.class;
+	}
 
-    public Object getValue(EvaluationContext ctx)
-            throws ELException {
-        StringBuffer sb = new StringBuffer(16);
-        Object obj = null;
-        if (this.children != null) {
-            for (int i = 0; i < this.children.length; i++) {
-                obj = this.children[i].getValue(ctx);
-                if (obj != null) {
-                    sb.append(obj);
-                }
-            }
-        }
-        return sb.toString();
-    }
+	public Object getValue(EvaluationContext ctx)
+			throws ELException {
+		StringBuffer sb = new StringBuffer(16);
+		Object obj = null;
+		if (this.children != null) {
+			for (int i = 0; i < this.children.length; i++) {
+				obj = this.children[i].getValue(ctx);
+				if (obj != null) {
+					sb.append(obj);
+				}
+			}
+		}
+		return sb.toString();
+	}
 }
