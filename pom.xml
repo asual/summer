@@ -1,266 +1,266 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project 
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="
-        http://maven.apache.org/POM/4.0.0 
-        http://maven.apache.org/maven-v4_0_0.xsd">
-        
-    <name>Summer Parent</name>
-    <artifactId>summer-parent</artifactId>
-    <groupId>com.asual.summer</groupId>
-    <url>http://www.asual.com/summer</url>
-    <packaging>pom</packaging>
-    <version>1.0.0.M2-SNAPSHOT</version>
-    <modelVersion>4.0.0</modelVersion>
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://maven.apache.org/POM/4.0.0 
+		http://maven.apache.org/maven-v4_0_0.xsd">
+		
+	<name>Summer Parent</name>
+	<artifactId>summer-parent</artifactId>
+	<groupId>com.asual.summer</groupId>
+	<url>http://www.asual.com/summer</url>
+	<packaging>pom</packaging>
+	<version>1.0.0.M2</version>
+	<modelVersion>4.0.0</modelVersion>
 
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    
-    <distributionManagement>
-        <repository>
-            <id>com.asual.repositories.releases</id>
-            <name>Asual Releases Repository</name>
-            <url>http://www.asual.com/maven/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>com.asual.repositories.snapshots</id>
-            <name>Asual Snapshots Repository</name>
-            <url>http://www.asual.com/maven/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<distributionManagement>
+		<repository>
+			<id>com.asual.repositories.releases</id>
+			<name>Asual Releases Repository</name>
+			<url>http://www.asual.com/maven/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>com.asual.repositories.snapshots</id>
+			<name>Asual Snapshots Repository</name>
+			<url>http://www.asual.com/maven/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
-    <properties>
-        <project.build.properties>build.properties</project.build.properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)</maven.build.timestamp.format>
-        <spring.version>3.0.5.RELEASE</spring.version>
-    </properties>
-    
-    <repositories>
-        <repository>
-            <id>org.springframework.maven.release</id>
-            <name>Spring Framework Repository</name>
-            <url>http://maven.springframework.org/release</url>
-        </repository>
-        <repository>
-            <id>net.java.download.maven</id>
-            <name>Java.net Repository</name>
-            <url>http://download.java.net/maven/2</url>
-        </repository>
-        <repository>
-            <id>org.glassfish.maven</id>
-            <name>GlassFish Repository</name>
-            <url>http://maven.glassfish.org/content/groups/glassfish</url>
-        </repository>
-        <repository>
-            <id>com.jboss.repository</id>
-            <name>JBoss Maven Repository</name>
-            <url>https://repository.jboss.org/nexus/content/repositories/public</url>
-        </repository>
-        <repository>
-            <id>org.codehaus.repository</id>
-            <name>Codehaus Repository</name>
-            <url>http://repository.codehaus.org</url>
-        </repository>
-        <repository>
-            <id>com.asual.repositories.public</id>
-            <name>Asual Public Repository</name>
-            <url>http://www.asual.com/maven/content/groups/public</url>
-        </repository>
-    </repositories>
+	<properties>
+		<project.build.properties>build.properties</project.build.properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)</maven.build.timestamp.format>
+		<spring.version>3.0.5.RELEASE</spring.version>
+	</properties>
+	
+	<repositories>
+		<repository>
+			<id>org.springframework.maven.release</id>
+			<name>Spring Framework Repository</name>
+			<url>http://maven.springframework.org/release</url>
+		</repository>
+		<repository>
+			<id>net.java.download.maven</id>
+			<name>Java.net Repository</name>
+			<url>http://download.java.net/maven/2</url>
+		</repository>
+		<repository>
+			<id>org.glassfish.maven</id>
+			<name>GlassFish Repository</name>
+			<url>http://maven.glassfish.org/content/groups/glassfish</url>
+		</repository>
+		<repository>
+			<id>com.jboss.repository</id>
+			<name>JBoss Maven Repository</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/public</url>
+		</repository>
+		<repository>
+			<id>org.codehaus.repository</id>
+			<name>Codehaus Repository</name>
+			<url>http://repository.codehaus.org</url>
+		</repository>
+		<repository>
+			<id>com.asual.repositories.public</id>
+			<name>Asual Public Repository</name>
+			<url>http://www.asual.com/maven/content/groups/public</url>
+		</repository>
+	</repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>net.java.download.glassfish</id>
-            <name>GlassFish Plugin Repository</name>
-            <url>http://download.java.net/maven/glassfish</url>
-        </pluginRepository>
-    </pluginRepositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>net.java.download.glassfish</id>
+			<name>GlassFish Plugin Repository</name>
+			<url>http://download.java.net/maven/glassfish</url>
+		</pluginRepository>
+	</pluginRepositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>3.0.20100224</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-    
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-eclipse-plugin</artifactId>
-                    <version>2.8</version>
-                    <configuration>
-                        <downloadSources>true</downloadSources>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
-                    <configuration>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-    
-    <profiles>
-        <profile>
-            <id>manifestEntries</id>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-jar-plugin</artifactId>
-                            <version>2.3.1</version>
-                            <configuration>
-                                <archive>
-                                    <manifestEntries>
-                                        <Build-Date>${maven.build.timestamp}</Build-Date>
-                                        <Build-Revision>${maven.build.revision}</Build-Revision>
-                                    </manifestEntries>
-                                </archive>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-war-plugin</artifactId>
-                            <version>2.1</version>
-                            <configuration>
-                                <archive>
-                                    <manifestEntries>
-                                        <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-                                        <Build-Revision>${maven.build.revision}</Build-Revision>
-                                    </manifestEntries>
-                                </archive>
-                            </configuration>
-                            <executions>
-                                <execution>
-                                    <phase>compile</phase>
-                                    <goals>
-                                        <goal>manifest</goal>
-                                    </goals>
-                                    <configuration>
-                                        <warSourceDirectory>${project.build.directory}/classes</warSourceDirectory>
-                                        <archive>
-                                            <manifestEntries>
-                                                <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-                                                <Build-Revision>${maven.build.revision}</Build-Revision>
-                                            </manifestEntries>
-                                        </archive>
-                                    </configuration>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <exec executable="${git.executable}" outputproperty="revision" dir="${basedir}">
-                                            <arg value="rev-parse" />
-                                            <arg value="HEAD" />
-                                        </exec>
-                                        <echo message="maven.build.revision=${revision}" 
-                                            file="${project.build.directory}/${project.build.properties}" />
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>properties-maven-plugin</artifactId>
-                        <version>1.0-alpha-2</version>
-                        <executions>
-                            <execution>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>read-project-properties</goal>
-                                </goals>
-                                <configuration>
-                                    <files>
-                                        <file>${project.build.directory}/${project.build.properties}</file>
-                                    </files>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>oneJar</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.asual.summer</groupId>
-                        <artifactId>summer-onejar</artifactId>
-                        <version>1.0.0.M2-SNAPSHOT</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>onejar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-    
-    <modules>
-        <module>ajax</module>
-        <module>archetype</module>
-        <module>atmosphere</module>
-        <module>core</module>
-        <module>el</module>
-        <module>jquery</module>
-        <module>json</module>
-        <module>sample</module>
-        <module>sample-scala</module>
-        <module>xml</module>
-    </modules>
-    
+	<dependencies>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>3.0.20100224</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>2.8</version>
+					<configuration>
+						<downloadSources>true</downloadSources>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<encoding>${project.build.sourceEncoding}</encoding>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
+	<profiles>
+		<profile>
+			<id>manifestEntries</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jar-plugin</artifactId>
+							<version>2.3.1</version>
+							<configuration>
+								<archive>
+									<manifestEntries>
+										<Build-Date>${maven.build.timestamp}</Build-Date>
+										<Build-Revision>${maven.build.revision}</Build-Revision>
+									</manifestEntries>
+								</archive>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-war-plugin</artifactId>
+							<version>2.1</version>
+							<configuration>
+								<archive>
+									<manifestEntries>
+										<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+										<Build-Revision>${maven.build.revision}</Build-Revision>
+									</manifestEntries>
+								</archive>
+							</configuration>
+							<executions>
+								<execution>
+									<phase>compile</phase>
+									<goals>
+										<goal>manifest</goal>
+									</goals>
+									<configuration>
+										<warSourceDirectory>${project.build.directory}/classes</warSourceDirectory>
+										<archive>
+											<manifestEntries>
+												<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+												<Build-Revision>${maven.build.revision}</Build-Revision>
+											</manifestEntries>
+										</archive>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<target>
+										<exec executable="${git.executable}" outputproperty="revision" dir="${basedir}">
+											<arg value="rev-parse" />
+											<arg value="HEAD" />
+										</exec>
+										<echo message="maven.build.revision=${revision}" 
+											file="${project.build.directory}/${project.build.properties}" />
+									</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>properties-maven-plugin</artifactId>
+						<version>1.0-alpha-2</version>
+						<executions>
+							<execution>
+								<phase>compile</phase>
+								<goals>
+									<goal>read-project-properties</goal>
+								</goals>
+								<configuration>
+									<files>
+										<file>${project.build.directory}/${project.build.properties}</file>
+									</files>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>oneJar</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.asual.summer</groupId>
+						<artifactId>summer-onejar</artifactId>
+						<version>1.0.0.M2</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>onejar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
+	<modules>
+		<module>ajax</module>
+		<module>archetype</module>
+		<module>atmosphere</module>
+		<module>core</module>
+		<module>el</module>
+		<module>jquery</module>
+		<module>json</module>
+		<module>sample</module>
+		<module>sample-scala</module>
+		<module>xml</module>
+	</modules>
+	
 </project>

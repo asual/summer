@@ -1,0 +1,7 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="page.title">${artifactId}</entry>
+	<entry key="page.welcome">Welcome to ${artifactId}!</entry>
+	
+</properties>

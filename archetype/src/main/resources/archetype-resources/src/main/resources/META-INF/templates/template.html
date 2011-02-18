@@ -1,13 +1,14 @@
-<ui:composition
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+<!DOCTYPE html>
+<html>
 	
 	<head>
+		<title>Default Template</title>
 		<link href="/css/${artifactId}.css" rel="stylesheet" />
 		<script src="/js/${artifactId}.js"></script>
 	</head>
 	
 	<body>
-		<ui:insert />
+		${template.body}
 	</body>
 	
-</ui:composition>
+</html>

@@ -19,7 +19,7 @@ You can create and run a blank Summer project by using the following commands:
     
 ## Specify the dependencies manually
 
-In order to use Summer you need the following records to your Maven 2 POM file:
+In order to use Summer you need the following records to your Maven 3 POM file:
 
     <repositories>
         <repository>
@@ -33,13 +33,13 @@ In order to use Summer you need the following records to your Maven 2 POM file:
         <dependency>
             <groupId>com.asual.summer</groupId>
             <artifactId>summer-core</artifactId>
-            <version>1.0.0.M1</version>
+            <version>1.0.0.M2</version>
         </dependency>
     </dependencies>
 
 ## Changes
     
-### 02/11/2011 - 1.0.0-SNAPSHOT
+### 02/18/2011 - 1.0.0.M2
 
 * New pure Scala sample.
 * Improved AJAX support.

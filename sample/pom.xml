@@ -14,39 +14,44 @@
 	<parent>
 		<groupId>com.asual.summer</groupId>
 		<artifactId>summer-parent</artifactId>
-		<version>1.0.0.M2-SNAPSHOT</version>
+		<version>1.0.0.M2</version>
 	</parent>
 	
 	<dependencies>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-core</artifactId>
-			<version>1.0.0.M2-SNAPSHOT</version>
+			<version>1.0.0.M2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-ajax</artifactId>
-			<version>1.0.0.M2-SNAPSHOT</version>
+			<version>1.0.0.M2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-atmosphere</artifactId>
-			<version>1.0.0.M2-SNAPSHOT</version>
+			<version>1.0.0.M2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-json</artifactId>
-			<version>1.0.0.M2-SNAPSHOT</version>
+			<version>1.0.0.M2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-xml</artifactId>
-			<version>1.0.0.M2-SNAPSHOT</version>
+			<version>1.0.0.M2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>

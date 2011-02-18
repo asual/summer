@@ -2,7 +2,7 @@
 <properties>
 
 	<entry key="page.heading">Summer Sample Application</entry>
-	<entry key="page.title">Sample Application Powered by Summer - The HTML5 Library for Java</entry>
+	<entry key="page.title">Sample Application Powered by Summer - The HTML5 Library for Java and Scala</entry>
 	<entry key="page.welcome">Welcome to the Summer Sample Application</entry>
 	<entry key="page.technology">Technologies</entry>
 	<entry key="page.technology.add">Add a Technology</entry>
