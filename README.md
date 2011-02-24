@@ -38,7 +38,16 @@ In order to use Summer you need the following records to your Maven 3 POM file:
     </dependencies>
 
 ## Changes
-    
+
+### 02/24/2011 - 1.0.0.M3-SNAPSHOT
+
+* New LessPack module for resource optimization and less.js support.
+* New OutPrint module for pretty HTML output.
+* New Beauty module for enahnced look and feel of form components.
+* New Bundle plugin for Servlet 2.5 compatibility.
+* New OneJar plugin for packaging applications as executable JAR files.
+* New AppEngine sample.
+
 ### 02/18/2011 - 1.0.0.M2
 
 * New pure Scala sample.
