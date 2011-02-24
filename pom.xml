@@ -11,7 +11,7 @@
 	<groupId>com.asual.summer</groupId>
 	<url>http://www.asual.com/summer</url>
 	<packaging>pom</packaging>
-	<version>1.0.0.M2</version>
+	<version>1.0.0.M3-SNAPSHOT</version>
 	<modelVersion>4.0.0</modelVersion>
 
 	<licenses>
@@ -136,6 +136,11 @@
 	<profiles>
 		<profile>
 			<id>manifestEntries</id>
+            <activation>
+				<property>
+					<name>git.executable</name>
+				</property>
+            </activation>
 			<build>
 				<pluginManagement>
 					<plugins>
@@ -155,7 +160,7 @@
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-war-plugin</artifactId>
-							<version>2.1</version>
+							<version>2.1.1</version>
 							<configuration>
 								<archive>
 									<manifestEntries>
@@ -182,6 +187,19 @@
 								</execution>
 							</executions>
 						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-antrun-plugin</artifactId>
+							<version>1.6</version>
+							<configuration>
+								<archive>
+									<manifestEntries>
+										<Build-Date>${maven.build.timestamp}</Build-Date>
+										<Build-Revision>${maven.build.revision}</Build-Revision>
+									</manifestEntries>
+								</archive>
+							</configuration>
+						</plugin>
 					</plugins>
 				</pluginManagement>
 				<plugins>
@@ -207,6 +225,19 @@
 								</configuration>
 							</execution>
 						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>ant-contrib</groupId>
+								<artifactId>ant-contrib</artifactId>
+								<version>1.0b3</version>
+								<exclusions>
+									<exclusion>
+										<groupId>ant</groupId>
+										<artifactId>ant</artifactId>
+									</exclusion>
+								</exclusions>
+							</dependency>
+						</dependencies>
 					</plugin>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
@@ -222,6 +253,7 @@
 									<files>
 										<file>${project.build.directory}/${project.build.properties}</file>
 									</files>
+									<quiet>true</quiet>
 								</configuration>
 							</execution>
 						</executions>
@@ -236,7 +268,6 @@
 					<plugin>
 						<groupId>com.asual.summer</groupId>
 						<artifactId>summer-onejar</artifactId>
-						<version>1.0.0.M2</version>
 						<executions>
 							<execution>
 								<goals>
@@ -251,16 +282,10 @@
 	</profiles>
 	
 	<modules>
-		<module>ajax</module>
-		<module>archetype</module>
-		<module>atmosphere</module>
-		<module>core</module>
-		<module>el</module>
-		<module>jquery</module>
-		<module>json</module>
-		<module>sample</module>
-		<module>sample-scala</module>
-		<module>xml</module>
+		<module>archetypes</module>
+		<module>modules</module>
+		<module>plugins</module>
+		<module>samples</module>
 	</modules>
 	
 </project>

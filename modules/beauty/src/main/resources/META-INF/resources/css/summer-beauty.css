@@ -1,0 +1,462 @@
+.text {
+	
+	.beauty,
+	.beauty .el {
+		background-image: url(../img/beauty.png);
+		background-repeat: no-repeat;
+	}
+	
+	.beauty {
+		background-position: 0 0;
+		line-height: 32px;
+		padding: 8px 0 8px 10px;
+	}
+	
+	.beauty input {
+		margin: 6px;
+		padding: 2px 3px 1px;
+		border: 0;
+		height: 17px;
+		background: none;
+	}
+	
+	.beauty input:focus {
+		outline: none;
+	}
+
+	.beauty .el {
+		position: absolute;
+		top: 0;
+		left: 10px;
+		white-space: nowrap;
+		background-position: 100% 0;
+		text-shadow: #fff 0px 1px 0px;
+		padding: 8px 0;
+		height: 16px;
+		line-height: 16px;
+	}
+	
+	.beauty-focus {
+		background-position: 0 -32px;
+	}
+		
+	.beauty-focus .el {
+		background-position: 100% -32px;
+	}
+		
+	.beauty-disabled {
+		background-position: 0 -384px;
+		color: #999;
+	}
+	
+	.beauty-disabled .el {
+		background-position: 100% -384px;
+	}
+}
+
+.checkbox {
+
+	label {
+		padding: 0 2px;
+	}
+	
+	.beauty {
+		padding: 4px 0 4px 23px;
+		line-height: 23px;
+		
+	}
+	
+	.beauty input {
+		width: 15px;
+		height: 15px;
+		margin: 4px;
+		padding: 0;
+		border: 0;
+	}
+	
+	.beauty .el {
+		background-image: url(../img/beauty.png);
+		background-repeat: no-repeat;
+		background-position: 0 -832px;
+		position: absolute;
+		width: 23px;
+		height: 23px;
+		top: 0;
+		left: 0;
+	}
+	
+	.beauty-active .el {
+		background-position: 0 -928px;
+	}
+	
+	.beauty-focus .el {
+		background-position: 0 -864px;
+	}
+	
+	.beauty-active.beauty-focus .el {
+		background-position: 0 -928px;
+	}
+	
+	.beauty .beauty-checked {
+		background-position: -32px -832px;
+	}
+	
+	.beauty-active .beauty-checked {
+		background-position: -32px -928px;
+	}
+	
+	.beauty-focus .beauty-checked {
+		background-position: -32px -864px;
+	}
+	
+	.beauty-active.beauty-focus .beauty-checked {
+		background-position: -32px -928px;
+	}
+	
+	.beauty-disabled .el,
+	.beauty-disabled.beauty-active .el {
+		background-position: 0 -960px;
+	}
+	
+	.beauty-disabled .beauty-checked,
+	.beauty-disabled.beauty-active .beauty-checked {
+		background-position: -32px -960px;
+	}
+}
+
+.radio {
+	
+	label {
+		padding: 0 2px;
+	}
+		   
+	.beauty {
+		padding: 4px 0 4px 23px;
+		line-height: 23px;
+		
+	}
+	
+	.beauty input {
+		width: 15px;
+		height: 15px;
+		margin: 4px;
+		padding: 0;
+		border: 0;
+	}
+
+	.beauty .el {
+		background-image: url(../img/beauty.png);
+		background-repeat: no-repeat;
+		background-position: -64px -832px;
+		position: absolute;
+		width: 23px;
+		height: 23px;
+		top: 0;
+		left: 0;
+	}
+
+	.beauty-active .el {
+		background-position: -64px -928px;
+	}
+	
+	.beauty-focus .el {
+		background-position: -64px -864px;
+	}
+	
+	.beauty-active.beauty-focus .el {
+		background-position: -64px -928px;
+	}
+	
+	.beauty .beauty-checked {
+		background-position: -96px -832px;
+	}
+	
+	.beauty-active .beauty-checked {
+		background-position: -96px -928px;
+	}
+	
+	.beauty-focus .beauty-checked {
+		background-position: -96px -864px;
+	}
+	
+	.beauty-active.beauty-focus .beauty-checked {
+		background-position: -96px -928px;
+	}
+	
+	.beauty-disabled .el,
+	.beauty-disabled.beauty-active .el {
+		background-position: -64px -960px;
+	}
+	
+	.beauty-disabled .beauty-checked,
+	.beauty-disabled.beauty-active .beauty-checked {
+		background-position: -96px -960px;
+	}
+}
+
+.file {
+	
+	.beauty,
+	.beauty .el {
+		background-image: url(../img/beauty.png);
+		background-repeat: no-repeat;
+	}
+	
+	.beauty {
+		background-position: 0 -992px;
+		line-height: 32px;
+		padding: 8px 0 8px 12px;
+	}
+	
+	.beauty input {
+		margin: 4px;
+		border: 0;
+		height: 24px;
+	}
+	
+	.beauty .el {
+		position: absolute;
+		top: 0;
+		left: 12px;
+		white-space: nowrap;
+		background-position: 100% -992px;
+		text-shadow: #fff 0px 1px 0px;
+		padding: 8px 4px;
+		height: 16px;
+		line-height: 16px;
+	}
+	
+	.beauty .value {
+		position: absolute;
+		padding: 0 8px;
+		top: 0;
+		white-space: nowrap;
+	}
+	
+	.beauty-focus {
+		background-position: 0 -1024px;
+	}
+		
+	.beauty-focus .el {
+		background-position: 100% -1024px;
+	}
+	
+	.beauty-active {
+		background-position: 0 -1056px;
+	}
+	
+	.beauty-active .el {
+		background-position: 100% -1056px;
+	}
+	
+	.beauty-active.beauty-focus {
+		background-position: 0 -1088px;
+	}
+	
+	.beauty-active.beauty-focus .el {
+		background-position: 100% -1088px;
+	}
+}
+
+.textarea {
+	
+	.beauty,
+	.beauty .el,
+	.beauty .el-bl,
+	.beauty .el-br {
+		background-image: url(../img/beauty.png);
+		background-repeat: no-repeat;
+	}
+	
+	.beauty {
+		background-position: 0  -96px;
+		line-height: 32px;
+		margin: 0;
+		padding: 0 0 0 10px;
+	}
+	
+	.beauty textarea {
+		margin: 6px;
+		padding: 2px 3px 1px;
+		border: 0;
+		background: none;
+		resize: none;
+	}
+	
+	.beauty textarea:focus {
+		outline: none;
+	}
+
+	.beauty .el {
+		position: absolute;
+		top: 0;
+		left: 10px;
+		white-space: nowrap;
+		background-position: 100% -96px;
+	}
+	
+	.beauty .el-bl {
+		position: absolute;
+		left: 0px;
+		white-space: nowrap;
+		background-position: 0 -256px;
+		padding: 32px 0 0 10px;
+	}
+	
+	.beauty .el-br {
+		position: absolute;
+		left: 10px;
+		white-space: nowrap;
+		background-position: 100% -256px;
+		padding: 32px 0  0;
+	}
+	
+	.beauty-focus {
+		background-position: 0 -288px;
+	}
+		
+	.beauty-focus .el {
+		background-position: 100% -288px;
+	}
+	
+	.beauty-focus .el-bl {
+		background-position: 0 -448px;
+	}
+	
+	.beauty-focus .el-br {
+		background-position: 100% -448px;
+	}
+
+	.beauty-disabled {
+		background-position: 0 -384px;
+		color: #999;
+	}
+	
+	.beauty-disabled .el {
+		background-position: 100% -384px;
+	}
+}
+
+.select {
+	
+	.beauty,
+	.beauty .el {
+		background-image: url(../img/beauty.png);
+		background-repeat: no-repeat;
+	}
+	
+	.beauty {
+		background-position: 0 -672px;
+		line-height: 32px;
+		padding: 8px 0 8px 10px;
+	}
+	
+	.beauty select {
+		margin: 4px;
+		padding: 0;
+		border: 0;
+		height: 24px;
+	}
+	
+	.beauty .el {
+		position: absolute;
+		top: 0;
+		left: 10px;
+		white-space: nowrap;
+		background-position: 100% -672px;
+		text-shadow: #fff 0px 1px 0px;
+		padding: 8px 0;
+		height: 16px;
+		line-height: 16px;
+	}
+	
+	.beauty-focus {
+		background-position: 0 -704px;
+	}
+		
+	.beauty-focus .el {
+		background-position: 100% -704px;
+	}
+		
+	.beauty-disabled {
+		background-position: 0 -800px;
+		color: #999;
+	}
+	
+	.beauty-disabled .el {
+		background-position: 100% -800px;
+	}
+}
+
+.button {
+	
+	.beauty,
+	.beauty .el {
+		background-image: url(../img/beauty.png);
+		background-repeat: no-repeat;
+	}
+	
+	.beauty {
+		background-position: 0 -992px;
+		line-height: 32px;
+		padding: 8px 0 8px 12px;
+	}
+	
+	.beauty button {
+		margin: 4px;
+		padding: 0 8px;
+		border: 0;
+		height: 24px;
+	}
+	
+	.beauty .el {
+		position: absolute;
+		top: 0;
+		left: 12px;
+		white-space: nowrap;
+		background-position: 100% -992px;
+		text-shadow: #fff 0px 1px 0px;
+		padding: 8px 0;
+		height: 16px;
+		line-height: 16px;
+	}
+	
+	.beauty-focus {
+		background-position: 0 -1024px;
+	}
+		
+	.beauty-focus .el {
+		background-position: 100% -1024px;
+	}
+	
+	.beauty-active {
+		background-position: 0 -1056px;
+	}
+	
+	.beauty-active .el {
+		background-position: 100% -1056px;
+	}
+	
+	.beauty-active.beauty-focus {
+		background-position: 0 -1088px;
+	}
+	
+	.beauty-active.beauty-focus .el {
+		background-position: 100% -1088px;
+	}
+}
+
+html[data-client='mozilla'] {
+	.text .beauty input,
+	.textarea .beauty textarea {
+		padding-top: 1px;
+	}
+	.checkbox .beauty,
+	.radio .beauty {
+		padding-top: 3px;
+	}
+	.select .beauty .el {
+		padding-top: 7px;
+		padding-bottom: 9px;
+	}
+}

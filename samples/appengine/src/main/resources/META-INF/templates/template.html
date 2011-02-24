@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<title>Default Template</title>
+		<link href="/css/summer-sample.css" rel="stylesheet" />
+		<script src="/js/summer-sample.js" data-pack="summer"></script>
+	</head>
+	
+	<body>
+		<header>
+			<p><a href="/">${messages.page.heading}</a></p>
+		</header>
+		<section>
+			${template.body}
+		</section>
+		<footer>
+			<p class="copyright">&copy; 2010-2011 Asual DZZD</p>
+			<p class="build" data-rendered="${not empty resourceUtils.getManifestAttribute('Build-Timestamp')}">
+				Build Timestamp: ${resourceUtils.getManifestAttribute('Build-Timestamp')}<br />
+				Build Revision: ${resourceUtils.getManifestAttribute('Build-Revision')}
+			</p>
+			<p><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine" /></p>
+		</footer>
+	</body>
+		
+</html>

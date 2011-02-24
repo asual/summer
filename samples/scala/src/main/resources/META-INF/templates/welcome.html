@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Welcome Template</title>
+        <link href="/css/summer-sample.css" rel="stylesheet" />
+        <script src="/js/summer-sample.js"></script>
+    </head>
+    
+    <body>
+        <section class="welcome">
+            ${template.body}
+        </section>
+        <footer>
+			<p class="clock">WebSocket Clock: <span data-websocket="clock">subscribing...</span></p>
+			<p class="copyright">&copy; 2010-2011 Asual DZZD</p>
+			<p class="build" data-rendered="${not empty resourceUtils.getManifestAttribute('Build-Timestamp')}">
+				Build Timestamp: ${resourceUtils.getManifestAttribute('Build-Timestamp')}<br />
+				Build Revision: ${resourceUtils.getManifestAttribute('Build-Revision')}
+			</p>
+        </footer>
+    </body>
+    
+</html>

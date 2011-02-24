@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project 
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://maven.apache.org/POM/4.0.0 
+		http://maven.apache.org/maven-v4_0_0.xsd">
+		
+	<name>Summer Modules</name>
+	<artifactId>summer-modules</artifactId>
+	<packaging>pom</packaging>
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>com.asual.summer</groupId>
+		<artifactId>summer-parent</artifactId>
+		<version>1.0.0.M3-SNAPSHOT</version>
+	</parent>
+	
+	<modules>
+		<module>ajax</module>
+		<module>atmosphere</module>
+		<module>beauty</module>
+		<module>core</module>
+		<module>el</module>
+		<module>jquery</module>
+		<module>json</module>
+		<module>lesspack</module>
+		<module>outprint</module>
+		<module>xml</module>
+	</modules>
+	
+</project>
