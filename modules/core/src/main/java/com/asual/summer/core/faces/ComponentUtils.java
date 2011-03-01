@@ -190,7 +190,11 @@ public class ComponentUtils {
 	}
 	
 	static String getComponentTag(UIComponent component) {
-		return (String) ComponentUtils.getConfig((Component) component, "componentTag");
+		if (component instanceof RepeatComponent) {
+			return (String) component.getAttributes().get(FacesDecorator.QNAME);
+		} else {
+			return (String) ComponentUtils.getConfig((Component) component, "componentTag");
+		}
 	}
 	
 	static boolean isComponentWrapper(UIComponent component) {

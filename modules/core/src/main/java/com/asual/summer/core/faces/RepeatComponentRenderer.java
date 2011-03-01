@@ -38,7 +38,7 @@ public class RepeatComponentRenderer extends Renderer {
 	
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		
-		String componentTag = (String) component.getAttributes().get(FacesDecorator.QNAME);
+		String componentTag = ComponentUtils.getComponentTag(component);
 		RepeatComponent repeatComponent = ((RepeatComponent) component);
 		ResponseWriter writer = context.getResponseWriter();
 		
@@ -66,14 +66,14 @@ public class RepeatComponentRenderer extends Renderer {
 			}
 			
 			Object value = repeatComponent.getValue();
-			if (value != null && ObjectUtils.size(value) == 0 && repeatComponent.getEmpty() != null) {
+			if ((value == null || ObjectUtils.size(value) == 0) && repeatComponent.getDataEmpty() != null) {
 				if (componentTag.matches("tbody")) {
 					writer.startElement("tr", repeatComponent);
 				}
 				if (componentTag.matches("tbody|tr")) {
 					writer.startElement("td", repeatComponent);
 				}
-				writer.write(repeatComponent.getEmpty());
+				writer.write(repeatComponent.getDataEmpty());
 				if (componentTag.matches("tbody|tr")) {
 					writer.endElement("td");
 				}
@@ -101,7 +101,7 @@ public class RepeatComponentRenderer extends Renderer {
 	}
 
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
-		String componentTag = (String) component.getAttributes().get(FacesDecorator.QNAME);
+		String componentTag = ComponentUtils.getComponentTag(component);
 		if (componentTag != null) {
 			ResponseWriter writer = context.getResponseWriter();
 			writer.endElement(componentTag);
