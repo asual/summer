@@ -85,6 +85,8 @@
 						url = o.attr('data-ajax-url');
 					}
 					
+					url = url.replace(/(^|&)_ajax=[^&]*(&|$)/, '');
+					
 					if (disabled != 'true') {
 						$.ajax({
 							url: url,
