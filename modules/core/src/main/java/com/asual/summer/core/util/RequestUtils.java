@@ -269,7 +269,12 @@ public class RequestUtils implements ApplicationContextAware {
 		
 		public UrlBuilder addParameter(String name, Object value) {
 			if (value != null) {
-				List<String> values = new ArrayList<String>();
+				List<String> values;
+				if (parameters.containsKey(name)) {
+					values = parameters.get(name);
+				} else {
+					values = new ArrayList<String>();
+				}
 				if (value instanceof String) {
 					values.add((String) value);
 				} else if (value.getClass().isArray()) {
@@ -284,9 +289,27 @@ public class RequestUtils implements ApplicationContextAware {
 					values.add(String.valueOf(value));
 				}
 				parameters.put(name, values);
-				return this;
 			}
-			removeParameter(name);
+			return this;
+		}
+		
+		public UrlBuilder setParameter(String parameter) {
+			if (!StringUtils.isEmpty(parameter)) {
+				String[] pair = parameter.split(NAME_VALUE_SEPARATOR);
+				if (pair.length > 0) {
+					setParameter(pair[0], pair.length > 1 ? StringUtils.decode(pair[1]) : null);
+				}
+			}
+			return this;
+		}
+		
+		public UrlBuilder setParameter(String name, Object value) {
+			if (value != null) {
+				parameters.put(name, new ArrayList<String>());
+				addParameter(name, value);
+			} else {
+				removeParameter(name);
+			}
 			return this;
 		}
 		
@@ -305,6 +328,17 @@ public class RequestUtils implements ApplicationContextAware {
 			return this;
 		}
 		
+		@SuppressWarnings("unused")
+		public UrlBuilder setParameters(String parameters) {
+			if (!StringUtils.isEmpty(parameters)) {
+				String[] params = parameters.replaceAll("&amp;", PARAMETER_SEPARATOR).split(PARAMETER_SEPARATOR);
+				for (String param : params) {
+					setParameter(param);
+				}
+			}
+			return this;
+		}
+		
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 			if (!StringUtils.isEmpty(extension)) {
@@ -318,10 +352,15 @@ public class RequestUtils implements ApplicationContextAware {
 			}
 			for (String key : parameters.keySet()) {
 				sb.append(sb.toString().contains(QUERY_STRING_SEPARATOR) ? PARAMETER_SEPARATOR : QUERY_STRING_SEPARATOR);
+				int count = 0;
 				for (String v : parameters.get(key)) {
+					if (count != 0) {
+						sb.append(PARAMETER_SEPARATOR);
+					}
 					sb.append(key);
 					sb.append(NAME_VALUE_SEPARATOR);
 					sb.append(StringUtils.encode(v));
+					count++;
 				}
 			}
 			return sb.toString();
