@@ -48,10 +48,11 @@ public class RooCommands implements CommandMarker { // All command types must im
 	 * @param context the component context can be used to get access to the OSGi container (ie find out if certain bundles are active)
 	 */
 	protected void activate(ComponentContext context) {
-		FieldConverter.add(RooPropertyName.class);
+		staticFieldConverter.add(RooPropertyName.class);
 	}
-	*
-	The deactivate method for this OSGi component, this will be called by the OSGi container upon bundle deactivation 
+	
+	/**
+	 * The deactivate method for this OSGi component, this will be called by the OSGi container upon bundle deactivation 
 	 * (result of the 'addon remove' command) 
 	 * 
 	 * @param context the component context can be used to get access to the OSGi container (ie find out if certain bundles are active)

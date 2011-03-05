@@ -219,9 +219,10 @@ public class Technology implements Serializable {
 	public void setImage(Image image) {
 		if (image != null) {
 			try {
-				Factory = CacheManager.getInstance().getCacheFactory();
-				Cache 			eFacto			he(Collections.emptyMap());
-				cache.put(valu					} catch (Cach			) {
+				CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
+				Cache cache = cacheFactory.createCache(Collections.emptyMap());
+				cache.put(value, image);
+			} catch (CacheException e) {
 				logger.error(e.getMessage(), e);
 			}
 		} else if (value != null) {
@@ -301,11 +302,11 @@ public class Technology implements Serializable {
 	public static Image findImage(String value) {
 		if (value != null) {
 			try {
-				CacheFactory cacheFactory		Manager.getInstance().get		tory();
-				Cache cache = cacheFactory.cre			lections.emptyMap());
-				retu			ache.get(value);
-			} 			Exception e) {
-				logger.error(e.getMe			
+				CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
+				Cache cache = cacheFactory.createCache(Collections.emptyMap());
+				return (Image) cache.get(value);
+			} catch (CacheException e) {
+				logger.error(e.getMessage(), e);
 			}
 		}
 		return null;
