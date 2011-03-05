@@ -13,6 +13,10 @@
 	<packaging>pom</packaging>
 	<version>1.0.0.M3-SNAPSHOT</version>
 	<modelVersion>4.0.0</modelVersion>
+	
+    <organization>
+        <name>Asual DZZD</name>
+    </organization>
 
 	<licenses>
 		<license>
