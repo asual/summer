@@ -1,96 +1,96 @@
 html {
-    height: 100%;
-    background: #f5f8fb url(../img/bg.jpg) repeat-x fixed bottom;
+	height: 100%;
+	background: #f5f8fb url(../img/bg.jpg) repeat-x fixed bottom;
 }
 
 body, button, input, select, textarea {
-    font: 14px 'Helvetica Neue', Arial, sans-serif;
+	font: 14px 'Helvetica Neue', Arial, sans-serif;
 }
 
 body, header, footer, section, p {
-    display: block;
-    margin: 0;
-    padding: 0;
+	display: block;
+	margin: 0;
+	padding: 0;
 }
 
 h1 {
-    font-weight: normal;
-    text-shadow: #fff 0px 1px 0px;
-    font-size: 32px;
-    margin: 40px 0 12px;
+	font-weight: normal;
+	text-shadow: #fff 0px 1px 0px;
+	font-size: 32px;
+	margin: 40px 0 12px;
 }
 
 h2 {
-    font-weight: normal;
-    text-shadow: #fff 0px 1px 0px;
-    font-size: 18px;
+	font-weight: normal;
+	text-shadow: #fff 0px 1px 0px;
+	font-size: 18px;
 }
 
 a {
-    color: #13539f;
+	color: #13539f;
 }
 
 a:hover {
-    color: #333;
+	color: #333;
 }
 
 header, footer, section {
-    width: 892px;
+	width: 892px;
 }
 
 header {
-    font-weight: normal;
-    font-size: 18px;
-    text-shadow: #fff 0px 1px 0px;
-    margin: 0 auto 20px;
-    padding: 30px 0 10px;
-    border-bottom: 1px solid #ccc;
-    box-shadow: 0 1px 0 #fff;
-    -moz-box-shadow: 0 1px 0 #fff;
-    -webkit-box-shadow: 0 1px 0 #fff;
+	font-weight: normal;
+	font-size: 18px;
+	text-shadow: #fff 0px 1px 0px;
+	margin: 0 auto 20px;
+	padding: 30px 0 10px;
+	border-bottom: 1px solid #ccc;
+	box-shadow: 0 1px 0 #fff;
+	-moz-box-shadow: 0 1px 0 #fff;
+	-webkit-box-shadow: 0 1px 0 #fff;
 }
 
 header a {
-    color: #000;
-    text-decoration: none;
+	color: #000;
+	text-decoration: none;
 }
 
 footer {
-    margin: 0 auto;
-    padding: 20px 0 40px;
-    font-size: 11px;
-    line-height: 15px;
+	margin: 0 auto;
+	padding: 20px 0 40px;
+	font-size: 11px;
+	line-height: 15px;
 }
 
 section {
-    margin: 0 auto 40px;
+	margin: 0 auto 40px;
 }
 
 section p, section ul {
-    line-height: 20px;
-    margin: 0 0 20px;
+	line-height: 20px;
+	margin: 0 0 20px;
 }
 
 fieldset {
-    margin: 0 0 15px;
-    padding: 15px 20px 10px;
-    border: 1px solid #999;
+	margin: 0 0 15px;
+	padding: 15px 20px 10px;
+	border: 1px solid #999;
 }
 
 fieldset legend {
-    font-weight: bold;
-    font-size: 14px;
-    margin: 0 0 0 -5px;
-    padding: 0 4px;
-    color: #666;
+	font-weight: bold;
+	font-size: 14px;
+	margin: 0 0 0 -5px;
+	padding: 0 4px;
+	color: #666;
 }
 
 fieldset img {
-    margin: 0 0 10px;
+	margin: 0 0 10px;
 }
 
 form div {
-    margin: 0 0 10px;
+	margin: 0 0 10px;
 }
 
 form button {
@@ -98,116 +98,116 @@ form button {
 }
 
 table {
-    width: 100%;
-    margin: 0 0 20px;
-    border-collapse: collapse;
-    border-spacing: 0;
-    border: 0 none;
+	width: 100%;
+	margin: 0 0 20px;
+	border-collapse: collapse;
+	border-spacing: 0;
+	border: 0 none;
 }
 
 th {
-    text-align: left;
-    font-weight: normal;
-    padding: 3px 5px;
-    border-right: 5px solid #f5f8fb;
-    border-bottom: 1px solid #ccc;
-    box-shadow: 0 1px 0 #fff;
-    -moz-box-shadow: 0 1px 0 #fff;
-    -webkit-box-shadow: 0 1px 0 #fff;
+	text-align: left;
+	font-weight: normal;
+	padding: 3px 5px;
+	border-right: 5px solid #f5f8fb;
+	border-bottom: 1px solid #ccc;
+	box-shadow: 0 1px 0 #fff;
+	-moz-box-shadow: 0 1px 0 #fff;
+	-webkit-box-shadow: 0 1px 0 #fff;
 }
 
 td {
-    padding: 5px;
+	padding: 5px;
 }
 
 table .even {
-    background: #dde5f0;
+	background: #dde5f0;
 }
 
 .welcome h1 {
-    font-weight: normal;
-    text-shadow: #fff 0px 1px 0px;
-    font-size: 40px;
-    margin: 60px 0 40px;
+	font-weight: normal;
+	text-shadow: #fff 0px 1px 0px;
+	font-size: 40px;
+	margin: 60px 0 40px;
 }
 
 .views {
-    font-size: 12px;
-    margin: 0 0 20px;
+	font-size: 12px;
+	margin: 0 0 20px;
 }
 
 .views span {
-    margin: 0 20px 0 0;
+	margin: 0 20px 0 0;
 }
 
 .list {
-    margin: 0 0 20px;
+	margin: 0 0 20px;
 }
 
 .list h2 {
-    margin: 0 0 2px;
+	margin: 0 0 2px;
 }
 
 .list div {
-    margin: 0 0 20px;
+	margin: 0 0 20px;
 }
 
 .list .details {
-    font-size: 12px;
-    margin: 0 0 4px;
+	font-size: 12px;
+	margin: 0 0 4px;
 }
 
 .list .details span {
-    color: #666;
-    padding: 0 4px 0 0;
+	color: #666;
+	padding: 0 4px 0 0;
 }
 
 .view {
-    margin: 0 0 40px;
+	margin: 0 0 40px;
 }
 
 .view p {
-    margin: 0 0 20px;
+	margin: 0 0 20px;
 }
 
 .view .image {
-    float: left; 
-    margin: 4px 24px 84px 0;
+	float: left; 
+	margin: 4px 24px 84px 0;
 }
 
 .button, .checkbox, .file, .select, .text, .textarea {
-    display: block;
+	display: block;
 }
 
 .file label, .select label, .text label, .textarea label {
-    display: block;
-    padding: 2px;
+	display: block;
+	padding: 2px;
 }
 
 .add, .edit {
-    clear: both;
+	clear: both;
 }
 
 .clock {
-    margin: 0 0 20px;
-    font-size: 14px;
+	margin: 0 0 20px;
+	font-size: 14px;
 }
 
 .copyright {
-    margin: 0 0 10px;
+	margin: 0 0 10px;
 }
 
 .build {
-    color: #666;
+	color: #666;
 }
 
 .error {
-    color: #cc0000;
-    line-height: 24px;
-    padding: 4px;
-    vertical-align: top;
+	color: #cc0000;
+	line-height: 24px;
+	padding: 4px;
+	vertical-align: top;
 }
 
 .error * {
-    vertical-align: top;
+	vertical-align: top;
 }
