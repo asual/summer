@@ -47,6 +47,7 @@ import org.apache.maven.project.MavenProjectHelper;
  * @author Rostislav Hristov
  *
  */
+@SuppressWarnings("deprecation")
 public class OneJarMojo extends AbstractMojo {	
 	
 	/**
@@ -138,7 +139,6 @@ public class OneJarMojo extends AbstractMojo {
 					artifact.updateVersion(artifact.getVersion(), localRepository);
 					putEntry(out, new FileInputStream(artifact.getFile()), new ZipEntry(JAR_CLASSPATH + artifact.getFile().getName()));
 					MavenProject project = mavenProjectBuilder.buildFromRepository(artifact, remoteArtifactRepositories, localRepository);
-					@SuppressWarnings("unchecked")
 					List<Dependency> dependencies = project.getDependencies();
 					for (Dependency dependency : dependencies) {
 						if (!"provided".equals(dependency.getScope())) {
