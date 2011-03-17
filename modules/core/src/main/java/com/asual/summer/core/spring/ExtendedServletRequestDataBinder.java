@@ -33,7 +33,7 @@ public class ExtendedServletRequestDataBinder extends ServletRequestDataBinder {
 	
 	public BindingResult getBindingResult() {
 		BindingResult result = super.getInternalBindingResult();
-		if (RequestUtils.isValidation() && !result.hasErrors()) {
+		if ((RequestUtils.getRequest() != null && RequestUtils.isValidation()) && !result.hasErrors()) {
 			result.addError(new ObjectError("validation", "success"));
 		}
 		return result;
