@@ -14,8 +14,6 @@
 
 package com.asual.summer.core.resource;
 
-import java.util.Arrays;
-
 import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
 
@@ -27,20 +25,7 @@ import org.springframework.core.PriorityOrdered;
 public abstract class AbstractResource implements PriorityOrdered {
 
 	private int order = Ordered.LOWEST_PRECEDENCE;
-	private String[] locations;
-	
-	public void setLocation(String location) {
-		setLocations(new String[] {location});
-	}
-	
-	public String[] getLocations() {
-		return locations;
-	}
 
-	public void setLocations(String[] locations) {
-		this.locations = locations;
-	}
-	
 	public int getOrder() {
 		return order;
 	}
@@ -48,12 +33,11 @@ public abstract class AbstractResource implements PriorityOrdered {
 	public void setOrder(int order) {
 		this.order = order;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(locations);
 		result = prime * result + order;
 		return result;
 	}
@@ -67,8 +51,6 @@ public abstract class AbstractResource implements PriorityOrdered {
 		if (getClass() != obj.getClass())
 			return false;
 		AbstractResource other = (AbstractResource) obj;
-		if (!Arrays.equals(locations, other.locations))
-			return false;
 		if (order != other.order)
 			return false;
 		return true;

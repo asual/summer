@@ -47,10 +47,10 @@ public class ResourceUtils {
 	
 	private static Map<String, String> attributes = new HashMap<String, String>();
 	
-	private static List<MessageResource> messageResources = null;
-	private static List<PropertyResource> propertyResources = null;
-	private static List<StylesheetResource> stylesheetResources = null;
-	private static List<ScriptResource> scriptResources = null;
+	private static List<MessageResource> messages = null;
+	private static List<PropertyResource> properties = null;
+	private static List<StylesheetResource> stylesheets = null;
+	private static List<ScriptResource> scripts = null;
 	
 	public static String getMessage(String key) {
 		return getMessage(key, new Object[] {}, LocaleContextHolder.getLocale());
@@ -66,11 +66,11 @@ public class ResourceUtils {
 	
 	public static String getMessage(String key, Object[] args, Locale locale) {
 	
-		if (messageResources == null) {
-			messageResources = getResources(MessageResource.class);
+		if (messages == null) {
+			messages = getResources(MessageResource.class);
 		}
 		
-		for (MessageResource bean : messageResources) {
+		for (MessageResource bean : messages) {
 			try {
 				return bean.getMessage(key, args, locale);
 			} catch (NoSuchMessageException e) {
@@ -82,13 +82,13 @@ public class ResourceUtils {
 
 	public static Object getProperty(String key) {
 		
-		if (propertyResources == null) {
-			propertyResources = getResources(PropertyResource.class);
+		if (properties == null) {
+			properties = getResources(PropertyResource.class);
 		}
 		
 		Object property = null;
 
-		for (PropertyResource bean : propertyResources) {
+		for (PropertyResource bean : properties) {
 			property = bean.getProperty(key);
 			if (property != null) {
 				break;
@@ -107,17 +107,17 @@ public class ResourceUtils {
 	}
 	
 	public static List<ScriptResource> getScripts() {
-		if (scriptResources == null) {
-			scriptResources = getResources(ScriptResource.class);
+		if (scripts == null) {
+			scripts = getResources(ScriptResource.class);
 		}
-		return scriptResources;
+		return scripts;
 	}
 
 	public static List<StylesheetResource> getStylesheets() {
-		if (stylesheetResources == null) {
-			stylesheetResources = getResources(StylesheetResource.class);
+		if (stylesheets == null) {
+			stylesheets = getResources(StylesheetResource.class);
 		}
-		return stylesheetResources;
+		return stylesheets;
 	}
 	
 	public static String getManifestAttribute(String key) {

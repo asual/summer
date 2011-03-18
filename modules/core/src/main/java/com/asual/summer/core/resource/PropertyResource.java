@@ -37,7 +37,7 @@ import org.springframework.util.ResourceUtils;
  * @author Rostislav Georgiev
  *
  */
-public class PropertyResource extends AbstractResource implements BeanFactoryPostProcessor {
+public class PropertyResource extends LocationResource implements BeanFactoryPostProcessor {
 
 	private ExtendedPropertyPlaceholderConfigurer eppc;
 	private final Log logger = LogFactory.getLog(getClass());

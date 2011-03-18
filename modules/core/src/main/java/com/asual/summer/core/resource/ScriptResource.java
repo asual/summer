@@ -19,7 +19,7 @@ package com.asual.summer.core.resource;
  * @author Rostislav Hristov
  *
  */
-public class ScriptResource extends AbstractResource {
+public class ScriptResource extends LocationResource {
 	
 	private String pack;
 

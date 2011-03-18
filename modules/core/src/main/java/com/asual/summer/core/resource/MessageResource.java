@@ -35,7 +35,7 @@ import org.springframework.util.ResourceUtils;
  * @author Rostislav Georgiev
  *
  */
-public class MessageResource extends AbstractResource {
+public class MessageResource extends LocationResource {
 
 	private ReloadableResourceBundleMessageSource rbms;
 	private final Log logger = LogFactory.getLog(getClass());
