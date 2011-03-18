@@ -288,7 +288,7 @@ public class ComponentUtils {
 	}
 	
 	static String getExprId(String expr) {
-		List<String> values = Arrays.asList(expr.replaceAll("^(\\$|#)\\{|\\}$", "").split("\\."));
+		List<String> values = Arrays.asList(expr.trim().replaceAll("^(\\$|#)\\{|\\}$", "").split("\\."));
 		if (values.size() > 1) {
 			return StringUtils.join(values.subList(1, values.size()), ".");
 		} else if (values.size() > 0) {
