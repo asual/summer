@@ -14,38 +14,34 @@
 
 package com.asual.summer.core.resource;
 
+import java.util.Arrays;
+
 /**
  * 
  * @author Rostislav Hristov
  *
  */
-public class StylesheetResource extends LocationResource {
+public class LocationResource extends AbstractResource {
 
-	private String media;
-	private String pack;
-
-	public String getMedia() {
-		return media;
-	}
-
-	public void setMedia(String media) {
-		this.media = media;
+	private String[] locations;
+	
+	public void setLocation(String location) {
+		setLocations(new String[] {location});
 	}
 	
-	public String getPack() {
-		return pack;
-	}
-	
-	public void setPack(String pack) {
-		this.pack = pack;
+	public String[] getLocations() {
+		return locations;
 	}
 
+	public void setLocations(String[] locations) {
+		this.locations = locations;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((media == null) ? 0 : media.hashCode());
-		result = prime * result + ((pack == null) ? 0 : pack.hashCode());
+		result = prime * result + Arrays.hashCode(locations);
 		return result;
 	}
 
@@ -57,16 +53,8 @@ public class StylesheetResource extends LocationResource {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StylesheetResource other = (StylesheetResource) obj;
-		if (media == null) {
-			if (other.media != null)
-				return false;
-		} else if (!media.equals(other.media))
-			return false;
-		if (pack == null) {
-			if (other.pack != null)
-				return false;
-		} else if (!pack.equals(other.pack))
+		LocationResource other = (LocationResource) obj;
+		if (!Arrays.equals(locations, other.locations))
 			return false;
 		return true;
 	}
