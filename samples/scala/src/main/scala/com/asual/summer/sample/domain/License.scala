@@ -3,7 +3,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,30 +39,30 @@ import scala.reflect.BeanProperty
 @serializable
 class License {
 
-    @PersistenceContext
-    @BeanProperty
-    @transient 
-    var entityManager:EntityManager = _
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(unique=true, nullable=false)
-    @BeanProperty
-    var id:Integer = _
+	@PersistenceContext
+	@BeanProperty
+	@transient 
+	var entityManager:EntityManager = _
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(unique=true, nullable=false)
+	@BeanProperty
+	var id:Integer = _
 
-    @NotEmpty
-    @Column(unique=true, nullable=false)
-    @BeanProperty
-    var value:String = _
-    
-    @NotEmpty
-    @Column
-    @BeanProperty
-    var name:String = _
+	@NotEmpty
+	@Column(unique=true, nullable=false)
+	@BeanProperty
+	var value:String = _
+	
+	@NotEmpty
+	@Column
+	@BeanProperty
+	var name:String = _
 
 	override def hashCode = {
-    	41 * value.hashCode
-    }
+		41 * value.hashCode
+	}
 	
 	override def equals(other:Any) = other match {
 		case that: License => 
@@ -75,57 +75,57 @@ class License {
 		other.isInstanceOf[License]
 	}
 
-    @Transactional
-    def persist = entityManager.persist(this)
-    
-    @Transactional
-    def merge:License = {
-    	var merged:License = entityManager.merge(this)
-        entityManager.flush
-        return merged
-    }
-    
-    @Transactional
-    def remove = {
-        if (entityManager.contains(this)) {
-            entityManager.remove(this)
-        } else {
-        	var attached:License = 
-        		entityManager.find(this.getClass(), this.id).asInstanceOf[License]
-            entityManager.remove(attached)
-        }
-    }
-    
-    @Transactional
-    def flush = {
-    	entityManager.flush
-    }    
+	@Transactional
+	def persist = entityManager.persist(this)
+	
+	@Transactional
+	def merge:License = {
+		var merged:License = entityManager.merge(this)
+		entityManager.flush
+		return merged
+	}
+	
+	@Transactional
+	def remove = {
+		if (entityManager.contains(this)) {
+			entityManager.remove(this)
+		} else {
+			var attached:License = 
+				entityManager.find(this.getClass(), this.id).asInstanceOf[License]
+			entityManager.remove(attached)
+		}
+	}
+	
+	@Transactional
+	def flush = {
+		entityManager.flush
+	}	
 }
 
 object License {
 	
 	def entityManager:EntityManager = {
-        var em:EntityManager = new License().entityManager
-        if (em == null) {
-        	throw new IllegalStateException("Entity manager has not been injected.")
-        }
-        return em
-    }
-    
-    def find(value:String):License = {
-    	return entityManager.createQuery("select o from License o where o.value = ?1")
-    		.setParameter(1, value).getSingleResult.asInstanceOf[License]
-    }
-    
-    def list():List[License] = {
-        return entityManager.createQuery("select o from License o")
-        	.getResultList.asInstanceOf[List[License]]
-    }
-    
-    def list(firstResult:Int, maxResults:Int):List[License] = {
-        return entityManager.createQuery("select o from License o")
-        	.setFirstResult(firstResult).setMaxResults(maxResults)
-        		.getResultList.asInstanceOf[List[License]]
-    }
+		var em:EntityManager = new License().entityManager
+		if (em == null) {
+			throw new IllegalStateException("Entity manager has not been injected.")
+		}
+		return em
+	}
+	
+	def find(value:String):License = {
+		return entityManager.createQuery("select o from License o where o.value = ?1")
+			.setParameter(1, value).getSingleResult.asInstanceOf[License]
+	}
+	
+	def list():List[License] = {
+		return entityManager.createQuery("select o from License o")
+			.getResultList.asInstanceOf[List[License]]
+	}
+	
+	def list(firstResult:Int, maxResults:Int):List[License] = {
+		return entityManager.createQuery("select o from License o")
+			.setFirstResult(firstResult).setMaxResults(maxResults)
+				.getResultList.asInstanceOf[List[License]]
+	}
 
 }
