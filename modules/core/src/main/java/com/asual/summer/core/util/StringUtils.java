@@ -16,6 +16,7 @@ package com.asual.summer.core.util;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -56,6 +57,14 @@ public class StringUtils {
 		}
 		return str;
 	}
+	
+	public static String lines(String str, int length) {
+		List<String> values = Arrays.asList(str.split("\n\r|\r\n|\n|\r"));
+		if (length < values.size()) {
+			return join(values.subList(0, length).toArray(new String[] {}), "\n") + "...";
+		}
+		return str;
+    }
 
 	public static String wrap(String left, String center, String right) {
 		return left.concat(center).concat(right);
