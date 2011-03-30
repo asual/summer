@@ -102,7 +102,8 @@ public class OutPrintFormatter {
 			new String[] {
 					"pre",
 					"script",
-					"style"
+					"style",
+					"textarea"
 			});
 	
 	public OutPrintFormatter(String str) throws SAXException, IOException {
