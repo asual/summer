@@ -14,7 +14,6 @@
 
 package com.asual.summer.core.resource;
 
-import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
 
 /**
@@ -24,8 +23,8 @@ import org.springframework.core.PriorityOrdered;
  */
 public abstract class AbstractResource implements PriorityOrdered {
 
-	private int order = Ordered.LOWEST_PRECEDENCE;
-
+	private int order = 0;
+	
 	public int getOrder() {
 		return order;
 	}

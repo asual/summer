@@ -78,11 +78,15 @@ public class HeadRenderer extends Renderer {
 		while (iter.hasNext()) {
 			UIComponent resource = (UIComponent) iter.next();
 			if (isStylesheet(resource)) {
-				stylesheetComponents.add(resource);
+				if (isUnique(stylesheetComponents, resource)) {
+					stylesheetComponents.add(resource);
+				}
 			} else if (isScript(resource)) {
-				scriptComponents.add(resource);
+				if (isUnique(scriptComponents, resource)) {
+					scriptComponents.add(resource);
+				}
 			} else {
-				tagComponents.add(resource);				
+				tagComponents.add(resource);
 			}
 		}
 
@@ -117,6 +121,23 @@ public class HeadRenderer extends Renderer {
 		return "script".equals(qName) && (type == null || "text/javascript".equals(type));
 	}
 	
+	protected boolean isUnique(List<UIComponent> components, UIComponent component) {
+		for (UIComponent c : components) {
+			try {
+				String attr = null;
+				if (isStylesheet(component)) {
+					attr = "href";
+				} else if (isScript(component)) {
+					attr = "src";					
+				}
+				if (attr != null && c.getAttributes().get(attr).equals(component.getAttributes().get(attr))) {
+					return false;
+				}				
+			} catch (Exception e) {
+			}
+		}
+		return true;
+	}	
 }
 
 class PackComparator<T> implements Comparator<UIComponent> {

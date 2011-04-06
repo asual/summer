@@ -2,8 +2,8 @@
 
 Summer is the next generation presentation layer library for Spring MVC. It provides the world's best HTML5 template 
 engine and takes advantage of many Spring features like MVC annotations and data binding, content negotiation, 
-REST support, conversion and various others. In addition out of the box it supports a number of Java EE 6 specifications 
-like Servlet 3.0, JPA 2, Bean Validation and EL 2.2.
+REST support, conversion and various others. In addition it supports a number of Java EE 6 specifications including 
+Servlet 3.0, JPA 2.0, Bean Validation and EL 2.2.
 
 Summer enables the creation of true web modules that package every required static resource. It also makes AJAX 
 really simple by providing partial page rendering capabilities. Support for HTML5 WebSockets is available through the 

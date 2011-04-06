@@ -57,9 +57,13 @@ public class HeadPackRenderer extends HeadRenderer {
 			while (iter.hasNext()) {
 				UIComponent resource = (UIComponent) iter.next();
 				if (isStylesheet(resource)) {
-					stylesheetComponents.add(resource);
+					if (isUnique(stylesheetComponents, resource)) {
+						stylesheetComponents.add(resource);
+					}
 				} else if (isScript(resource)) {
-					scriptComponents.add(resource);
+					if (isUnique(scriptComponents, resource)) {
+						scriptComponents.add(resource);
+					}
 				} else {
 					tagComponents.add(resource);
 				}

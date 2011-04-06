@@ -31,6 +31,10 @@ import org.springframework.util.ReflectionUtils;
 @Named
 public class ClassUtils {
 	
+	public static Class<?> getClass(String clazz) throws ClassNotFoundException {
+		return Class.forName(clazz);
+	}
+	
 	public static boolean isInstance(Object obj, String clazz) {
 		try {
 			return Class.forName(clazz).isInstance(obj);
