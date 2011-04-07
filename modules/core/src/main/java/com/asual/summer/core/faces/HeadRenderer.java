@@ -145,9 +145,12 @@ class PackComparator<T> implements Comparator<UIComponent> {
 	public int compare(UIComponent c1, UIComponent c2) {
 		String pkg1 = (String) c1.getAttributes().get("dataPack");
 		String pkg2 = (String) c2.getAttributes().get("dataPack");
-		if ("summer".equals(pkg1)) {
+		String summer = "summer";
+		if (summer.equals(pkg1) && pkg1.equals(pkg2)) {
+			return 0;
+		} else if (summer.equals(pkg1)) {
 			return -1;
-		} else if ("summer".equals(pkg2)) {
+		} else if (summer.equals(pkg2)) {
 			return 1;
 		} else if (pkg1 != null && pkg2 != null) {
 			return pkg1.compareToIgnoreCase(pkg2);
