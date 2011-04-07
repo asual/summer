@@ -134,23 +134,43 @@ public class RequestUtils implements ApplicationContextAware {
 	}
 	
 	public static boolean isMozilla() {
-		return Pattern.compile("Mozilla").matcher(getUserAgent()).find() && !Pattern.compile("compatible|WebKit").matcher(getUserAgent()).find();
+		String userAgent = getUserAgent();
+		if (userAgent != null) {
+			return Pattern.compile("Mozilla").matcher(userAgent).find() && !Pattern.compile("compatible|WebKit").matcher(userAgent).find();
+		}
+		return false;
 	}
 	
 	public static boolean isMSIE() {
-		return Pattern.compile("MSIE").matcher(getUserAgent()).find() && !Pattern.compile("Opera").matcher(getUserAgent()).find();
+		String userAgent = getUserAgent();
+		if (userAgent != null) {
+			return Pattern.compile("MSIE").matcher(userAgent).find() && !Pattern.compile("Opera").matcher(userAgent).find();
+		}
+		return false;
 	}
 	
 	public static boolean isOpera() {
-		return Pattern.compile("Opera").matcher(getUserAgent()).find();
+		String userAgent = getUserAgent();
+		if (userAgent != null) {
+			return Pattern.compile("Opera").matcher(userAgent).find();
+		}
+		return false;
 	}
 	
 	public static boolean isWebKit() {
-		return Pattern.compile("WebKit").matcher(getUserAgent()).find();
+		String userAgent = getUserAgent();
+		if (userAgent != null) {
+			return Pattern.compile("WebKit").matcher(userAgent).find();
+		}
+		return false;
 	}
 	
 	public static boolean isMobile() {
-		return Pattern.compile(" Mobile/").matcher(getUserAgent()).find();
+		String userAgent = getUserAgent();
+		if (userAgent != null) {
+			return Pattern.compile(" Mobile/").matcher(userAgent).find();
+		}
+		return false;
 	}
 
 	public static String getClient() {
@@ -247,7 +267,7 @@ public class RequestUtils implements ApplicationContextAware {
 		
 		@SuppressWarnings("unused")
 		public UrlBuilder addPath(String path) {
-			setPath(this.path.concat(path));
+			setPath(this.path.concat("/" + path.replaceFirst("^/", "")));
 			return this;
 		}
 		
