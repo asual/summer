@@ -18,7 +18,7 @@
 	</parent>
 
 	<properties>
-		<gae.version>1.4.0</gae.version>
+		<gae.version>1.4.3</gae.version>
 	</properties>
 
 	<repositories>
@@ -291,7 +291,7 @@
 			<plugin>
 				<groupId>net.kindleit</groupId>
 				<artifactId>maven-gae-plugin</artifactId>
-				<version>0.8.0</version>
+				<version>0.8.4</version>
 				<configuration>
 					<jvmFlags>
 						<jvmFlag>-Xdebug</jvmFlag>
