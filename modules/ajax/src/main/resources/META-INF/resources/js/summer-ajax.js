@@ -98,7 +98,7 @@
 									xhr.setRequestHeader('X-Requested-Operation', 'Validation');
 								}
 								regions.trigger('beforeSend', [xhr]).each(function() {
-									wrapper(this).addClass('loading');
+									wrapper(this).removeClass('error').addClass('loading');
 								});
 							},
 							complete: function(xhr, status) {
@@ -107,10 +107,10 @@
 								});
 							},
 							error: function(xhr, status, error) {
-								if (xhr.status) {
-									this.success(xhr.responseXML, [xhr, status, error]);
-								}
-								regions.trigger('error');
+								regions.each(function(i) {
+									wrapper(this).html(error).addClass('error');									
+								});
+								regions.trigger('error', [xhr, status, error]);
 							},
 							success: function(data, status, xhr) {
 								var elements = $(innerShiv(data, false));
@@ -142,10 +142,7 @@
 												fn(source, ready);
 											}
 										}
-									});
-									regions.trigger('success', [data, status, xhr]);
-								} else {
-									regions.trigger('error', [data, status, xhr]);								
+									}).trigger('success', [data, status, xhr]);
 								}
 								regions = $(selector);
 							}
