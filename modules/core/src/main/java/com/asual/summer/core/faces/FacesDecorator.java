@@ -166,7 +166,7 @@ public final class FacesDecorator implements TagDecorator {
 	public Tag decorate(Tag tag) {
 		Location location = tag.getLocation();
 		String namespace = tag.getNamespace();
-		String qName = tag.getQName();
+		String qName = tag.getQName().toLowerCase();
 		TagAttributeImpl tagNameAttr = null;
 		TagAttributeImpl tagTargetAttr = null;
 		List<TagAttribute> attrs = new ArrayList<TagAttribute>(Arrays.asList(tag.getAttributes().getAll()));
