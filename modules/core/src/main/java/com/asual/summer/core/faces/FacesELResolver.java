@@ -17,9 +17,9 @@ package com.asual.summer.core.faces;
 import javax.el.ELContext;
 import javax.el.ELException;
 
-import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.jsf.el.SpringBeanFacesELResolver;
 
+import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ResourceUtils;
 
 /**
@@ -32,8 +32,8 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 	private static String MESSAGES = "messages";
 	private static String PROPERTIES = "properties";
 	
-	private static final ThreadLocal<String> keyHolder = new NamedThreadLocal<String>("key");
-
+	public static final String KEY_ATTRIBUTE = FacesELResolver.class.getName() + ".KEY_ATTRIBUTE";
+	
 	public Object getValue(ELContext elContext, Object base, Object property) throws ELException {
 		
 		Object value = super.getValue(elContext, base, property);
@@ -41,10 +41,10 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 		if (value == null) {
 			try {
 				if (property instanceof String) {
-					String prop = (String) property;
+					final String prop = (String) property;
 					if (base == null && (MESSAGES.equals(prop) || PROPERTIES.equals(prop))) {
 						elContext.setPropertyResolved(true);
-						keyHolder.set(null);
+						RequestUtils.setAttribute(KEY_ATTRIBUTE, null);
 						return new String(prop);
 					}
 					if (base instanceof String) {
@@ -57,16 +57,16 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 							elContext.setPropertyResolved(true);
 							Object propertyResult = ResourceUtils.getProperty(prop);
 							return propertyResult != null ? propertyResult : "{" + prop + "}";
-						} else if (bs.startsWith("{") && bs.endsWith("}") || keyHolder.get() != null) {
+						} else if (bs.startsWith("{") && bs.endsWith("}") || RequestUtils.getAttribute(KEY_ATTRIBUTE) != null) {
 							elContext.setPropertyResolved(true);
-							if (keyHolder.get() != null) {
-								bs = "{" + keyHolder.get() + "}";
+							if (RequestUtils.getAttribute(KEY_ATTRIBUTE) != null) {
+								bs = "{" + RequestUtils.getAttribute(KEY_ATTRIBUTE) + "}";
 							}
-							keyHolder.set(bs.substring(1, bs.length() - 1) + "." + prop);
-							String messageResult = ResourceUtils.getMessage(keyHolder.get());
+							RequestUtils.setAttribute(KEY_ATTRIBUTE, bs.substring(1, bs.length() - 1) + "." + prop);
+							String messageResult = ResourceUtils.getMessage((String) RequestUtils.getAttribute(KEY_ATTRIBUTE));
 							String message = messageResult != null ? messageResult : "{" + prop + "}";
 							if (message.startsWith("{") && message.endsWith("}")) {
-								Object propertyResult = ResourceUtils.getProperty(keyHolder.get());
+								Object propertyResult = ResourceUtils.getProperty((String) RequestUtils.getAttribute(KEY_ATTRIBUTE));
 								return propertyResult != null ? propertyResult : "{" + prop + "}";
 							} else {
 								return message;
@@ -77,7 +77,7 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 			} catch (Exception e) {}
 		}
 		
-		keyHolder.set(null);
+		RequestUtils.setAttribute(KEY_ATTRIBUTE, null);
 		return value;
 	}
 

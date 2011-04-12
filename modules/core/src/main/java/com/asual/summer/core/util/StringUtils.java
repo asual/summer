@@ -148,7 +148,7 @@ public class StringUtils {
 					value.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\""));
 		}
 		return str;
-	}	
+	}
 	
 	public static String getEncoding() {
 		return ENCODING;

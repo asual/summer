@@ -45,7 +45,7 @@ public class AjaxVisitContext extends PartialVisitContext {
 		
 		String clientId = component.getClientId();
 		
-		if (!getIdsToVisit().contains(clientId)) {
+		if (!unvisitedClientIds.contains(clientId)) {
 			clientId = null;
 			return VisitResult.ACCEPT;
 		}

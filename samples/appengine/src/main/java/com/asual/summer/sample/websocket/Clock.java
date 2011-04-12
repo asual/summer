@@ -14,20 +14,20 @@
 
 package com.asual.summer.sample.websocket;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
+//
+//import javax.ws.rs.GET;
+//import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import org.atmosphere.cpr.Broadcaster;
-import org.atmosphere.jersey.JerseyBroadcaster;
-import org.atmosphere.jersey.SuspendResponse;
-
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
+//import org.atmosphere.cpr.Broadcaster;
+//import org.atmosphere.jersey.JerseyBroadcaster;
+//import org.atmosphere.jersey.SuspendResponse;
+//
+//import com.google.appengine.api.taskqueue.Queue;
+//import com.google.appengine.api.taskqueue.QueueFactory;
+//import com.google.appengine.api.taskqueue.TaskOptions;
 import com.sun.jersey.spi.resource.Singleton;
 
 /**
@@ -38,37 +38,37 @@ import com.sun.jersey.spi.resource.Singleton;
 @Path("/clock")
 @Singleton
 public class Clock {
-  
-	private Broadcaster topic = new JerseyBroadcaster("clock");
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)");
- 
-	public Clock() {
-		queue();
-	}
 	
-	@GET
-	public SuspendResponse<String> subscribe() {
-		return new SuspendResponse.SuspendResponseBuilder<String>()
-			.broadcaster(topic)
-			.outputComments(true)
-			.build();
-	}
-	
-	@POST
-	public void tick() {
-		Date date = new Date();
-		date.setTime(System.currentTimeMillis());
-		topic.broadcast(dateFormat.format(date));
-		queue();
-	}
-	
-	public void queue() {
-		Queue queue = QueueFactory.getDefaultQueue();
-		queue.add(
-				TaskOptions.Builder
-				.withUrl("/websocket/clock")
-				.method(TaskOptions.Method.POST)
-				.countdownMillis(1000));		
-	}
+//	private Broadcaster topic = new JerseyBroadcaster("clock");
+//	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)");
+// 
+//	public Clock() {
+//		queue();
+//	}
+//	
+//	@GET
+//	public SuspendResponse<String> subscribe() {
+//		return new SuspendResponse.SuspendResponseBuilder<String>()
+//			.broadcaster(topic)
+//			.outputComments(true)
+//			.build();
+//	}
+//	
+//	@POST
+//	public void tick() {
+//		Date date = new Date();
+//		date.setTime(System.currentTimeMillis());
+//		topic.broadcast(dateFormat.format(date));
+//		queue();
+//	}
+//	
+//	public void queue() {
+//		Queue queue = QueueFactory.getDefaultQueue();
+//		queue.add(
+//				TaskOptions.Builder
+//				.withUrl("/websocket/clock")
+//				.method(TaskOptions.Method.POST)
+//				.countdownMillis(1000));		
+//	}
 
 }

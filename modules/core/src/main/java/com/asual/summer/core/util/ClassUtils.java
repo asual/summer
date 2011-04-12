@@ -35,6 +35,10 @@ public class ClassUtils {
 		return Class.forName(clazz);
 	}
 	
+	public static Object cast(Object obj, String clazz) throws ClassNotFoundException {
+		return Class.forName(clazz).cast(obj);
+	}
+	
 	public static boolean isInstance(Object obj, String clazz) {
 		try {
 			return Class.forName(clazz).isInstance(obj);
@@ -43,7 +47,7 @@ public class ClassUtils {
 		}
 	}
 
-	public static Object newInstance(String clazz, Object[] parameters) throws SecurityException, ClassNotFoundException {
+	public static Object newInstance(String clazz, Object... parameters) throws SecurityException, ClassNotFoundException {
 		Class<?>[] classParameters = new Class[parameters == null ? 0 : parameters.length];
 		for (int i = 0; i < classParameters.length; i++) {
 			classParameters[i] = parameters[i].getClass();
@@ -59,9 +63,9 @@ public class ClassUtils {
 					Object[] params = new Object[parameters.length];
 					for (int i = 0; i < parameters.length; i++) {
 						if (types[i] == boolean.class || types[i] == Boolean.class) {
-							params[i] = Boolean.valueOf((String) parameters[i]);
+							params[i] = Boolean.valueOf(parameters[i].toString());
 						} else if (types[i] == int.class || types[i] == Integer.class) {
-							params[i] = Integer.valueOf((String) parameters[i]);
+							params[i] = Integer.valueOf(parameters[i].toString());
 						} else {
 							params[i] = types[i].cast(parameters[i]);
 						}

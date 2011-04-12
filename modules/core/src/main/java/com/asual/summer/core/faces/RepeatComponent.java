@@ -14,6 +14,7 @@
 
 package com.asual.summer.core.faces;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,41 +84,63 @@ public class RepeatComponent extends UIRepeat implements Component {
 		return varStatus;
 	}
 	
-	public Integer getBegin() {
-		if (super.getBegin() == null) {
-			Object attr = getAttributeExpression("dataRepeatBegin");
-			if (attr != null) {
-				return Integer.valueOf(attr.toString());
-			}
-		}
-		return super.getBegin();
+	public Integer getDataRepeatBegin() {
+        if (getBegin() != null) {
+            return getBegin();
+        }
+        ValueExpression ve = this.getValueExpression("getDataRepeatBegin");
+        if (ve != null) {
+            return (Integer) ve.getValue(getFacesContext().getELContext());
+        }
+        return null;
 	}
 	
-	public Integer getEnd() {
-		if (super.getEnd() == null) {
-			Object attr = getAttributeExpression("dataRepeatEnd");
-			if (attr != null) {
-				return Integer.valueOf(attr.toString());
-			}
-		}
-		return super.getEnd();
+	public void setDataRepeatBegin(Integer begin) {
+		setBegin(begin);
 	}
 	
-	public Integer getStep() {
-		if (super.getStep() == null) {
-			Object attr = getAttributeExpression("dataRepeatStep");
-			if (attr != null) {
-				return Integer.valueOf(attr.toString());
-			}
-		}
-		return super.getStep();
+	public Integer getDataRepeatEnd() {
+        if (getEnd() != null) {
+            return getEnd();
+        }
+        ValueExpression ve = this.getValueExpression("getDataRepeatEnd");
+        if (ve != null) {
+            return (Integer) ve.getValue(getFacesContext().getELContext());
+        }
+        return null;
+	}
+	
+	public void setDataRepeatEnd(Integer end) {
+		setEnd(end);
+	}
+	
+	public Integer getDataRepeatStep() {
+        if (getStep() != null) {
+            return getStep();
+        }
+        ValueExpression ve = this.getValueExpression("dataRepeatStep");
+        if (ve != null) {
+            return (Integer) ve.getValue(getFacesContext().getELContext());
+        }
+        return null;
+	}
+	
+	public void setDataRepeatStep(Integer step) {
+		setStep(step);
 	}
 	
 	public Object getValue() {
+		Object value;
 		if (super.getValue() == null) {
-			return getAttributeExpression("dataRepeat");
+			value = getAttributeExpression("dataRepeat");
+		} else {
+			value = super.getValue();
 		}
-		return super.getValue();
+		if (value != null && 
+				!(value instanceof Iterable || value instanceof Collection || value.getClass().isArray())) {
+			return new String[Integer.valueOf(value.toString())];
+		}
+		return value;
 	}
 	
 	public String getDataEmpty() {
@@ -172,9 +195,9 @@ public class RepeatComponent extends UIRepeat implements Component {
 	private void populateAttributes() {
 		setVar(getVar());
 		setVarStatus(getVarStatus());
-		setBegin(getBegin());
-		setEnd(getEnd());		
-		setStep(getStep());		
+		setBegin(getDataRepeatBegin());
+		setEnd(getDataRepeatEnd());
+		setStep(getDataRepeatStep());
 	}
 
 }

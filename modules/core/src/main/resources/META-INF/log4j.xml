@@ -15,7 +15,12 @@
 		<appender-ref ref="console" />
 	</logger>
 	
-	<logger name="com.asual.summer.core.spring.ViewNameTranslator">
+	<logger name="org.springframework.context.annotation.ClassPathBeanDefinitionScanner">
+		<level value="FATAL" />
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger name="org.atmosphere.cpr.AtmosphereServlet">
 		<level value="FATAL" />
 		<appender-ref ref="console" />
 	</logger>

@@ -50,6 +50,7 @@ public class ViewResolverConfiguration extends ContentNegotiatingViewResolver {
 	public void setMediaTypes(Map<String, String> mediaTypes) {
 		this.mediaTypes.putAll(mediaTypes);
 		super.setMediaTypes(mediaTypes);
+		super.setDefaultContentType(MediaType.parseMediaType(mediaTypes.values().iterator().next()));
 	}
 	
 	public MediaType getMediaTypeFromFilename(String filename) {

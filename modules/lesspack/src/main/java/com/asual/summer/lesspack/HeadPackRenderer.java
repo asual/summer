@@ -53,7 +53,7 @@ public class HeadPackRenderer extends HeadRenderer {
 			List<UIComponent> stylesheetComponents = new ArrayList<UIComponent>();
 			List<UIComponent> scriptComponents = new ArrayList<UIComponent>();
 			List<UIComponent> tagComponents = new ArrayList<UIComponent>();
-
+			
 			while (iter.hasNext()) {
 				UIComponent resource = (UIComponent) iter.next();
 				if (isStylesheet(resource)) {
@@ -100,7 +100,7 @@ public class HeadPackRenderer extends HeadRenderer {
 			combineStylesheets(writer, component);
 			
 			dataPack = null;
-
+			
 			sortByPack(scriptComponents);
 			for (UIComponent c : scriptComponents) {
 				

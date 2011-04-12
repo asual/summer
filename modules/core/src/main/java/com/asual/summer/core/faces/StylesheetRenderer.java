@@ -15,7 +15,6 @@
 package com.asual.summer.core.faces;
 
 import java.io.IOException;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,11 @@ import javax.faces.event.ListenerFor;
 import javax.faces.event.PostAddToViewEvent;
 import javax.faces.render.Renderer;
 
+import org.jboss.el.lang.EvaluationContext;
+import org.jboss.el.lang.ExpressionBuilder;
+
 import com.asual.summer.core.util.RequestUtils;
+import com.asual.summer.core.util.ScriptUtils;
 
 /**
  * 
@@ -40,8 +43,7 @@ import com.asual.summer.core.util.RequestUtils;
 @ListenerFor(systemEventClass=PostAddToViewEvent.class)
 public class StylesheetRenderer extends Renderer implements ComponentSystemEventListener {
 	
-	private static final String COMP_KEY =
-		StylesheetRenderer.class.getName() + "_COMPOSITE_COMPONENT";
+	private static final String COMP_KEY = StylesheetRenderer.class.getName() + ".COMPOSITE_COMPONENT";
 	
 	private static final List<String> ATTRIBUTES = Arrays.asList(new String[] {
 		"charset",
@@ -83,26 +85,41 @@ public class StylesheetRenderer extends Renderer implements ComponentSystemEvent
 			component.pushComponentToEL(context, component);
 		}
 		
-		ResponseWriter writer = context.getResponseWriter();
-		Map<String, Object> attrs = component.getAttributes();
-		
-		String qName = (String) attrs.get(FacesDecorator.QNAME);
-		writer.startElement(qName, component);
-		for (String attr : ATTRIBUTES) {
-			String value = (String) attrs.get(attr);
-			if (value == null && component.getValueExpression(attr) != null) {
-				value = (String) component.getValueExpression(attr).getValue(context.getELContext());
-			}
-			if (value != null) {
-				if ("href".equals(attr) || "src".equals(attr)) {
-					writer.writeAttribute(attr, RequestUtils.contextRelative((String) attrs.get(attr), true), attr);					
-				} else {
-					writer.writeAttribute(attr, attrs.get(attr), attr);
+		if (!isScriptExpression(component)) {
+			
+			Map<String, Object> attrs = component.getAttributes();
+			String qName = (String) attrs.get(FacesDecorator.QNAME);
+			
+			ResponseWriter writer = context.getResponseWriter();
+			writer.startElement(qName, component);
+			
+			for (String attr : ATTRIBUTES) {
+				String value = (String) attrs.get(attr);
+				if (value == null && component.getValueExpression(attr) != null) {
+					value = (String) component.getValueExpression(attr).getValue(context.getELContext());
+				}
+				if (value != null) {
+					if ("href".equals(attr) || "src".equals(attr)) {
+						writer.writeAttribute(attr, RequestUtils.contextRelative((String) attrs.get(attr), true), attr);					
+					} else {
+						writer.writeAttribute(attr, attrs.get(attr), attr);
+					}
 				}
 			}
 		}
 	}
-
+	
+	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
+		if (!isScriptExpression(component)) {
+            for (UIComponent kid : component.getChildren()) {
+                kid.encodeAll(context);
+            }			
+		} else {
+			List<UIComponent> children = component.getChildren();
+			ScriptUtils.define(children.get(0).toString().replaceAll("\\\n|\\\t", "").trim());
+		}
+	}
+    
 	public void encodeEnd(FacesContext context, UIComponent component)
 		  throws IOException {
 		
@@ -113,17 +130,32 @@ public class StylesheetRenderer extends Renderer implements ComponentSystemEvent
 			component.pushComponentToEL(context, component);
 		}
 		
-		ResponseWriter writer = context.getResponseWriter();
-		Map<String,Object> attrs = component.getAttributes();		
-		String qName = (String) attrs.get("qName");
-		writer.endElement(qName);
-		writer.write("\n");
+		if (!isScriptExpression(component)) {
+			ResponseWriter writer = context.getResponseWriter();
+			Map<String,Object> attrs = component.getAttributes();		
+			String qName = (String) attrs.get("qName");
+			writer.endElement(qName);
+			writer.write("\n");
+		}
 	}
 	
 	protected String verifyTarget(String toVerify) {
 		return toVerify;
 	}
 	
+	protected boolean isScriptExpression(UIComponent component) {
+		return "text/expression".equalsIgnoreCase((String) component.getAttributes().get("type"));
+	}
+	
 	public void decode(FacesContext context, UIComponent component) {
-	}	
+	}
+	
+	protected Object evaluateExpression(String value) {
+		return ExpressionBuilder.createNode(value)
+			.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
+	}
+	
+	public boolean getRendersChildren() {
+		return true;
+	}
 }

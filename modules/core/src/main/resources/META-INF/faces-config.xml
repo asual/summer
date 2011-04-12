@@ -31,6 +31,10 @@
 		<el-resolver>com.asual.summer.core.faces.FacesELResolver</el-resolver>
 	</application>
 	
+	<factory>
+		<faces-context-factory>com.asual.summer.core.faces.FacesContextFactoryImpl</faces-context-factory>
+	</factory>
+	
 	<render-kit>
 		<renderer>
 			<component-family>javax.faces.Output</component-family>

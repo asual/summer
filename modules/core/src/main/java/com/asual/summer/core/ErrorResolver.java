@@ -87,7 +87,7 @@ public class ErrorResolver implements HandlerExceptionResolver {
 				if (request.getAttribute(ERRORS) == null) {
 					request.setAttribute(ERRORS, errors);
 					request.setAttribute(be.getObjectName(), be.getTarget());
-					return new ModelAndView(new InternalResourceView(form));
+					return new ModelAndView(new InternalResourceView(form.concat(form.contains("?") ? "&" : "?").concat("_error=true")));
 				}
 			} else {
 				List<String> pairs = new ArrayList<String>();

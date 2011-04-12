@@ -14,7 +14,7 @@
 		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 	
 	<context:component-scan base-package="com.asual.summer.core" />
-
+	
 	<bean class="com.asual.summer.core.resource.MessageResource" p:order="2147483647">
 		<property name="wildcardLocations">
 			<list>
