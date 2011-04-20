@@ -2,6 +2,7 @@
 <properties>
 
 	<entry key="app.id">summer</entry>
+	<entry key="app.encoding">UTF-8</entry>
 	<entry key="app.maxUploadSize">10240000</entry>
 	
 </properties>

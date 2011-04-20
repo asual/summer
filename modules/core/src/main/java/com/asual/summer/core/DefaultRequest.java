@@ -17,8 +17,6 @@ package com.asual.summer.core;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import com.asual.summer.core.util.StringUtils;
-
 /**
  * 
  * @author Rostislav Hristov
@@ -28,10 +26,6 @@ public class DefaultRequest extends HttpServletRequestWrapper {
 	
 	public DefaultRequest(HttpServletRequest request) {
 		super(request);
-	}
-	
-	public String getCharacterEncoding() {
-		return StringUtils.getEncoding();
 	}
 
 	public HttpServletRequest getRequest() {

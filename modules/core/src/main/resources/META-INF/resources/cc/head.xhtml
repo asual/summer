@@ -35,7 +35,7 @@
 			<script>
 				$.summer = {
 					contextPath: '${request.getContextPath()}'
-				}
+				};
 			</script>
 			<c:forEach var="item" items="${resourceUtils.getScripts()}">
 				<c:forEach var="source" items="${item.locations}">

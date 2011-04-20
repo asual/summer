@@ -35,8 +35,6 @@ import org.apache.commons.lang.WordUtils;
  */
 @Named
 public class StringUtils {
-
-	private static String ENCODING = "UTF-8";
 	
 	public static String ellipsis(String str, int length) {
 		String space = " ";
@@ -106,7 +104,7 @@ public class StringUtils {
 
 	public static String encode(String value) {
 		try {
-			return URLEncoder.encode(value, getEncoding());
+			return URLEncoder.encode(value, (String) ResourceUtils.getProperty("app.encoding"));
 		} catch (Exception e) {
 			return value;
 		}
@@ -114,7 +112,7 @@ public class StringUtils {
 
 	public static String decode(String value) {
 		try {
-			return URLDecoder.decode(value, getEncoding());
+			return URLDecoder.decode(value, (String) ResourceUtils.getProperty("app.encoding"));
 		} catch (Exception e) {
 			return value;
 		}
@@ -150,7 +148,4 @@ public class StringUtils {
 		return str;
 	}
 	
-	public static String getEncoding() {
-		return ENCODING;
-	}
 }
