@@ -47,42 +47,42 @@
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-ajax</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-atmosphere</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-beauty</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-core</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-json</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-lesspack</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-outprint</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-xml</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-fileupload</groupId>
@@ -92,7 +92,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.1</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp.jstl</groupId>
@@ -119,7 +119,7 @@
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>1.6.9</version>
+			<version>${aspectj.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -227,12 +227,12 @@
 					<dependency>
 						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjrt</artifactId>
-						<version>1.6.9</version>
+						<version>${aspectj.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjtools</artifactId>
-						<version>1.6.9</version>
+						<version>${aspectj.version}</version>
 					</dependency>
 				</dependencies>
 				<executions>
@@ -262,7 +262,7 @@
 				<configuration>
 					<api>JPA</api>
 					<enhancerName>ASM</enhancerName>
-					<log4jConfiguration>${basedir}/src/main/resources/META-INF/log4j.xml</log4jConfiguration>
+					<log4jConfiguration>${basedir}/src/test/resources/META-INF/log4j.xml</log4jConfiguration>
 					<mappingIncludes>**/domain/*.class</mappingIncludes>
 					<persistenceUnitName>transactions-optional</persistenceUnitName>
 				</configuration>
@@ -278,7 +278,7 @@
 			<plugin>
 				<groupId>com.asual.summer</groupId>
 				<artifactId>summer-bundle</artifactId>
-				<version>1.0.0.M3-SNAPSHOT</version>
+				<version>${project.version}</version>
 				<executions>
 					<execution>
 						<goals>

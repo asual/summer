@@ -19,7 +19,6 @@
 	
 	<properties>
 		<maven.version>3.0.1</maven.version>
-		<jetty.version>8.0.0.M2</jetty.version>
 	</properties>
 		
 	<dependencies>
@@ -130,7 +129,7 @@
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-core</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId> 

@@ -21,17 +21,17 @@
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-core</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-jquery</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-lesspack</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	
