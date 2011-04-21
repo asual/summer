@@ -14,9 +14,9 @@
 	<version>1.0.0.M3-SNAPSHOT</version>
 	<modelVersion>4.0.0</modelVersion>
 	
-    <organization>
-        <name>Asual DZZD</name>
-    </organization>
+	<organization>
+		<name>Asual DZZD</name>
+	</organization>
 
 	<licenses>
 		<license>
@@ -44,6 +44,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)</maven.build.timestamp.format>
+		<aspectj.version>1.6.9</aspectj.version>
+		<jetty.version>8.0.0.M2</jetty.version>
+		<servlet.version>3.0.20100224</servlet.version>
+		<slf4j.version>1.6.1</slf4j.version>
 		<spring.version>3.0.5.RELEASE</spring.version>
 	</properties>
 	
@@ -92,8 +96,32 @@
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>3.0.20100224</version>
+			<version>${servlet.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.1.1</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	
@@ -118,6 +146,88 @@
 						<target>1.6</target>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.8.1</version>
+					<configuration>
+						<argLine>-Duser.language=en -Duser.region=US -XX:PermSize=256m -XX:MaxPermSize=256m -XX:MaxHeapSize=512m</argLine>
+						<systemProperties>
+							<property>
+								<name>log4j.configuration</name>
+								<value>META-INF/log4j.xml</value>
+							</property>
+						</systemProperties>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.8.1</version>
+					<configuration>
+						<argLine>-Duser.language=en -Duser.region=US -XX:PermSize=256m -XX:MaxPermSize=256m -XX:MaxHeapSize=512m</argLine>
+						<systemProperties>
+							<property>
+								<name>log4j.configuration</name>
+								<value>META-INF/log4j.xml</value>
+							</property>
+						</systemProperties>
+					</configuration>
+					<executions>
+						<execution>
+							<id>integration-test</id>
+							<goals>
+								<goal>integration-test</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>verify</id>
+							<goals>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>${jetty.version}</version>
+					<configuration>
+	                    <stopPort>9089</stopPort>
+	                    <stopKey>jetty</stopKey>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.mortbay.jetty</groupId>
+							<artifactId>servlet-api</artifactId>
+							<version>${servlet.version}</version>
+						</dependency>
+					</dependencies>
+					<executions>
+						<execution>
+							<id>start-jetty</id>
+							<phase>pre-integration-test</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<connectors>
+									<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+										<port>9090</port>
+									</connector>
+								</connectors>
+								<daemon>true</daemon>
+							</configuration>
+						</execution>
+						<execution>
+							<id>stop-jetty</id>
+							<phase>post-integration-test</phase>
+							<goals>
+								<goal>stop</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -140,11 +250,11 @@
 	<profiles>
 		<profile>
 			<id>manifestEntries</id>
-            <activation>
+			<activation>
 				<property>
 					<name>git.executable</name>
 				</property>
-            </activation>
+			</activation>
 			<build>
 				<pluginManagement>
 					<plugins>

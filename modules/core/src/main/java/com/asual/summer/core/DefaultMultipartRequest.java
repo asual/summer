@@ -22,8 +22,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
-import com.asual.summer.core.util.StringUtils;
-
 /**
  * 
  * @author Rostislav Hristov
@@ -39,10 +37,6 @@ public class DefaultMultipartRequest extends DefaultMultipartHttpServletRequest 
 				multipartParameters.get(key)[i] = multipartParameters.get(key)[i];
 			}
 		}
-	}
-	
-	public String getCharacterEncoding() {
-		return StringUtils.getEncoding();
 	}
 	
 	public HttpServletRequest getRequest() {

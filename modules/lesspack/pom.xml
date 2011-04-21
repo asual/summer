@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-core</artifactId>
-			<version>1.0.0.M3-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.lesscss</groupId>
@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>3.0.20100224</version>
+			<version>${servlet.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

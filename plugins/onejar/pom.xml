@@ -19,7 +19,6 @@
 
 	<properties>
 		<maven.version>3.0.1</maven.version>
-		<jetty.version>8.0.0.M2</jetty.version>
 	</properties>
 	
 	<dependencies>
@@ -136,7 +135,7 @@
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>3.0.20100224</version>
+			<version>${servlet.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp.jstl</groupId>

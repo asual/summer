@@ -31,6 +31,8 @@ import org.w3c.dom.html.HTMLDocument;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.asual.summer.core.util.ResourceUtils;
+
 /**
  * 
  * @author Rostislav Hristov
@@ -110,7 +112,7 @@ public class OutPrintFormatter {
 		sb = new StringBuilder();
 		str = str.replaceAll("<!--\\[if ([^\\]]*)\\]>", "&lt;!--[if $1]&gt;").replaceAll("<!\\[endif\\]-->", "&lt;![endif]--&gt;");
 		str = str.replaceAll("<!--", "&lt;!--").replaceAll("-->", "--&gt;");
-		String encoding = com.asual.summer.core.util.StringUtils.getEncoding();
+		String encoding = (String) ResourceUtils.getProperty("app.encoding");
 		InputSource is = new InputSource(new StringReader(str));
 		is.setEncoding(encoding);
 		DOMFragmentParser parser = new DOMFragmentParser();

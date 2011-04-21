@@ -23,7 +23,7 @@ import java.io.Writer;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import com.asual.summer.core.util.StringUtils;
+import com.asual.summer.core.util.ResourceUtils;
 import com.sun.faces.RIConstants;
 import com.sun.faces.config.WebConfiguration;
 import com.sun.faces.renderkit.RenderKitImpl;
@@ -59,7 +59,7 @@ public class OutPrintRenderKitImpl extends RenderKitImpl {
 			WebConfiguration.DisableUnicodeEscaping.getByValue(webConfig.getOptionValue(DisableUnicodeEscaping));
 		boolean isPartial = context.getPartialViewContext().isPartialRequest();
 		
-		return new OutPrintResponseWriter(writer, contentType, characterEncoding != null ? characterEncoding : StringUtils.getEncoding(), 
+		return new OutPrintResponseWriter(writer, contentType, characterEncoding != null ? characterEncoding : (String) ResourceUtils.getProperty("app.encoding"), 
 				scriptHiding, scriptInAttributes, escaping, isPartial);
 	}
 

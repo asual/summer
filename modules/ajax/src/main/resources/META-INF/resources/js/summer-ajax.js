@@ -93,11 +93,11 @@
 							type: re.test(method) ? method : 'post',
 							data: params + (data ? '&' + data : ''),
 							dataType: 'html',
-							beforeSend: function(xhr) {
+							beforeSend: function(xhr, settings) {
 								if (validation) {
 									xhr.setRequestHeader('X-Requested-Operation', 'Validation');
 								}
-								regions.trigger('beforeSend', [xhr]).each(function() {
+								regions.trigger('beforeSend', [xhr, settings]).each(function() {
 									wrapper(this).removeClass('error').addClass('loading');
 								});
 							},

@@ -20,24 +20,24 @@ import java.io.InputStreamReader;
 import java.io.PushbackInputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.net.URL;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xerces.util.XMLStringBuffer;
+import org.apache.xerces.xni.Augmentations;
+import org.apache.xerces.xni.XMLLocator;
+import org.apache.xerces.xni.XMLResourceIdentifier;
+import org.apache.xerces.xni.XMLString;
+import org.apache.xerces.xni.XNIException;
+import org.apache.xerces.xni.parser.XMLDocumentFilter;
 import org.cyberneko.html.HTMLEntities;
+import org.cyberneko.html.filters.DefaultFilter;
 import org.cyberneko.html.parsers.DOMParser;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-
-import com.asual.summer.core.util.StringUtils;
 
 /**
  * 
@@ -53,8 +53,9 @@ public class FacesResourceProcessor {
 		byte[] bytes;
 		
 		try {
+			
 			StringBuilder sb = new StringBuilder();
-			UnicodeReader reader = new UnicodeReader(input, StringUtils.getEncoding());
+			UnicodeReader reader = new UnicodeReader(input, "UTF-8");
 			try {
 				char[] cbuf = new char[32];
 				int r;
@@ -62,35 +63,8 @@ public class FacesResourceProcessor {
 					sb.append(cbuf, 0, r);
 				}
 				String str = sb.toString();
-				
-				try {
-				       
-					InputSource is = new InputSource(new StringReader(str));
-					is.setEncoding(StringUtils.getEncoding());
-					
-			        DOMParser parser = new DOMParser();
-					parser.setFeature("http://cyberneko.org/html/features/balance-tags", false);
-					parser.setProperty("http://cyberneko.org/html/properties/default-encoding", StringUtils.getEncoding());
-			        parser.parse(is);
-			        
-					StringWriter sw = new StringWriter();
-					sw.write("<!DOCTYPE html>");
-			        
-					Transformer transformer = TransformerFactory.newInstance().newTransformer();				
-					transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-					transformer.setOutputProperty(OutputKeys.MEDIA_TYPE, "text/html");
-					transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-					transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-					transformer.transform(new DOMSource(parser.getDocument()), new StreamResult(sw));
-					
-					str = sw.toString();
-					
-				} catch (Exception e) {
-					
-					logger.error(e.getMessage(), e);
-				}
-				
 				if (!str.contains("ui:component")) {
+					str = handleDocument(str, reader.getEncoding());
 					if (url.getFile().contains("META-INF/templates")) {
 						str = "<ui:component xmlns:ui=\"http://java.sun.com/jsf/facelets\">" + 
 							Pattern.compile("(<\\!DOCTYPE html>)|(</?html[^>]*>)|(<title>[^<]*</title>)", 
@@ -98,13 +72,7 @@ public class FacesResourceProcessor {
 										"\\$\\{template\\.body\\}", "<ui:insert />") + "</ui:component>";
 					}
 				}
-				Matcher m = Pattern.compile("&(\\w*);").matcher(str);
-				StringBuffer b = new StringBuffer();
-				while (m.find()) {
-					m.appendReplacement(b, "&#" +  HTMLEntities.get(m.group(1)) + ";");
-				}
-				m.appendTail(b);
-				bytes = b.toString().getBytes(reader.getEncoding());
+				bytes = str.getBytes(reader.getEncoding());
 			} finally {
 				reader.close();
 			}
@@ -113,6 +81,103 @@ public class FacesResourceProcessor {
 		}
 		
 		return bytes;
+	}
+	
+	private static String handleDocument(String str, String encoding) {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+		    
+			InputSource is = new InputSource(new StringReader(str));
+			is.setEncoding(encoding);
+			
+	        DOMParser parser = new DOMParser();
+			parser.setFeature("http://cyberneko.org/html/features/balance-tags", false);
+			parser.setFeature("http://cyberneko.org/html/features/scanner/notify-builtin-refs", true);
+			parser.setProperty("http://cyberneko.org/html/properties/default-encoding", encoding);
+
+			XMLDocumentFilter[] filters = { new DefaultFilter() {
+				
+				boolean inEntityRef;
+				XMLStringBuffer buffer = new XMLStringBuffer();
+			
+				public void startDocument(XMLLocator locator, String encoding, Augmentations augs) throws XNIException {
+					super.startDocument(locator, encoding, augs);
+					inEntityRef = false;
+				}
+				
+				public void characters(XMLString text, Augmentations augs) throws XNIException {
+					if (!inEntityRef) {
+						super.characters(text, augs);
+					}
+				}
+			
+				public void startGeneralEntity(String name, XMLResourceIdentifier id, String encoding, Augmentations augs) throws XNIException {
+					inEntityRef = true;
+					buffer.clear();
+					buffer.append("&#");
+					buffer.append(String.valueOf(HTMLEntities.get(name)));
+					buffer.append(";");
+					super.characters(buffer, augs);
+				}
+			
+				public void endGeneralEntity(String name, Augmentations augs) throws XNIException {
+					inEntityRef = false;
+				}
+				
+			}};
+			parser.setProperty("http://cyberneko.org/html/properties/filters", filters);
+	        parser.parse(is);
+	        Node doc = parser.getDocument();
+			sb.append("<!DOCTYPE html>");
+			handleNode(doc, sb);
+			
+		} catch (Exception e) {			
+			logger.error(e.getMessage(), e);
+		}
+		
+		return sb.toString();
+	}
+	
+	private static void handleNode(Node node, StringBuilder sb) {
+		
+		Node child = node.getFirstChild();
+		
+		while (child != null) {
+
+			short nodeType = child.getNodeType();
+			String nodeName = child.getNodeName().toLowerCase();
+			String nodeValue = child.getNodeValue();
+			
+			if (nodeType == 1) {
+				
+				sb.append("<" + nodeName);
+				
+				NamedNodeMap m = child.getAttributes();
+				if (m != null) {
+					for (int i = 0; i < m.getLength(); i++) {
+					   Node item = m.item(i);
+					   sb.append(" " + item.getNodeName().toLowerCase() + "=\"" + item.getNodeValue() + "\"");
+					}
+				}
+				
+				if (child.getChildNodes().getLength() != 0) {
+					sb.append(">");
+					handleNode(child, sb);
+					sb.append("</" + nodeName + ">");
+				} else {
+					sb.append(" />");
+				}
+
+			} else if (nodeType == 3) {
+
+				sb.append(nodeValue);
+				
+			}
+			
+			child = child.getNextSibling();
+		}
 	}
 	
 	/**

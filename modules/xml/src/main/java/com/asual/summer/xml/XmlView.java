@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jackson.JsonGenerator.Feature;
 import org.codehaus.jackson.map.SerializationConfig;
 
-import com.asual.summer.core.util.StringUtils;
 import com.asual.summer.core.view.AbstractResponseView;
 import com.fasterxml.jackson.xml.XmlMapper;
 import com.fasterxml.jackson.xml.ser.ToXmlGenerator;
@@ -50,7 +49,7 @@ public class XmlView extends AbstractResponseView {
 			throws Exception {
 		
 		response.setContentType(getContentType());
-		response.setCharacterEncoding(StringUtils.getEncoding());
+		response.setCharacterEncoding(request.getCharacterEncoding());
 		
 		XmlMapper mapper = new XmlMapper();
 		mapper.configure(Feature.AUTO_CLOSE_TARGET, false);

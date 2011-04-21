@@ -20,7 +20,7 @@ import java.util.Locale;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import com.asual.summer.core.util.StringUtils;
+import com.asual.summer.core.util.ResourceUtils;
 
 /**
  * 
@@ -30,7 +30,7 @@ import com.asual.summer.core.util.StringUtils;
 public class ExtendedInternalResourceViewResolver extends InternalResourceViewResolver {
 	
 	public ExtendedInternalResourceViewResolver() {
-		setContentType("text/html;charset=" + StringUtils.getEncoding());
+		setContentType("text/html;charset=" + ResourceUtils.getProperty("app.encoding"));
 	}
 
 	public String getPrefix() {

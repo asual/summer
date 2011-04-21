@@ -24,7 +24,6 @@ import org.codehaus.jackson.JsonGenerator.Feature;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 
-import com.asual.summer.core.util.StringUtils;
 import com.asual.summer.core.view.AbstractResponseView;
 
 /**
@@ -47,13 +46,15 @@ public class JsonView extends AbstractResponseView {
 	protected void renderMergedOutputModel(Map<String, Object> model,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		
+		String encoding = request.getCharacterEncoding();
+		String callback = (String) request.getParameter("callback");
 
 		response.setContentType(getContentType());
-		response.setCharacterEncoding(StringUtils.getEncoding());
+		response.setCharacterEncoding(encoding);
 		
-		String callback = (String) request.getParameter("callback");
 		if (callback != null) {
-			response.getOutputStream().write((callback + " && " + callback + "(").getBytes(StringUtils.getEncoding()));
+			response.getOutputStream().write((callback + " && " + callback + "(").getBytes(encoding));
 		}
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -62,7 +63,7 @@ public class JsonView extends AbstractResponseView {
 		mapper.writeValue(response.getOutputStream(), filterModel(model));
 
 		if (callback != null) {
-			response.getOutputStream().write(");".getBytes(StringUtils.getEncoding()));
+			response.getOutputStream().write(");".getBytes(encoding));
 		}
 
 	}

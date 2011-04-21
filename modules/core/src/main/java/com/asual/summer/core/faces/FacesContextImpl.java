@@ -15,12 +15,7 @@
 package com.asual.summer.core.faces;
 
 import javax.el.ELContext;
-import javax.el.ELContextEvent;
-import javax.el.ELContextListener;
-import javax.faces.application.Application;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.lifecycle.Lifecycle;
 
 import com.sun.faces.el.ELContextImpl;
@@ -31,31 +26,14 @@ import com.sun.faces.el.ELContextImpl;
  *
  */
 public class FacesContextImpl extends com.sun.faces.context.FacesContextImpl {
-	
-	private ELContextImpl elContext = null;
 
 	public FacesContextImpl(ExternalContext ec, Lifecycle lifecycle) {
 		super(ec, lifecycle);
 	}
 	
     public ELContext getELContext() {
-        if (elContext == null) {
-            Application app = getApplication();
-            elContext = new ELContextImpl(app.getELResolver());
-            elContext.putContext(FacesContext.class, this);
-            elContext.setFunctionMapper(new FacesFunctionMapper());
-            UIViewRoot root = this.getViewRoot();
-            if (null != root) {
-                elContext.setLocale(root.getLocale());
-            }
-            ELContextListener[] listeners = app.getELContextListeners();
-            if (listeners.length > 0) {
-                ELContextEvent event = new ELContextEvent(elContext);
-                for (ELContextListener listener: listeners) {
-                    listener.contextCreated(event);
-                }
-            }
-        }
+    	ELContextImpl elContext = (ELContextImpl) super.getELContext();
+        elContext.setFunctionMapper(new FacesFunctionMapper());
         return elContext;
     }
 
