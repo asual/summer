@@ -1,17 +1,6 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 
-	<entry key="page.heading">Summer Sample Application</entry>
-	<entry key="page.title">Sample Application Powered by Summer - The HTML5 Library for Java and Scala</entry>
-	<entry key="page.welcome">Welcome to the Summer Sample Application</entry>
-	<entry key="page.technology">Technologies</entry>
-	<entry key="page.technology.add">Add a Technology</entry>
-
-	<entry key="conversion.java.net.URL">Valid URL is required!</entry>
-	<entry key="conversion.com.asual.summer.sample.file.Image">Valid image is required!</entry>
-
-	<entry key="validation.NotNull">Value is required!</entry>
-	<entry key="validation.NotEmpty">Value is required!</entry>
-	<entry key="validation.Size"><![CDATA[The required size is between <strong>{2}</strong> and <strong>{1}</strong>]]></entry>
+	<entry key="page.welcome">Summer - The HTML5 Library for Java and Scala</entry>
 
 </properties>

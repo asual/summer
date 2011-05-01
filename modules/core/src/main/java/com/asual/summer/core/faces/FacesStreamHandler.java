@@ -24,6 +24,8 @@ import java.net.URLStreamHandler;
 import javax.faces.application.ProjectStage;
 import javax.faces.context.FacesContext;
 
+import com.asual.summer.core.util.ResourceUtils;
+
 /**
  * 
  * @author Rostislav Hristov
@@ -41,6 +43,8 @@ public class FacesStreamHandler extends URLStreamHandler {
 	
 	protected URLConnection openConnection(final URL u) throws IOException {
 		
+		final String encoding = (String) ResourceUtils.getProperty("app.encoding");
+		
 		return new URLConnection(u) {
 			
 			public void connect() throws IOException {
@@ -52,7 +56,7 @@ public class FacesStreamHandler extends URLStreamHandler {
 						URLConnection urlc = resource.openConnection();
 						InputStream in = urlc.getInputStream();
 						try {
-							bytes = FacesResourceProcessor.execute(u, in);
+							bytes = FacesResourceProcessor.execute(u, in, encoding);
 						} finally {
 							in.close();
 						}

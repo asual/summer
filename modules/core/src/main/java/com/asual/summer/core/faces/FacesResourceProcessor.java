@@ -14,6 +14,7 @@
 
 package com.asual.summer.core.faces;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,20 +24,16 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.xerces.util.XMLStringBuffer;
-import org.apache.xerces.xni.Augmentations;
-import org.apache.xerces.xni.XMLLocator;
-import org.apache.xerces.xni.XMLResourceIdentifier;
-import org.apache.xerces.xni.XMLString;
-import org.apache.xerces.xni.XNIException;
+import org.apache.xerces.xni.QName;
+import org.apache.xerces.xni.XMLAttributes;
 import org.apache.xerces.xni.parser.XMLDocumentFilter;
+import org.cyberneko.html.HTMLElements;
 import org.cyberneko.html.HTMLEntities;
-import org.cyberneko.html.filters.DefaultFilter;
+import org.cyberneko.html.filters.Writer;
 import org.cyberneko.html.parsers.DOMParser;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 /**
@@ -48,31 +45,98 @@ public class FacesResourceProcessor {
 	
 	private static final Log logger = LogFactory.getLog(FacesResourceProcessor.class);
 
-	public static byte[] execute(URL url, InputStream input) throws IOException {
+	public static byte[] execute(URL url, InputStream input, String encoding) throws IOException {
 		
 		byte[] bytes;
 		
 		try {
 			
 			StringBuilder sb = new StringBuilder();
-			UnicodeReader reader = new UnicodeReader(input, "UTF-8");
+			UnicodeReader reader = new UnicodeReader(input, encoding);
+			
 			try {
+				
 				char[] cbuf = new char[32];
 				int r;
 				while ((r = reader.read(cbuf, 0, 32)) != -1) {
 					sb.append(cbuf, 0, r);
 				}
+				
 				String str = sb.toString();
+				
 				if (!str.contains("ui:component")) {
-					str = handleDocument(str, reader.getEncoding());
+					
+					try {
+					    
+						String fileEncoding = reader.getEncoding();
+						InputSource is = new InputSource(new StringReader(str));
+						is.setEncoding(fileEncoding);
+
+						final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						
+						XMLDocumentFilter[] filters = { new Writer(baos, fileEncoding) {
+							
+						    protected void printStartElement(QName element, XMLAttributes attributes) {
+						        fPrinter.print('<');
+						        fPrinter.print(element.rawname);
+						        int attrCount = attributes != null ? attributes.getLength() : 0;
+						        for (int i = 0; i < attrCount; i++) {
+						            String aname = attributes.getQName(i);
+						            String avalue = attributes.getValue(i);
+						            fPrinter.print(' ');
+						            fPrinter.print(aname);
+						            fPrinter.print("=\"");
+						            printAttributeValue(avalue);
+						            fPrinter.print('"');
+						        }
+						        if (HTMLElements.getElement(element.rawname).isEmpty()) {
+							        fPrinter.print(' ');						        	
+							        fPrinter.print('/');
+						        }
+						        fPrinter.print('>');
+						        fPrinter.flush();
+						    }
+						    
+						    protected void printAttributeValue(String text) {
+						        fPrinter.print(StringEscapeUtils.escapeHtml(text));
+						        fPrinter.flush();
+						    }
+						    
+						    protected void printEntity(String name) {
+						        fPrinter.print('&');
+						        fPrinter.print('#');
+						        fPrinter.print(HTMLEntities.get(name));
+						        fPrinter.print(';');
+						        fPrinter.flush();
+						    }
+						    
+						}};
+						
+				        DOMParser parser = new DOMParser();
+						parser.setFeature("http://cyberneko.org/html/features/balance-tags", false);
+						parser.setFeature("http://cyberneko.org/html/features/scanner/notify-builtin-refs", true);
+						parser.setProperty("http://cyberneko.org/html/properties/default-encoding", fileEncoding);
+						parser.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
+						parser.setProperty("http://cyberneko.org/html/properties/filters", filters);
+				        parser.parse(is);
+				        
+				        str = "<!DOCTYPE html>" + baos.toString(fileEncoding);
+						
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}					
+					
 					if (url.getFile().contains("META-INF/templates")) {
 						str = "<ui:component xmlns:ui=\"http://java.sun.com/jsf/facelets\">" + 
 							Pattern.compile("(<\\!DOCTYPE html>)|(</?html[^>]*>)|(<title>[^<]*</title>)", 
 								Pattern.CASE_INSENSITIVE).matcher(str).replaceAll("").replaceAll(
 										"\\$\\{template\\.body\\}", "<ui:insert />") + "</ui:component>";
 					}
+					
 				}
+				
 				bytes = str.getBytes(reader.getEncoding());
+				
 			} finally {
 				reader.close();
 			}
@@ -81,103 +145,6 @@ public class FacesResourceProcessor {
 		}
 		
 		return bytes;
-	}
-	
-	private static String handleDocument(String str, String encoding) {
-		
-		StringBuilder sb = new StringBuilder();
-		
-		try {
-		    
-			InputSource is = new InputSource(new StringReader(str));
-			is.setEncoding(encoding);
-			
-	        DOMParser parser = new DOMParser();
-			parser.setFeature("http://cyberneko.org/html/features/balance-tags", false);
-			parser.setFeature("http://cyberneko.org/html/features/scanner/notify-builtin-refs", true);
-			parser.setProperty("http://cyberneko.org/html/properties/default-encoding", encoding);
-
-			XMLDocumentFilter[] filters = { new DefaultFilter() {
-				
-				boolean inEntityRef;
-				XMLStringBuffer buffer = new XMLStringBuffer();
-			
-				public void startDocument(XMLLocator locator, String encoding, Augmentations augs) throws XNIException {
-					super.startDocument(locator, encoding, augs);
-					inEntityRef = false;
-				}
-				
-				public void characters(XMLString text, Augmentations augs) throws XNIException {
-					if (!inEntityRef) {
-						super.characters(text, augs);
-					}
-				}
-			
-				public void startGeneralEntity(String name, XMLResourceIdentifier id, String encoding, Augmentations augs) throws XNIException {
-					inEntityRef = true;
-					buffer.clear();
-					buffer.append("&#");
-					buffer.append(String.valueOf(HTMLEntities.get(name)));
-					buffer.append(";");
-					super.characters(buffer, augs);
-				}
-			
-				public void endGeneralEntity(String name, Augmentations augs) throws XNIException {
-					inEntityRef = false;
-				}
-				
-			}};
-			parser.setProperty("http://cyberneko.org/html/properties/filters", filters);
-	        parser.parse(is);
-	        Node doc = parser.getDocument();
-			sb.append("<!DOCTYPE html>");
-			handleNode(doc, sb);
-			
-		} catch (Exception e) {			
-			logger.error(e.getMessage(), e);
-		}
-		
-		return sb.toString();
-	}
-	
-	private static void handleNode(Node node, StringBuilder sb) {
-		
-		Node child = node.getFirstChild();
-		
-		while (child != null) {
-
-			short nodeType = child.getNodeType();
-			String nodeName = child.getNodeName().toLowerCase();
-			String nodeValue = child.getNodeValue();
-			
-			if (nodeType == 1) {
-				
-				sb.append("<" + nodeName);
-				
-				NamedNodeMap m = child.getAttributes();
-				if (m != null) {
-					for (int i = 0; i < m.getLength(); i++) {
-					   Node item = m.item(i);
-					   sb.append(" " + item.getNodeName().toLowerCase() + "=\"" + item.getNodeValue() + "\"");
-					}
-				}
-				
-				if (child.getChildNodes().getLength() != 0) {
-					sb.append(">");
-					handleNode(child, sb);
-					sb.append("</" + nodeName + ">");
-				} else {
-					sb.append(" />");
-				}
-
-			} else if (nodeType == 3) {
-
-				sb.append(nodeValue);
-				
-			}
-			
-			child = child.getNextSibling();
-		}
 	}
 	
 	/**

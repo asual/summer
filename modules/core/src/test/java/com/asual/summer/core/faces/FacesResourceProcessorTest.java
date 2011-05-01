@@ -25,18 +25,25 @@ public class FacesResourceProcessorTest {
 		String encoding = (String) ResourceUtils.getProperty("app.encoding");
 		
 		url = ResourceUtils.getClasspathResource("META-INF/pages/index.html");
-		bytes = FacesResourceProcessor.execute(url, url.openConnection().getInputStream());
+		bytes = FacesResourceProcessor.execute(url, url.openConnection().getInputStream(), encoding);
 		
 		assertEquals(
 				"<!DOCTYPE html>\n" + 
 				"<html>\n" + 
 				"	\n" + 
-				"	<title>${messages.page.title}</title>\n" + 
+				"	<title>${messages.page.welcome}</title>\n" + 
 				"	\n" + 
-				"	<p>& &#38; &#169;</p>\n" + 
+				"	<script type=\"text/expression\">\n" + 
+				"		function getWelcomeKey() {\n" + 
+				"			return 'page'.concat('.' + 'welcome');\n" + 
+				"		}\n" + 
+				"	</script>\n" + 
+				"	\n" + 
+				"	<h1><a href=\"http://www.asual.com/summer/?module=core&amp;test=true\">${resourceUtils.getMessage(getWelcomeKey())}</a></h1>\n" + 
+				"	\n" + 
+				"	<p>&#169; 2010-2011 Asual DZZD</p>\n" + 
 				"	\n" + 
 				"</html>", new String(bytes, encoding));
-		
 	}
 
 }

@@ -25,7 +25,7 @@ public class HtmlViewIT {
 		assertEquals(
 				"<!DOCTYPE html>\n" + 
 				"<html><head><meta charset=\"UTF-8\" />\n" + 
-				"<title>Welcome to Summer!</title>\n" + 
+				"<title>Summer - The HTML5 Library for Java and Scala</title>\n" + 
 				"<link href=\"/css/summer-core.css\" rel=\"stylesheet\" />\n" + 
 				"<script src=\"/js/summer-core.js\"></script>\n" + 
 				"<script>\n" + 
@@ -34,9 +34,8 @@ public class HtmlViewIT {
 				"				};\n" + 
 				"			</script>\n" + 
 				"</head>\n" + 
-				"<body><h1>Welcome to Summer!</h1>\n" + 
+				"<body><h1><a href=\"http://www.asual.com/summer/?module=core&amp;test=true\">Summer - The HTML5 Library for Java and Scala</a></h1><p>&copy; 2010-2011 Asual DZZD</p>\n" + 
 				"			</body></html>", content);
-		
 	}
 	
 }

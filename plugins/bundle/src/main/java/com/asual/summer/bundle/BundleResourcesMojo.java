@@ -52,6 +52,11 @@ public class BundleResourcesMojo extends AbstractMojo {
 	 * @readonly
 	 */
 	private File outputDirectory;
+
+	/**
+	 * @parameter default-value="UTF-8"
+	 */
+	private String encoding;
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		
@@ -79,7 +84,7 @@ public class BundleResourcesMojo extends AbstractMojo {
 					
 					try {
 						in = new FileInputStream(file);
-						bytes = FacesResourceProcessor.execute(file.toURI().toURL(), new FileInputStream(file));
+						bytes = FacesResourceProcessor.execute(file.toURI().toURL(), new FileInputStream(file), encoding);
 					} finally {
 						IOUtil.close(in);
 					}

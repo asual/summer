@@ -77,7 +77,7 @@ public class MessageResource extends LocationResource {
 		int i = 0;
 		boolean entries = true;
 		
-		while(entries) {
+		while (entries) {
 			entries = false;
 			for (Resource[] location : resourceLocations) {
 				if (location.length > i) {
@@ -85,7 +85,7 @@ public class MessageResource extends LocationResource {
 						URL url = location[i].getURL();
 						boolean isJar = ResourceUtils.isJarURL(url);
 						String basename = "classpath:" + url.getFile()
-							.replaceFirst(isJar ? "^.*" + ResourceUtils.JAR_URL_SEPARATOR : "^(.*/classes|.*/resources)/", "")
+							.replaceFirst(isJar ? "^.*" + ResourceUtils.JAR_URL_SEPARATOR : "^(.*/test-classes|.*/classes|.*/resources)/", "")
 							.replaceAll("(_\\w+){0,3}\\.(properties|xml)", "");
 						if (isJar) {
 							if (!jarBasenames.contains(basename)) {

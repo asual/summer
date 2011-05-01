@@ -70,12 +70,14 @@ public class ResourceUtils {
 			messages = getResources(MessageResource.class);
 		}
 		
-		for (MessageResource bean : messages) {
-			try {
-				return bean.getMessage(key, args, locale);
-			} catch (NoSuchMessageException e) {
+		if (messages != null) {
+			for (MessageResource bean : messages) {
+				try {
+					return bean.getMessage(key, args, locale);
+				} catch (NoSuchMessageException e) {
+				}
 			}
-		}		
+		}
 		
 		return null;
 	}
@@ -88,10 +90,12 @@ public class ResourceUtils {
 		
 		Object property = null;
 
-		for (PropertyResource bean : properties) {
-			property = bean.getProperty(key);
-			if (property != null) {
-				break;
+		if (properties != null) {
+			for (PropertyResource bean : properties) {
+				property = bean.getProperty(key);
+				if (property != null) {
+					break;
+				}
 			}
 		}
 		
@@ -189,17 +193,20 @@ public class ResourceUtils {
 	private static <T> List<T> getResources(Class<T> clazz) {
 		
 		String[] names = BeanUtils.getBeanNames(clazz);
-		List<T> resources = new ArrayList<T>();
-	
-		for (String name : names) {
-			T bean = (T) BeanUtils.getBean(name);
-			if (!resources.contains(bean)) {
-				resources.add(bean);
+		
+		if (names != null) {
+			List<T> resources = new ArrayList<T>();
+			for (String name : names) {
+				T bean = (T) BeanUtils.getBean(name);
+				if (!resources.contains(bean)) {
+					resources.add(bean);
+				}
 			}
+			OrderComparator.sort(resources);
+			return resources;			
 		}
 		
-		OrderComparator.sort(resources);
-		return resources;
+		return null;
 	}
 	
 }

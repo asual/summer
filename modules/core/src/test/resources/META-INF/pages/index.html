@@ -1,8 +1,16 @@
 <!DOCTYPE html>
 <html>
 	
-	<title>${messages.page.title}</title>
+	<title>${messages.page.welcome}</title>
 	
-	<p>& &amp; &copy;</p>
+	<script type="text/expression">
+		function getWelcomeKey() {
+			return 'page'.concat('.' + 'welcome');
+		}
+	</script>
+	
+	<h1><a href="http://www.asual.com/summer/?module=core&test=true">${resourceUtils.getMessage(getWelcomeKey())}</a></h1>
+	
+	<p>&copy; 2010-2011 Asual DZZD</p>
 	
 </html>

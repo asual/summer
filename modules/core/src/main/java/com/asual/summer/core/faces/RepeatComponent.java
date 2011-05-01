@@ -88,7 +88,7 @@ public class RepeatComponent extends UIRepeat implements Component {
         if (getBegin() != null) {
             return getBegin();
         }
-        ValueExpression ve = this.getValueExpression("getDataRepeatBegin");
+        ValueExpression ve = this.getValueExpression("dataRepeatBegin");
         if (ve != null) {
             return (Integer) ve.getValue(getFacesContext().getELContext());
         }
@@ -103,7 +103,7 @@ public class RepeatComponent extends UIRepeat implements Component {
         if (getEnd() != null) {
             return getEnd();
         }
-        ValueExpression ve = this.getValueExpression("getDataRepeatEnd");
+        ValueExpression ve = this.getValueExpression("dataRepeatEnd");
         if (ve != null) {
             return (Integer) ve.getValue(getFacesContext().getELContext());
         }
