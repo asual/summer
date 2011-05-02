@@ -40,43 +40,40 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 		Object value = super.getValue(elContext, base, property);
 		
 		if (value == null) {
-			try {
-				if (property instanceof String) {
-					final String current = (String) property;
-					if (base == null && (MESSAGES.equals(current) || PROPERTIES.equals(current))) {
-						elContext.setPropertyResolved(true);
-						return current;
-					}
-					if (base instanceof String) {
-						if (MESSAGES.equals(base)) {
-							elContext.setPropertyResolved(true);
-							RequestUtils.setAttribute(MESSAGE_ATTRIBUTE, current);
-							String result = ResourceUtils.getMessage(current);
-							return result != null ? result : "";
-						} else if (PROPERTIES.equals(base)) {
-							elContext.setPropertyResolved(true);
-							RequestUtils.setAttribute(PROPERTY_ATTRIBUTE, current);
-							Object result = ResourceUtils.getProperty(current);
-							return result != null ? result : "";
-						} else if (RequestUtils.getAttribute(MESSAGE_ATTRIBUTE) != null) {
-							elContext.setPropertyResolved(true);
-							RequestUtils.setAttribute(MESSAGE_ATTRIBUTE, RequestUtils.getAttribute(MESSAGE_ATTRIBUTE) + "." + current);
-							Object result = ResourceUtils.getMessage((String) RequestUtils.getAttribute(MESSAGE_ATTRIBUTE));
-							return result != null ? result : "";
-						} else if (RequestUtils.getAttribute(PROPERTY_ATTRIBUTE) != null) {
-							elContext.setPropertyResolved(true);
-							RequestUtils.setAttribute(PROPERTY_ATTRIBUTE, RequestUtils.getAttribute(PROPERTY_ATTRIBUTE) + "." + current);
-							Object result = ResourceUtils.getProperty((String) RequestUtils.getAttribute(PROPERTY_ATTRIBUTE));
-							return result != null ? result : "";
-						}
-					}
+			if (property instanceof String) {
+				final String current = (String) property;
+				if (base == null && MESSAGES.equals(current)) {
+					elContext.setPropertyResolved(true);
+					RequestUtils.setAttribute(MESSAGE_ATTRIBUTE, null);
+					return current;						
+				} else if (base == null && PROPERTIES.equals(current)) {
+					elContext.setPropertyResolved(true);
+					RequestUtils.setAttribute(PROPERTY_ATTRIBUTE, null);
+					return current;						
+				} else if (MESSAGES.equals(base)) {
+					elContext.setPropertyResolved(true);
+					RequestUtils.setAttribute(MESSAGE_ATTRIBUTE, current);
+					String result = ResourceUtils.getMessage(current);
+					return result != null ? result : "";
+				} else if (PROPERTIES.equals(base)) {
+					elContext.setPropertyResolved(true);
+					RequestUtils.setAttribute(PROPERTY_ATTRIBUTE, current);
+					Object result = ResourceUtils.getProperty(current);
+					return result != null ? result : "";
+				} else if (base instanceof String && RequestUtils.getAttribute(MESSAGE_ATTRIBUTE) != null) {
+					elContext.setPropertyResolved(true);
+					RequestUtils.setAttribute(MESSAGE_ATTRIBUTE, RequestUtils.getAttribute(MESSAGE_ATTRIBUTE) + "." + current);
+					Object result = ResourceUtils.getMessage((String) RequestUtils.getAttribute(MESSAGE_ATTRIBUTE));
+					return result != null ? result : "";
+				} else if (base instanceof String && RequestUtils.getAttribute(PROPERTY_ATTRIBUTE) != null) {
+					elContext.setPropertyResolved(true);
+					RequestUtils.setAttribute(PROPERTY_ATTRIBUTE, RequestUtils.getAttribute(PROPERTY_ATTRIBUTE) + "." + current);
+					Object result = ResourceUtils.getProperty((String) RequestUtils.getAttribute(PROPERTY_ATTRIBUTE));
+					return result != null ? result : "";
 				}
-			} catch (Exception e) {}
+			}
 		}
 		
-		RequestUtils.setAttribute(MESSAGE_ATTRIBUTE, null);
-		RequestUtils.setAttribute(PROPERTY_ATTRIBUTE, null);
-
 		return value;
 	}
 
