@@ -14,6 +14,14 @@
 
 package com.asual.summer.core;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.asual.summer.core.util.RequestUtils;
+
 /**
  * 
  * @author Rostislav Hristov
@@ -22,9 +30,11 @@ package com.asual.summer.core;
 public class ViewNotFoundException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
-
+	private final Log logger = LogFactory.getLog(getClass());
+	private boolean logged = false;
+	
 	public ViewNotFoundException() {
-		super();
+		super(RequestUtils.getUrl());
 	}
 	
 	public ViewNotFoundException(String message) {
@@ -38,4 +48,23 @@ public class ViewNotFoundException extends RuntimeException {
 	public ViewNotFoundException(Throwable e) {
 		super(e);
 	}
+
+    public void printStackTrace(PrintStream s) {
+    	if (!logged) {
+    		logger.error(getMessage());
+    		logged = true;
+    	}
+    }
+    
+    public void printStackTrace(PrintWriter s) {
+    	if (!logged) {
+    		logger.error(getMessage());
+    		logged = true;
+    	}
+    }
+    
+    public StackTraceElement[] getStackTrace() {
+    	return new StackTraceElement[0];
+    }
+    
 }
