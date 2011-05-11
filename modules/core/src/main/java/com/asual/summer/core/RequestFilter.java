@@ -125,7 +125,7 @@ public class RequestFilter extends OncePerRequestFilter {
 			}
 			
 			if (RequestUtils.isMSIE()) {
-				response.setHeader("X-UA-Compatible", "IE=8");
+				response.setHeader("X-UA-Compatible", "IE=Edge,chrome=1");
 			}
 			
 			filterChain.doFilter(requestHolder.get(), response);
