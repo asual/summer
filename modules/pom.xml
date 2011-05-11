@@ -74,8 +74,8 @@
 						</dependency>
 					</dependencies>
 					<configuration>
-	                    <stopPort>9089</stopPort>
-	                    <stopKey>jetty</stopKey>
+						<stopPort>9089</stopPort>
+						<stopKey>jetty</stopKey>
 					</configuration>					
 					<executions>
 						<execution>
