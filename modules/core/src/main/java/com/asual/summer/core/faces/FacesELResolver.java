@@ -45,9 +45,11 @@ public class FacesELResolver extends SpringBeanFacesELResolver {
 				if (base == null && MESSAGES.equals(current)) {
 					elContext.setPropertyResolved(true);
 					RequestUtils.setAttribute(MESSAGE_ATTRIBUTE, null);
+					RequestUtils.setAttribute(PROPERTY_ATTRIBUTE, null);
 					return current;						
 				} else if (base == null && PROPERTIES.equals(current)) {
 					elContext.setPropertyResolved(true);
+					RequestUtils.setAttribute(MESSAGE_ATTRIBUTE, null);
 					RequestUtils.setAttribute(PROPERTY_ATTRIBUTE, null);
 					return current;						
 				} else if (MESSAGES.equals(base)) {
