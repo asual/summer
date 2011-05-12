@@ -11,7 +11,7 @@
 	<groupId>com.asual.summer</groupId>
 	<url>http://www.asual.com/summer</url>
 	<packaging>pom</packaging>
-	<version>1.0.0.M3-SNAPSHOT</version>
+	<version>1.0.0.M3</version>
 	<modelVersion>4.0.0</modelVersion>
 	
 	<organization>
