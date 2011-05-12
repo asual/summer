@@ -20,7 +20,6 @@
 	<modules>
 		<module>bundle</module>
 		<module>onejar</module>
-		<module>roo</module>
 	</modules>
 	
 </project>
