@@ -34,6 +34,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.jboss.el.lang.EvaluationContext;
+import org.jboss.el.lang.ExpressionBuilder;
 
 import com.asual.summer.core.ErrorResolver;
 import com.asual.summer.core.util.BeanUtils;
@@ -141,6 +142,11 @@ public class ComponentUtils {
 			classes.add(styleClass);
 		}
 		return classes;
+	}
+	
+	static String getValue(UIComponent component) {
+		return (String) ExpressionBuilder.createNode(component.getChildren().get(0).toString())
+			.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null));
 	}
 	
 	static String getAttrValue(Component component, String key) {

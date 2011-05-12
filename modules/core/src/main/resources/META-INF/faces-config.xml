@@ -33,6 +33,7 @@
 	
 	<factory>
 		<faces-context-factory>com.asual.summer.core.faces.FacesContextFactoryImpl</faces-context-factory>
+		<render-kit-factory>com.asual.summer.core.faces.FacesRenderKitFactoryImpl</render-kit-factory>
 	</factory>
 	
 	<render-kit>

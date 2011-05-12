@@ -25,9 +25,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
-import org.jboss.el.lang.EvaluationContext;
-import org.jboss.el.lang.ExpressionBuilder;
-
 import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.compiler.UIInstructions;
 
@@ -75,20 +72,16 @@ public class CompositeComponentRenderer extends Renderer {
 			throw new IOException("Unable to find element [" + component.getClientId() + "].");
 		}
 		
-		Map<String, Object> attrs = component.getAttributes();
-		if ("false".equals((String) attrs.get("dataEscape"))) {
-			if (component.getFacetCount() == 1 && component.getFacet(UIComponent.COMPOSITE_FACET_NAME) instanceof UIPanel) {
-				UIPanel panel = (UIPanel) component.getFacet(UIComponent.COMPOSITE_FACET_NAME);
-				if (panel.getChildCount() == 1 && panel.getChildren().get(0) instanceof UIInstructions) {
-					ResponseWriter writer = context.getResponseWriter();
-					writer.write((String) ExpressionBuilder.createNode(panel.getChildren().get(0).toString())
-							.getValue(new EvaluationContext(FacesContext.getCurrentInstance().getELContext(), null, null)));
-					return;
-				}
-			}
-		}
+		String escape = ComponentUtils.getAttrValue((Component) component, "dataEscape");
 		
-		compositeRoot.encodeAll(context);
+		UIComponent facet = component.getFacet(UIComponent.COMPOSITE_FACET_NAME);
+		if (!StringUtils.isEmpty(escape) && !Boolean.valueOf(escape) &&
+				component.getFacetCount() == 1 && facet != null && facet instanceof UIPanel && 
+				facet.getChildCount() == 1 && facet.getChildren().get(0) instanceof UIInstructions) {
+			context.getResponseWriter().write(ComponentUtils.getValue(facet));
+		} else {
+			compositeRoot.encodeAll(context);
+		}
 	}
 	
 	public void encodeEnd(FacesContext context, UIComponent component)
