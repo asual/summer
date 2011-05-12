@@ -35,7 +35,7 @@ import org.springframework.core.OrderComparator;
 import com.asual.summer.core.resource.MessageResource;
 import com.asual.summer.core.resource.PropertyResource;
 import com.asual.summer.core.resource.ScriptResource;
-import com.asual.summer.core.resource.StylesheetResource;
+import com.asual.summer.core.resource.StyleResource;
 
 /**
  * 
@@ -49,7 +49,7 @@ public class ResourceUtils {
 	
 	private static List<MessageResource> messages = null;
 	private static List<PropertyResource> properties = null;
-	private static List<StylesheetResource> stylesheets = null;
+	private static List<StyleResource> styles = null;
 	private static List<ScriptResource> scripts = null;
 	
 	public static String getMessage(String key) {
@@ -117,11 +117,11 @@ public class ResourceUtils {
 		return scripts;
 	}
 
-	public static List<StylesheetResource> getStylesheets() {
-		if (stylesheets == null) {
-			stylesheets = getResources(StylesheetResource.class);
+	public static List<StyleResource> getStyles() {
+		if (styles == null) {
+			styles = getResources(StyleResource.class);
 		}
-		return stylesheets;
+		return styles;
 	}
 	
 	public static String getManifestAttribute(String key) {

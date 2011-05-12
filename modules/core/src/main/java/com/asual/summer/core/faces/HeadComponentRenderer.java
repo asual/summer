@@ -41,9 +41,9 @@ import com.asual.summer.core.util.ScriptUtils;
  *
  */
 @ListenerFor(systemEventClass=PostAddToViewEvent.class)
-public class StylesheetRenderer extends Renderer implements ComponentSystemEventListener {
+public class HeadComponentRenderer extends Renderer implements ComponentSystemEventListener {
 	
-	private static final String COMP_KEY = StylesheetRenderer.class.getName() + ".COMPOSITE_COMPONENT";
+	private static final String COMP_KEY = HeadComponentRenderer.class.getName() + ".COMPOSITE_COMPONENT";
 	
 	private static final List<String> ATTRIBUTES = Arrays.asList(new String[] {
 		"charset",

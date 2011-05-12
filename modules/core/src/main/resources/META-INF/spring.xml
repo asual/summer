@@ -35,7 +35,7 @@
 
 	<bean class="com.asual.summer.core.resource.ScriptResource" p:location="/js/summer-core.js" p:pack="summer" p:order="-2147483645" />
 
-	<bean class="com.asual.summer.core.resource.StylesheetResource" p:location="/css/summer-core.css" p:pack="summer" p:order="-2147483645" />
+	<bean class="com.asual.summer.core.resource.StyleResource" p:location="/css/summer-core.css" p:pack="summer" p:order="-2147483645" />
 	
 	<bean id="annotationModelAndViewResolver" class="com.asual.summer.core.spring.AnnotationModelAndViewResolver" />
 

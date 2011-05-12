@@ -19,7 +19,7 @@ package com.asual.summer.core.resource;
  * @author Rostislav Hristov
  *
  */
-public class StylesheetResource extends LocationResource {
+public class StyleResource extends LocationResource {
 
 	private String media;
 	private String pack;
@@ -57,7 +57,7 @@ public class StylesheetResource extends LocationResource {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StylesheetResource other = (StylesheetResource) obj;
+		StyleResource other = (StyleResource) obj;
 		if (media == null) {
 			if (other.media != null)
 				return false;
