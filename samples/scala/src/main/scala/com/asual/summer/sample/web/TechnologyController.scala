@@ -51,7 +51,7 @@ class TechnologyController {
 	@RequestMapping(method=Array(RequestMethod.POST))
 	def persist(@Valid @ModelAttribute technology:Technology):ModelAndView = {
 		technology.merge
-		return new ModelAndView(new RedirectView("/technology/" + technology.getValue, true))
+		return new ModelAndView(new RedirectView("/technology/" + technology.value, true))
 	}
 	
 	@RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.GET))
@@ -67,7 +67,7 @@ class TechnologyController {
 	@RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.PUT))
 	def merge(@Valid @ModelAttribute technology:Technology):ModelAndView = {
 		technology.merge
-		return new ModelAndView(new RedirectView("/technology/" + technology.getValue, true))
+		return new ModelAndView(new RedirectView("/technology/" + technology.value, true))
 	}
 	
 	@RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.DELETE))
@@ -99,15 +99,15 @@ class TechnologyController {
 	
 	@RequestMapping(Array("/image/{value}"))
 	def image(@PathVariable("value") value:String, response:HttpServletResponse) {
-		var image:Image = Technology.findImage(value);
+		var image:Image = Technology.findImage(value)
 		if (image != null) {
-			response.setContentLength(image.getBytes.length);
-			response.setContentType(image.contentType);
-			response.getOutputStream.write(image.getBytes);
+			response.setContentLength(image.getBytes.length)
+			response.setContentType(image.contentType)
+			response.getOutputStream.write(image.getBytes)
 		} else {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND)
 		}
-		response.getOutputStream.flush;
-		response.getOutputStream.close;
+		response.getOutputStream.flush
+		response.getOutputStream.close
 	}
 }

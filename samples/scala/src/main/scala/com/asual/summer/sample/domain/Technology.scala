@@ -200,7 +200,7 @@ object Technology {
 				return ois.readObject().asInstanceOf[Technology.Image]
 			}
 		}
-		return null;
+		return null
 	}
 	
 	def list():List[Technology] = { 
