@@ -31,13 +31,16 @@ public class ResourceOrderProcessor implements BeanFactoryPostProcessor {
 	
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		AbstractResource resource = null;
+		int count = 0;
 		for (Object key : resources.keySet()) {
 			if (key instanceof AbstractResource) {
 				resource = (AbstractResource) key;
 			} else if (key instanceof String) {
 				resource = beanFactory.getBean((String) key, AbstractResource.class);
 			}
-			resource.setOrder(resources.get(key));
+			Integer order = resources.get(key);
+			resource.setOrder(order != null ? order : count);
+			count++;
 		}
 	}
 	
