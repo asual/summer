@@ -135,7 +135,6 @@ public class HeadComponentRenderer extends Renderer implements ComponentSystemEv
 			Map<String,Object> attrs = component.getAttributes();		
 			String qName = (String) attrs.get("qName");
 			writer.endElement(qName);
-			writer.write("\n");
 		}
 	}
 	

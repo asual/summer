@@ -96,31 +96,24 @@ public class CompositeComponentRenderer extends Renderer {
 	
 	public void beginElement(Component component, String name) throws IOException {
 		
-		FacesContext context = FacesContext.getCurrentInstance();
-		ResponseWriter writer = context.getResponseWriter();
-		writer.write("<");
-		writer.write(name);
+		ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
+		writer.startElement(name, (UIComponent) component);
 
 		Map<String, Object> attrs = ComponentUtils.getAttributes(component, name);
-		
 		if (ComponentUtils.isComponentWrapper((UIComponent) component)) {
 			attrs.put("class", component.getStyleClass());
 		}
 		
 		for (String key : attrs.keySet()) {
 			if (ComponentUtils.shouldWriteAttribute(component, key) && attrs.get(key) != null) {
-				writer.write(" " + key + "=\"" + ComponentUtils.contextAttribute(key, attrs.get(key)) + "\"");
+				writer.writeAttribute(key, ComponentUtils.contextAttribute(key, attrs.get(key)), null);
 			}
 		}
-		
-		writer.write(">");
 	}
 	
 	public void endElement(CompositeComponent component, String name) throws IOException {
 		ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
-		writer.write("</");
-		writer.write(name);
-		writer.write(">");
+		writer.endElement(name);
 	}
 
 	public boolean getRendersChildren() {

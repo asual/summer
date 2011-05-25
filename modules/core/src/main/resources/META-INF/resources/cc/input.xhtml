@@ -32,10 +32,12 @@
 		
 		<ui:fragment rendered="${not empty cc.attrs.type and cc.attrs.type.matches('hidden|submit|reset')}">
 			${cc.renderer.beginElement(cc, 'input')}
+			${cc.renderer.endElement(cc, 'input')}
 		</ui:fragment>
 		
 		<ui:fragment rendered="${not empty cc.attrs.type and cc.attrs.type.matches('checkbox|radio')}">
 			${cc.renderer.beginElement(cc, 'input')}
+			${cc.renderer.endElement(cc, 'input')}
 			<ui:fragment rendered="${not empty cc.attrs.dataLabel}">
 				<label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
 			</ui:fragment>
@@ -48,6 +50,7 @@
 				<label for="${cc.formId}" title="${cc.attrs.title}">${cc.attrs.dataLabel}</label>
 			</ui:fragment>
 			${cc.renderer.beginElement(cc, 'input')}
+			${cc.renderer.endElement(cc, 'input')}
 			<h:outputText rendered="${(empty cc.attrs.dataError or cc.attrs.dataError) and not empty cc.formName and not empty errors.get(cc.formName)}"
 				value="${errors.get(cc.formName).message}" styleClass="error" escape="false" />
 		</ui:fragment>

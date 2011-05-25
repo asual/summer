@@ -63,7 +63,6 @@ public class HeadRenderer extends Renderer {
 		throws IOException {
 		ResponseWriter writer = context.getResponseWriter();
 		writer.endElement("head");
-		writer.write("\n");
 	}
 
 	protected void encodeHeadResources(FacesContext context, UIComponent component)

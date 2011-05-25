@@ -50,7 +50,7 @@ public class FacesRenderKitImpl extends RenderKitImpl {
 		
 		return new FacesResponseWriter(writer, RIConstants.HTML_CONTENT_TYPE, 
 				characterEncoding != null ? characterEncoding : (String) ResourceUtils.getProperty("app.encoding"), 
-						webConfig.isOptionEnabled( EnableScriptInAttributeValue), 
+						webConfig.isOptionEnabled(EnableScriptInAttributeValue), 
 						FacesContext.getCurrentInstance().getPartialViewContext().isPartialRequest());
 	}
 	
