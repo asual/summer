@@ -156,6 +156,7 @@
 				});				
 				
 				if (ready && event == 'ready') {
+					// TODO: Check if o is a region... potential request loop
 					o.trigger(event, ready).bind('success', function() {
 						o.trigger(event, ready);
 					});

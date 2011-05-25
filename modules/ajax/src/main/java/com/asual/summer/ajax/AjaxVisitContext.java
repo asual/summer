@@ -14,8 +14,12 @@
 
 package com.asual.summer.ajax;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.component.UIComponent;
@@ -33,11 +37,27 @@ import com.sun.faces.component.visit.PartialVisitContext;
  */
 public class AjaxVisitContext extends PartialVisitContext {
 	
+	private Collection<String> unknownClientIds;
 	private Collection<String> unvisitedClientIds;
+	private Map<String,Collection<String>> subtreeClientIds;
 	
 	public AjaxVisitContext(Collection<String> clientIds, Set<VisitHint> hints) {
 		super(FacesContext.getCurrentInstance(), clientIds, hints);
+		unknownClientIds = new HashSet<String>();
 		unvisitedClientIds = new HashSet<String>(clientIds);
+		subtreeClientIds = new HashMap<String,Collection<String>>();
+		for (String id : unvisitedClientIds) {
+			UIComponent component = findComponent(id, FacesContext.getCurrentInstance().getViewRoot());
+			if (component != null) {
+				String clientId = component.getClientId();
+				while (component != null) {
+					subtreeClientIds.put(component.getClientId(), Arrays.asList(clientId));
+					component = component.getParent();
+				}
+			} else {
+				unknownClientIds.add(id);
+			}
+		}
 	}
 
 	public VisitResult invokeVisitCallback(UIComponent component, 
@@ -52,6 +72,7 @@ public class AjaxVisitContext extends PartialVisitContext {
 		
 		VisitResult result = callback.visit(this, component);
 		unvisitedClientIds.remove(clientId);
+		unknownClientIds.remove(clientId);
 		
 		if (unvisitedClientIds.isEmpty()) {
 			return VisitResult.COMPLETE;
@@ -60,8 +81,32 @@ public class AjaxVisitContext extends PartialVisitContext {
 		return result;
 	}
 	
+	private UIComponent findComponent(String expr, UIComponent component) {
+		if (expr.equals(component.getClientId())) {
+			return component;
+		}
+		UIComponent result = null;
+		Iterator<UIComponent> children = component.getFacetsAndChildren();
+		while(children.hasNext()) {
+			UIComponent child = children.next();
+			result = findComponent(expr, child);
+			if (result != null) {
+				return result;
+			}
+		}
+		return result;
+	}
+	
 	public Collection<String> getSubtreeIdsToVisit(UIComponent component) {
-		return getIdsToVisit();	 
+		if (unknownClientIds.size() != 0) {
+			return unvisitedClientIds;
+		}
+		Collection<String> subtreeIdsToVisit = subtreeClientIds.get(component.getClientId());		
+		if (subtreeIdsToVisit != null) {
+			return subtreeIdsToVisit;
+		} else {
+			return Arrays.asList();
+		}
 	}
 
 }
