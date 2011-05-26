@@ -21,21 +21,26 @@ public class HtmlViewIT {
 		HttpGet request = new HttpGet("http://localhost:9090/");
 		HttpResponse response = client.execute(request);
 		HttpEntity entity = response.getEntity();
-		String content = EntityUtils.toString(entity);	
+		String content = EntityUtils.toString(entity);
 		assertEquals(
 				"<!DOCTYPE html>\n" + 
-				"<html><head><meta charset=\"UTF-8\" />\n" + 
-				"<title>Summer - The HTML5 Library for Java and Scala</title>\n" + 
-				"<link href=\"/css/summer-core.css\" rel=\"stylesheet\" />\n" + 
-				"<script src=\"/js/summer-core.js\"></script>\n" + 
-				"<script>\n" + 
-				"				$.summer = {\n" + 
-				"					contextPath: ''\n" + 
-				"				};\n" + 
-				"			</script>\n" + 
-				"</head>\n" + 
-				"<body><h1><a href=\"http://www.asual.com/summer/?module=core&amp;test=true\">Summer - The HTML5 Library for Java and Scala</a></h1><p>&copy; 2010-2011 Asual DZZD</p>\n" + 
-				"			</body></html>", content);
+				"<html>\n" + 
+				"    <head>\n" + 
+				"        <meta charset=\"UTF-8\">\n" + 
+				"        <title>Summer - The HTML5 Library for Java and Scala</title>\n" + 
+				"        <link href=\"/css/summer-core.css\" rel=\"stylesheet\">\n" + 
+				"        <script src=\"/js/summer-core.js\"></script>\n" + 
+				"        <script>\n" + 
+				"            $.summer = {\n" + 
+				"                contextPath: ''\n" + 
+				"            };\n" + 
+				"        </script>\n" + 
+				"    </head>\n" + 
+				"    <body>\n" + 
+				"        <h1><a href=\"http://www.asual.com/summer/?module=core&amp;test=true\">Summer - The HTML5 Library for Java and Scala</a></h1>\n" + 
+				"        <p>© 2010-2011 Asual DZZD</p>\n" + 
+				"    </body>\n" + 
+				"</html>\n", content);
 	}
 	
 }
