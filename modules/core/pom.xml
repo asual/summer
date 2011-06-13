@@ -111,7 +111,10 @@
 						</systemProperty>
 					</systemProperties>
 					<webAppConfig>
-						<extraClasspath>${basedir}/target/test-classes;${basedir}/target/classes</extraClasspath>
+						<extraClasspath>
+							${basedir}/target/test-classes;
+							${basedir}/target/classes
+						</extraClasspath>
 					</webAppConfig>
 					<webAppSourceDirectory>${basedir}/src/main/resources</webAppSourceDirectory>
 					<webXml>${basedir}/src/main/resources/META-INF/web-fragment.xml</webXml>

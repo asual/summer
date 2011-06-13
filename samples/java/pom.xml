@@ -178,7 +178,12 @@
 				<configuration>
 					<webAppConfig>
 						<jettyEnvXml>${basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
-						<extraClasspath>${basedir}/target/classes;${basedir}/../../modules/ajax/target/classes;${basedir}/../../modules/atmosphere/target/classes;${basedir}/../../modules/core/target/classes</extraClasspath>
+						<extraClasspath>
+							${basedir}/target/classes;
+							${basedir}/../../modules/ajax/target/classes;
+							${basedir}/../../modules/atmosphere/target/classes;
+							${basedir}/../../modules/core/target/classes
+						</extraClasspath>
 					</webAppConfig>
 				</configuration>
 			</plugin>
