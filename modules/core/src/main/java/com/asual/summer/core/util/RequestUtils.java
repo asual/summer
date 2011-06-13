@@ -114,13 +114,13 @@ public class RequestUtils implements ApplicationContextAware {
 	}
 	
 	public static boolean isValidation() {
-		return "Validation".equals(getHeader("X-Requested-Operation"));
+		return "Validation".equalsIgnoreCase(getHeader("X-Requested-Operation"));
 	}
 	
 	public static boolean isAjaxRequest() {
-		return "XMLHttpRequest".equals(getHeader("X-Requested-With"));
+		return "XMLHttpRequest".equalsIgnoreCase(getHeader("X-Requested-With"));
 	}
-		
+	
 	public static boolean isGetRequest() {
 		return "GET".equalsIgnoreCase(getRequest().getMethod());
 	}
