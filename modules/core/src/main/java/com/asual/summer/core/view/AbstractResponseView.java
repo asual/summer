@@ -17,8 +17,13 @@ package com.asual.summer.core.view;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.view.AbstractView;
+import org.springframework.web.util.UrlPathHelper;
+import org.springframework.web.util.WebUtils;
 
 /**
  * 
@@ -27,6 +32,7 @@ import org.springframework.web.servlet.view.AbstractView;
  */
 public abstract class AbstractResponseView extends AbstractView implements ResponseView {
 
+	private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
 	private String extension;
 	
 	public String getExtension() {
@@ -45,5 +51,13 @@ public abstract class AbstractResponseView extends AbstractView implements Respo
 			}
 		}
 		return result;
-	}	
+	}
+	
+	protected String getFilename(HttpServletRequest request) {
+		String requestUri = urlPathHelper.getRequestUri(request);
+		String filename = WebUtils.extractFullFilenameFromUrlPath(requestUri);
+		String extension = StringUtils.getFilenameExtension(filename);
+		return filename.replaceFirst("\\." + extension + "$", ".") + getExtension();		
+	}
+	
 }
