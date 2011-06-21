@@ -22,12 +22,14 @@ import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceEditor;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
 
@@ -60,11 +62,34 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 		eppc.setStringArraySeparator(stringArraySeparator);
 	}
 	
+	public void setProperties(Properties properties) {
+		eppc.setProperties(properties);
+	}
+
+	public void setPropertiesArray(Properties[] propertiesArray) {
+		eppc.setPropertiesArray(propertiesArray);
+	}
+	
+	public void setIgnoreResourceNotFound(boolean ignoreResourceNotFound) {
+		eppc.setIgnoreResourceNotFound(ignoreResourceNotFound);
+	}
+	
 	public void setLocations(String[] locations) {
-		setWildcardLocations(locations);
+		
+		super.setLocations(locations);
+		
+		ResourceEditor editor = (ResourceEditor) BeanUtils.findEditorByConvention(Resource.class);
+		Resource[] resources = new Resource[locations.length];
+		for (int i = 0; i < locations.length; i++) {
+			editor.setAsText(locations[i]);
+			resources[i] = (Resource) editor.getValue();
+		}
+		eppc.setLocations(resources);
 	}
 	
 	public void setWildcardLocations(String[] locations) {
+		
+		super.setLocations(locations);
 		
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		List<Resource[]> resourceLocations = new ArrayList<Resource[]>();
@@ -111,8 +136,7 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 		
 		eppc.setLocations(fileResources.toArray(new Resource[fileResources.size()]));
 	}
-
-	@Override
+	
 	public void postProcessBeanFactory(
 			ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		eppc.postProcessBeanFactory(beanFactory);

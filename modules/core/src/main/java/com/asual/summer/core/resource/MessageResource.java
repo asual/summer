@@ -50,10 +50,14 @@ public class MessageResource extends LocationResource {
 	}
 	
 	public void setLocations(String[] locations) {
-		setWildcardLocations(locations);
+		super.setLocations(locations);
+		rbms.clearCache();
+		rbms.setBasenames(locations);
 	}
 	
 	public void setWildcardLocations(String[] locations) {
+		
+		super.setLocations(locations);
 		
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		List<Resource[]> resourceLocations = new ArrayList<Resource[]>();
