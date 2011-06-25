@@ -14,26 +14,25 @@
 
 package com.asual.summer.bundle;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.jar.JarInputStream;
-import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.codehaus.plexus.util.IOUtil;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.Descriptor;
@@ -83,13 +82,14 @@ public class BundleDescriptorMojo extends AbstractMojo {
 
 		try {
 			
-			File webXml = new File(buildDirectory, finalName + "/WEB-INF/web.xml");
-			FileUtils.copyFile(new File(basedir, "src/main/webapp/WEB-INF/web.xml"), webXml);
+			String webXml = "/WEB-INF/web.xml";
+			File webXmlFile = new File(buildDirectory, finalName + webXml);
+			FileUtils.copyFile(new File(basedir, "src/main/webapp/" + webXml), webXmlFile);
 			
 			Configuration[] configurations = new Configuration[] { new WebXmlConfiguration(), new FragmentConfiguration() };
 			WebAppContext context = new WebAppContext();
 			context.setDefaultsDescriptor(null);
-			context.setDescriptor(webXml.getAbsolutePath());
+			context.setDescriptor(webXmlFile.getAbsolutePath());
 			context.setConfigurations(configurations);
 			
 			for (Artifact artifact : artifacts) {
@@ -138,47 +138,45 @@ public class BundleDescriptorMojo extends AbstractMojo {
 			}
 			root.addAll(nodes);
 
-			BufferedWriter writer = new BufferedWriter(new FileWriter(webXml));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(webXmlFile));
 			writer.write(root.toString());
 			writer.close();
 			
 			File warFile = new File(buildDirectory, finalName + ".war");
-			File bundleFile = new File(buildDirectory, "bundle.war");
+			File tempFile = File.createTempFile(warFile.getName(), null);
+			tempFile.delete();
+
+			warFile.renameTo(tempFile);
 			
-			JarInputStream in = new JarInputStream(new FileInputStream(warFile));
-			JarOutputStream out = new JarOutputStream(new FileOutputStream(bundleFile));
 			
-			while (true) {
-				ZipEntry entry = in.getNextEntry();
-				if (entry != null) {
-					if ("WEB-INF/web.xml".equals(entry.getName())) {
-						BufferedInputStream bis = new BufferedInputStream(new FileInputStream(webXml));
-						putEntry(out, bis, new ZipEntry(entry.getName()));
-						bis.close();
-					} else {
-						putEntry(out, in, entry);
-					}
-				} else {
-					break;
+			ZipInputStream zis = new ZipInputStream(new FileInputStream(tempFile));
+			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(warFile));
+			
+			ZipEntry entry = zis.getNextEntry();
+			while (entry != null) {
+				String name = entry.getName();
+				if (!webXmlFile.getName().equals(name)) {
+					out.putNextEntry(new ZipEntry(name));
+					IOUtils.copy(zis, out);
 				}
+				entry = zis.getNextEntry();
 			}
-			
+			zis.close();
+
+			InputStream in = new FileInputStream(webXmlFile);
+			out.putNextEntry(new ZipEntry(webXml));
+
+			IOUtils.copy(in, out);
+			out.closeEntry();
 			in.close();
-			out.close();
 			
-			warFile.delete();
-			FileUtils.moveFile(bundleFile, warFile);
+			out.close();
+			tempFile.delete();
 			
 		} catch (Exception e) {
 			getLog().error(e.getMessage(), e);
 			throw new MojoExecutionException(e.getMessage(), e);
 		}
-	}
-	
-	private void putEntry(JarOutputStream out, InputStream in, ZipEntry entry) throws IOException {
-		out.putNextEntry(entry);
-		IOUtil.copy(in, out);
-		out.closeEntry();
 	}
 	
 }
