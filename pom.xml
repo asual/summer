@@ -48,7 +48,7 @@
 		<jetty.version>8.0.0.M3</jetty.version>
 		<servlet.version>3.0.20100224</servlet.version>
 		<slf4j.version>1.6.1</slf4j.version>
-		<spring.version>3.0.5.RELEASE</spring.version>
+		<spring.version>3.1.0.M2</spring.version>
 	</properties>
 	
 	<repositories>
@@ -81,6 +81,11 @@
 			<id>com.asual.repositories.public</id>
 			<name>Asual Public Repository</name>
 			<url>http://www.asual.com/maven/content/groups/public</url>
+		</repository>
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Maven Central Compatible Spring Milestone Repository</name>
+			<url>http:// maven.springframework.org/milestone</url>
 		</repository>
 	</repositories>
 
