@@ -106,7 +106,7 @@ public class CompositeComponentRenderer extends Renderer {
 		
 		for (String key : attrs.keySet()) {
 			if (ComponentUtils.shouldWriteAttribute(component, key) && attrs.get(key) != null) {
-				writer.writeAttribute(key, ComponentUtils.contextAttribute(key, attrs.get(key)), null);
+				ComponentUtils.writeAttribute(writer, key, attrs.get(key));
 			}
 		}
 	}
