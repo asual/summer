@@ -17,22 +17,21 @@ package com.asual.summer.bundle;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.codehaus.plexus.archiver.zip.ZipArchiver;
+import org.codehaus.plexus.archiver.zip.ZipUnArchiver;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.Descriptor;
@@ -51,7 +50,7 @@ import org.eclipse.jetty.xml.XmlParser.Node;
  * @author Rostislav Hristov
  * 
  */
-public class BundleDescriptorMojo extends AbstractMojo {	
+public class BundleDescriptorMojo extends AbstractMojo {
 
 	/**
 	 * @parameter default-value="${project.artifacts}"
@@ -82,8 +81,9 @@ public class BundleDescriptorMojo extends AbstractMojo {
 
 		try {
 			
-			String webXml = "/WEB-INF/web.xml";
-			File webXmlFile = new File(buildDirectory, finalName + webXml);
+			String webXml = "WEB-INF/web.xml";
+			String bundle = "bundle";
+			File webXmlFile = new File(buildDirectory, finalName + "/" + webXml);
 			FileUtils.copyFile(new File(basedir, "src/main/webapp/" + webXml), webXmlFile);
 			
 			Configuration[] configurations = new Configuration[] { new WebXmlConfiguration(), new FragmentConfiguration() };
@@ -138,40 +138,27 @@ public class BundleDescriptorMojo extends AbstractMojo {
 			}
 			root.addAll(nodes);
 
-			BufferedWriter writer = new BufferedWriter(new FileWriter(webXmlFile));
+			File warFile = new File(buildDirectory, finalName + ".war");
+			File bundleDir = new File(buildDirectory, bundle);
+			bundleDir.mkdir();
+			
+			ZipUnArchiver unarchiver = new ZipUnArchiver();
+			unarchiver.enableLogging(new ConsoleLogger(Logger.LEVEL_INFO, finalName));
+			unarchiver.setSourceFile(warFile);
+			unarchiver.setDestDirectory(bundleDir);
+			unarchiver.extract();
+			
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(bundleDir, webXml)));
 			writer.write(root.toString());
 			writer.close();
 			
-			File warFile = new File(buildDirectory, finalName + ".war");
-			File tempFile = File.createTempFile(warFile.getName(), null);
-			tempFile.delete();
-
-			warFile.renameTo(tempFile);
+			ZipArchiver archiver = new ZipArchiver();
+			archiver.enableLogging(new ConsoleLogger(Logger.LEVEL_INFO, finalName));
+			archiver.addDirectory(bundleDir);
+			archiver.setDestFile(warFile);
+			archiver.createArchive();
 			
-			
-			ZipInputStream zis = new ZipInputStream(new FileInputStream(tempFile));
-			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(warFile));
-			
-			ZipEntry entry = zis.getNextEntry();
-			while (entry != null) {
-				String name = entry.getName();
-				if (!webXmlFile.getName().equals(name)) {
-					out.putNextEntry(new ZipEntry(name));
-					IOUtils.copy(zis, out);
-				}
-				entry = zis.getNextEntry();
-			}
-			zis.close();
-
-			InputStream in = new FileInputStream(webXmlFile);
-			out.putNextEntry(new ZipEntry(webXml));
-
-			IOUtils.copy(in, out);
-			out.closeEntry();
-			in.close();
-			
-			out.close();
-			tempFile.delete();
+			FileUtils.deleteDirectory(bundleDir);
 			
 		} catch (Exception e) {
 			getLog().error(e.getMessage(), e);
