@@ -86,7 +86,7 @@ public class License implements Serializable {
 
 	public void setName(String name) {
 		if (name != null) {
-			value = StringUtils.toURIPath(name);
+			value = StringUtils.toUriPath(name);
 		}
 		this.name = name;
 	}

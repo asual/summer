@@ -76,7 +76,7 @@ public class StringUtils {
 		return WordUtils.capitalize(str);
 	}
 
-	public static String toURIPath(String str) {
+	public static String toUriPath(String str) {
 		return StringUtils.join(str.replaceAll("'|\\\"|\\.|,|;", "").split(" "), "-").toLowerCase();
 	}
 
