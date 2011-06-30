@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.InternalResourceView;
@@ -47,7 +48,6 @@ public class ErrorResolver implements HandlerExceptionResolver {
 	private static final String ERRORS = "errors";
 	private final Log logger = LogFactory.getLog(getClass());
 	
-	@SuppressWarnings("unchecked")
 	public ModelAndView resolveException(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception e) {
 		
@@ -72,16 +72,41 @@ public class ErrorResolver implements HandlerExceptionResolver {
 							message = ResourceUtils.getMessage(key.substring(0, 
 									key.indexOf(".", key.indexOf(".") + 1)), args);
 						}
-					} else if (fe.isBindingFailure() && message == null && key.split("\\.").length > 2) {
+					} else if (fe.isBindingFailure() && key.split("\\.").length > 2) {
 						message = ResourceUtils.getMessage(key.substring(0, 
 								key.indexOf(".")) + key.substring(key.lastIndexOf(".")), args);
+					} else {
+						message = fe.getDefaultMessage();
 					}
 				}
 				error.put("message",  message != null ? message : "Error (" + key + ")");
 				error.put("value", fe.getRejectedValue());
 				errors.put(fe.getField(), error);
 			}
-			
+
+	        for (ObjectError oe : (List<ObjectError>) be.getGlobalErrors()) {
+	        	Map<String, Object> error = new HashMap<String, Object>();
+	        	Object[] args = oe.getArguments();
+				String key = "global." + oe.getCodes()[2];
+	        	String message = ResourceUtils.getMessage(key, args);
+				if (message == null) {
+					if (key.split("\\.").length > 3) {
+						message = ResourceUtils.getMessage(key.substring(0, 
+								key.indexOf(".", key.indexOf(".") + 1)) + key.substring(key.lastIndexOf(".")), args);
+					}
+					if (message == null && key.split("\\.").length > 2) {
+						message = ResourceUtils.getMessage(key.substring(0, 
+								key.indexOf(".", key.indexOf(".") + 1)), args);
+					}
+					if (message == null) {
+						message = oe.getDefaultMessage();
+					}
+				}
+				error.put("message",  message != null ? message : "Error (" + key + ")");
+	        	error.put("value", oe.getObjectName());
+	        	errors.put(oe.getObjectName(), error);
+	        }
+	        
 			String form = (String) RequestUtils.getParameter("_form");
 			if (form != null) {
 				if (request.getAttribute(ERRORS) == null) {
