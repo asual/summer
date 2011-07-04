@@ -103,7 +103,7 @@ class Technology {
 	
 	def setName(name:String) = {
 		if (name != null) {
-			value = StringUtils.toURIPath(name)
+			value = StringUtils.toUriPath(name)
 		}
 		this.name = name
 	}
