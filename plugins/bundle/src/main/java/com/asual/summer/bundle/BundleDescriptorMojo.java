@@ -17,21 +17,20 @@ package com.asual.summer.bundle;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.codehaus.plexus.archiver.zip.ZipArchiver;
-import org.codehaus.plexus.archiver.zip.ZipUnArchiver;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.Descriptor;
@@ -82,8 +81,9 @@ public class BundleDescriptorMojo extends AbstractMojo {
 		try {
 			
 			String webXml = "WEB-INF/web.xml";
-			String bundle = "bundle";
-			File webXmlFile = new File(buildDirectory, finalName + "/" + webXml);
+			File warDir = new File(buildDirectory, finalName);
+			File warFile = new File(buildDirectory, finalName + ".war");
+			File webXmlFile = new File(warDir, webXml);
 			FileUtils.copyFile(new File(basedir, "src/main/webapp/" + webXml), webXmlFile);
 			
 			Configuration[] configurations = new Configuration[] { new WebXmlConfiguration(), new FragmentConfiguration() };
@@ -137,32 +137,44 @@ public class BundleDescriptorMojo extends AbstractMojo {
 				}
 			}
 			root.addAll(nodes);
-
-			File warFile = new File(buildDirectory, finalName + ".war");
-			File bundleDir = new File(buildDirectory, bundle);
-			bundleDir.mkdir();
 			
-			ZipUnArchiver unarchiver = new ZipUnArchiver();
-			unarchiver.enableLogging(new ConsoleLogger(Logger.LEVEL_INFO, finalName));
-			unarchiver.setSourceFile(warFile);
-			unarchiver.setDestDirectory(bundleDir);
-			unarchiver.extract();
-			
-			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(bundleDir, webXml)));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(new File(warDir, webXml)));
 			writer.write(root.toString());
 			writer.close();
-			
-			ZipArchiver archiver = new ZipArchiver();
-			archiver.enableLogging(new ConsoleLogger(Logger.LEVEL_INFO, finalName));
-			archiver.addDirectory(bundleDir);
-			archiver.setDestFile(warFile);
-			archiver.createArchive();
-			
-			FileUtils.deleteDirectory(bundleDir);
+
+			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(warFile));
+			zip(warDir, warDir, zos);
+			zos.close();
 			
 		} catch (Exception e) {
 			getLog().error(e.getMessage(), e);
 			throw new MojoExecutionException(e.getMessage(), e);
+		}
+	}
+	
+	private void zip(File directory, File base, ZipOutputStream zos)
+			throws IOException {
+		File[] files = directory.listFiles();
+		byte[] buffer = new byte[8192];
+		int read = 0;
+		for (int i = 0, n = files.length; i < n; i++) {
+			String name = files[i].getPath().substring(base.getPath().length() + 1);
+			if (files[i].isDirectory()) {
+				if (!name.endsWith("/")) {
+					name = name + "/";
+				}
+				ZipEntry entry = new ZipEntry(name);
+				zos.putNextEntry(entry);
+				zip(files[i], base, zos);
+			} else {
+				FileInputStream in = new FileInputStream(files[i]);
+				ZipEntry entry = new ZipEntry(name);
+				zos.putNextEntry(entry);
+				while (-1 != (read = in.read(buffer))) {
+					zos.write(buffer, 0, read);
+				}
+				in.close();
+			}
 		}
 	}
 	
