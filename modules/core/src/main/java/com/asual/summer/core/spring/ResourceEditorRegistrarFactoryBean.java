@@ -29,6 +29,7 @@ public class ResourceEditorRegistrarFactoryBean implements FactoryBean<ResourceE
 
 	private ApplicationContext applicationContext;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public ResourceEditorRegistrar getObject() throws Exception {
 		return new ResourceEditorRegistrar(applicationContext);

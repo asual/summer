@@ -55,69 +55,26 @@ public class FacesResponseWriter extends ResponseWriter {
 	private String name;
 	
 	private List<String> autoClose = Arrays.asList(
-			new String[] {
-					"meta", 
-					"img", 
-					"link", 
-					"input", 
-					"br",
-					"hr"
-			});
+		"meta", "img", "link", "input", "br", "hr"
+	);
 	
 	private List<String> noSpace = Arrays.asList(
-			new String[] {
-					"p",
-					"div",
-					"h1", 
-					"h2", 
-					"h3", 
-					"h4", 
-					"h5", 
-					"h6",
-					"br",
-					"hr"
-			});
+		"p", "div", "h1", "h2", "h3", "h4", "h5", "h6", "br", "hr"
+	);
 	
 	private List<String> sameLine = Arrays.asList(
-			new String[] {
-					"p",
-					"li",
-					"em",
-					"strong",
-					"title", 
-					"a", 
-					"option", 
-					"textarea", 
-					"span", 
-					"sub", 
-					"sup", 
-					"small", 
-					"label", 
-					"button", 
-					"h1", 
-					"h2", 
-					"h3", 
-					"h4", 
-					"h5", 
-					"h6",
-					"legend",
-					"pre"
-			});
+		"p", "li", "em", "strong", "title", "a", "option", "pre", 
+		"textarea", "span", "sub", "sup", "small", "label", 
+		"button", "h1", "h2", "h3", "h4", "h5", "h6", "legend"
+	);
 	
 	private List<String> sameLineNoContent = Arrays.asList(
-			new String[] {
-					"pre",
-					"script", 
-					"textarea"
-			});
+		"pre", "script", "textarea"
+	);
 	
 	private List<String> pre = Arrays.asList(
-			new String[] {
-					"pre",
-					"script",
-					"style",
-					"textarea"
-			});
+		"pre", "script", "style", "textarea"
+	);
 	
 	private int depth = 0;
 	private boolean start = false;
@@ -328,7 +285,7 @@ public class FacesResponseWriter extends ResponseWriter {
         closeStartIfNecessary(true);
         String textStr = text.toString();
         if (!isStyleOrScript(name) && textWriter.getBuffer().length() == 0) {
-        	textStr = StringUtils.trimLeadingWhitespace(textStr);
+        	//textStr = StringUtils.trimLeadingWhitespace(textStr);
         }
         ensureTextBufferCapacity(textStr);
         HtmlUtils.writeText(textWriter, escapeUnicode, escapeIso, buffer, textStr, textBuffer);
@@ -390,7 +347,7 @@ public class FacesResponseWriter extends ResponseWriter {
 			if (isSameLine(name)) {
 		        writer.write(textStr);
 			} else {
-		        writer.write(getIndent(depth + 1) + textStr + '\n');
+		        writer.write(getIndent(depth + 1) + textStr + "\n");
 			}
 			
 	        textWriter.getBuffer().setLength(0);

@@ -76,7 +76,7 @@ public class HeadRenderer extends Renderer {
 		
 		while (iter.hasNext()) {
 			UIComponent resource = (UIComponent) iter.next();
-			if (isStylesheet(resource)) {
+			if (isStyle(resource)) {
 				if (isUnique(stylesheetComponents, resource)) {
 					stylesheetComponents.add(resource);
 				}
@@ -108,7 +108,7 @@ public class HeadRenderer extends Renderer {
 		Collections.sort(components, new PackComparator<UIComponent>());
 	}
 	
-	protected boolean isStylesheet(UIComponent component) {
+	protected boolean isStyle(UIComponent component) {
 		String qName = (String) component.getAttributes().get(FacesDecorator.QNAME);
 		String type = (String) component.getAttributes().get("type");
 		return ("link".equals(qName) || "style".equals(qName)) && (type == null || "text/css".equals(type));
@@ -124,7 +124,7 @@ public class HeadRenderer extends Renderer {
 		for (UIComponent c : components) {
 			try {
 				String attr = null;
-				if (isStylesheet(component)) {
+				if (isStyle(component)) {
 					attr = "href";
 				} else if (isScript(component)) {
 					attr = "src";					

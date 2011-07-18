@@ -27,8 +27,6 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.inject.Named;
 
-import org.apache.commons.codec.binary.Base64;
-
 /**
  * 
  * @author Rostislav Hristov
@@ -62,7 +60,7 @@ public class ObjectUtils {
 		return 0;
 	}
 	
-	public static byte[] encode(Object obj) throws IOException {
+	public static byte[] compress(Object obj) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		GZIPOutputStream gz = new GZIPOutputStream(baos);
 		ObjectOutputStream oos = new ObjectOutputStream(gz);
@@ -70,22 +68,14 @@ public class ObjectUtils {
 		oos.close();
 		return baos.toByteArray();
 	}
-
-	public static String encodeBase64(byte[] bytes) throws IOException {
-		return Base64.encodeBase64String(bytes);
-	}
 	
-	public static Object decode(byte[] bytes) throws IOException, ClassNotFoundException {
+	public static Object decompress(byte[] bytes) throws IOException, ClassNotFoundException {
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-		GZIPInputStream gz = new GZIPInputStream(bais); 
+		GZIPInputStream gz = new GZIPInputStream(bais);
 		ObjectInputStream ois = new ObjectInputStream(gz);
 		Object obj = ois.readObject();
 		ois.close();
 		return obj;
-	}
-	
-	public static byte[] deserializeFromBase64(String str) throws IOException, ClassNotFoundException {
-		return Base64.decodeBase64(str);
 	}
 
 }

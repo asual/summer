@@ -26,10 +26,10 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
-import org.springframework.util.StringUtils;
-
+import com.asual.lesscss.ResourcePackage;
 import com.asual.summer.core.faces.HeadRenderer;
 import com.asual.summer.core.util.RequestUtils;
+import com.asual.summer.core.util.ResourceUtils;
 
 /**
  * 
@@ -38,27 +38,29 @@ import com.asual.summer.core.util.RequestUtils;
  */
 public class HeadPackRenderer extends HeadRenderer {
    
-	private List<String> stylesheets = new ArrayList<String>();
+	private String version;
+	private List<String> styles = new ArrayList<String>();
 	private List<String> scripts = new ArrayList<String>();
-	private String separator = ";";
 	private String dataPack;
 	
 	protected void encodeHeadResources(FacesContext context, UIComponent component) throws IOException {
 		
 		if (context.isProjectStage(ProjectStage.Production)) {
 			
+			version = (String) ResourceUtils.getProperty("app.version");
+			
 			ResponseWriter writer = context.getResponseWriter();
 			UIViewRoot viewRoot = context.getViewRoot();
 			ListIterator<?> iter = (viewRoot.getComponentResources(context, "head")).listIterator();
-			List<UIComponent> stylesheetComponents = new ArrayList<UIComponent>();
+			List<UIComponent> styleComponents = new ArrayList<UIComponent>();
 			List<UIComponent> scriptComponents = new ArrayList<UIComponent>();
 			List<UIComponent> tagComponents = new ArrayList<UIComponent>();
-			
+						
 			while (iter.hasNext()) {
 				UIComponent resource = (UIComponent) iter.next();
-				if (isStylesheet(resource)) {
-					if (isUnique(stylesheetComponents, resource)) {
-						stylesheetComponents.add(resource);
+				if (isStyle(resource)) {
+					if (isUnique(styleComponents, resource)) {
+						styleComponents.add(resource);
 					}
 				} else if (isScript(resource)) {
 					if (isUnique(scriptComponents, resource)) {
@@ -75,8 +77,8 @@ public class HeadPackRenderer extends HeadRenderer {
 			
 			dataPack = null;
 
-			sortByPack(stylesheetComponents);
-			for (UIComponent c : stylesheetComponents) {
+			sortByPack(styleComponents);
+			for (UIComponent c : styleComponents) {
 				
 				if (c.isRendered()) {
 					Map<String, Object> attrs = c.getAttributes();
@@ -86,18 +88,18 @@ public class HeadPackRenderer extends HeadRenderer {
 					if (href != null) {
 						preEncodeAll(context, c);
 						if (dataPack != null && !dataPack.equals(pkg)) {
-							combineStylesheets(writer, component);
+							combineStyles(writer, component, dataPack);
 						}
 						dataPack = pkg;
-						stylesheets.add(href);
+						styles.add(href);
 					} else {
-						combineStylesheets(writer, component);
+						combineStyles(writer, component, dataPack);
 						preEncodeAll(context, c);
 						postEncodeAll(context, c);
 					}
 				}
 			}
-			combineStylesheets(writer, component);
+			combineStyles(writer, component, dataPack);
 			
 			dataPack = null;
 			
@@ -112,18 +114,18 @@ public class HeadPackRenderer extends HeadRenderer {
 					if (src != null) {
 						preEncodeAll(context, c);
 						if (dataPack != null && !dataPack.equals(pkg)) {
-							combineScripts(writer, component);
+							combineScripts(writer, component, dataPack);
 						}
 						dataPack = pkg;
 						scripts.add(src);
 					} else {
-						combineScripts(writer, component);
+						combineScripts(writer, component, dataPack);
 						preEncodeAll(context, c);
 						postEncodeAll(context, c);
 					}
 				}
 			}
-			combineScripts(writer, component);
+			combineScripts(writer, component, dataPack);
 			
 		} else {
 			
@@ -139,7 +141,7 @@ public class HeadPackRenderer extends HeadRenderer {
 			return;
 		}
 		Map<String, Object> attrs = component.getAttributes();
-		if ((isStylesheet(component) && attrs.get("href") == null) || 
+		if ((isStyle(component) && attrs.get("href") == null) || 
 				(isScript(component) && attrs.get("src") == null)) {
 			component.encodeBegin(context);
 		}
@@ -154,56 +156,61 @@ public class HeadPackRenderer extends HeadRenderer {
 			}
 		}
 		Map<String, Object> attrs = component.getAttributes();
-		if ((isStylesheet(component) && attrs.get("href") == null) || 
+		if ((isStyle(component) && attrs.get("href") == null) || 
 				(isScript(component) && attrs.get("src") == null)) {
 			component.encodeEnd(context);
 		}
 	}
 	
-	private void writeStylesheet(ResponseWriter writer, UIComponent component, String href) throws IOException {
+	private void writeStyle(ResponseWriter writer, UIComponent component, String href) throws IOException {
 		writer.startElement("link", component);
 		writer.writeAttribute("type", "text/css", "type");
 		writer.writeAttribute("rel", "stylesheet", "rel");
 		writer.writeAttribute("href", href, "href");
 		writer.endElement("link");
-		writer.write("\n");
 	}
 	
-	private void writeScripts(ResponseWriter writer, UIComponent component, String src) throws IOException {
+	private void writeScript(ResponseWriter writer, UIComponent component, String src) throws IOException {
 		writer.startElement("script", component);
 		writer.writeAttribute("type", "text/javascript", "type");
 		writer.writeAttribute("src", src, "src");
 		writer.endElement("script");
-		writer.write("\n");	}
+	}
 	
-	private void combineStylesheets(ResponseWriter writer, UIComponent component) throws IOException {
+	private void combineStyles(ResponseWriter writer, UIComponent component, String name) throws IOException {
 		List<String> pack = new ArrayList<String>();
-		for (String href : stylesheets) {
+		for (String href : styles) {
 			if (href.startsWith("http")) {
-				writeStylesheet(writer, component, href);
+				writeStyle(writer, component, href);
 			} else {
 				pack.add(href);
 			}
 		}
-		if (pack.size() != 0) {  
-			writeStylesheet(writer, component, RequestUtils.contextRelative("/css/?pack=" + 
-					StringUtils.arrayToDelimitedString(stylesheets.toArray(), separator), true));
+		if (pack.size() != 0) {
+			ResourcePackage rp = new ResourcePackage(pack.toArray(new String[]{}));
+			rp.setName(name);
+			rp.setVersion(version);
+			rp.setExtension("css");
+			writeStyle(writer, component, RequestUtils.contextRelative("/css" + rp, true));
 		}
-		stylesheets.clear();
+		styles.clear();
 	}
 	
-	private void combineScripts(ResponseWriter writer, UIComponent component) throws IOException {
+	private void combineScripts(ResponseWriter writer, UIComponent component, String name) throws IOException {
 		List<String> pack = new ArrayList<String>();
 		for (String src : scripts) {
 			if (src.startsWith("http")) {
-				writeScripts(writer, component, src);
+				writeScript(writer, component, src);
 			} else {
 				pack.add(src);
 			}
 		}
 		if (pack.size() != 0) {
-			writeScripts(writer, component, RequestUtils.contextRelative("/js/?pack=" + 
-					StringUtils.arrayToDelimitedString(pack.toArray(), separator), true));
+			ResourcePackage rp = new ResourcePackage(pack.toArray(new String[]{}));
+			rp.setName(name);
+			rp.setVersion(version);
+			rp.setExtension("js");
+			writeScript(writer, component, RequestUtils.contextRelative("/js" + rp, true));
 		}
 		scripts.clear();
 	}
