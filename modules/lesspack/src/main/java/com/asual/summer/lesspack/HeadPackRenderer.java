@@ -178,9 +178,10 @@ public class HeadPackRenderer extends HeadRenderer {
 	}
 	
 	private void combineStyles(ResponseWriter writer, UIComponent component, String name) throws IOException {
+		String type = "css";
 		List<String> pack = new ArrayList<String>();
 		for (String href : styles) {
-			if (href.startsWith("http")) {
+			if (href.startsWith("http") || !href.startsWith("/" + type)) {
 				writeStyle(writer, component, href);
 			} else {
 				pack.add(href);
@@ -190,16 +191,17 @@ public class HeadPackRenderer extends HeadRenderer {
 			ResourcePackage rp = new ResourcePackage(pack.toArray(new String[]{}));
 			rp.setName(name);
 			rp.setVersion(version);
-			rp.setExtension("css");
-			writeStyle(writer, component, RequestUtils.contextRelative("/css" + rp, true));
+			rp.setExtension(type);
+			writeStyle(writer, component, RequestUtils.contextRelative("/" + type + rp, true));
 		}
 		styles.clear();
 	}
 	
 	private void combineScripts(ResponseWriter writer, UIComponent component, String name) throws IOException {
+		String type = "js";
 		List<String> pack = new ArrayList<String>();
 		for (String src : scripts) {
-			if (src.startsWith("http")) {
+			if (src.startsWith("http") || !src.startsWith("/" + type)) {
 				writeScript(writer, component, src);
 			} else {
 				pack.add(src);
@@ -209,8 +211,8 @@ public class HeadPackRenderer extends HeadRenderer {
 			ResourcePackage rp = new ResourcePackage(pack.toArray(new String[]{}));
 			rp.setName(name);
 			rp.setVersion(version);
-			rp.setExtension("js");
-			writeScript(writer, component, RequestUtils.contextRelative("/js" + rp, true));
+			rp.setExtension(type);
+			writeScript(writer, component, RequestUtils.contextRelative("/" + type + rp, true));
 		}
 		scripts.clear();
 	}
