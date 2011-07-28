@@ -18,7 +18,7 @@
 	</parent>
 
 	<properties>
-		<gae.version>1.4.3</gae.version>
+		<gae.version>1.5.1</gae.version>
 	</properties>
 
 	<repositories>
@@ -72,11 +72,6 @@
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-lesspack</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.asual.summer</groupId>
-			<artifactId>summer-outprint</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
