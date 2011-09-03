@@ -23,28 +23,13 @@
 	<repositories>
 		<repository>
 			<id>org.springframework.maven.release</id>
-			<name>Spring Framework Repository</name>
+			<name>Spring Framework Release Repository</name>
 			<url>http://maven.springframework.org/release</url>
 		</repository>
 		<repository>
-			<id>net.java.download.maven</id>
-			<name>Java.net Repository</name>
-			<url>http://download.java.net/maven/2</url>
-		</repository>
-		<repository>
-			<id>org.glassfish.maven</id>
-			<name>GlassFish Repository</name>
-			<url>http://maven.glassfish.org/content/groups/glassfish</url>
-		</repository>
-		<repository>
-			<id>com.jboss.repository</id>
-			<name>JBoss Maven Repository</name>
-			<url>https://repository.jboss.org/nexus/content/repositories/public</url>
-		</repository>
-		<repository>
-			<id>org.codehaus.repository</id>
-			<name>Codehaus Repository</name>
-			<url>http://repository.codehaus.org</url>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Framework Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
 		</repository>
 		<repository>
 			<id>com.asual.repositories.public</id>
@@ -52,7 +37,7 @@
 			<url>http://www.asual.com/maven/content/groups/public</url>
 		</repository>
 	</repositories>
-	
+    
 	<dependencies>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
@@ -69,6 +54,17 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.1</version>
 		</dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>jstl-api</artifactId>
+            <version>1.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 	</dependencies>
 	
 	<build>
@@ -86,7 +82,7 @@
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.0.0.M2</version>
+				<version>8.0.0.M3</version>
 				<configuration>
 					<webAppConfig>
 						<jettyEnvXml>${dollar}{basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
