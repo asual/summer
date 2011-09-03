@@ -9,10 +9,18 @@
 	<namespace>http://www.asual.com/summer/standard</namespace>
 	
 	<tag>
+		<tag-name>output</tag-name>
+		<component>
+			<component-type>summer.faces.OutputComponent</component-type>
+			<renderer-type>summer.faces.Output</renderer-type>
+		</component>
+	</tag>
+	
+	<tag>
 		<tag-name>repeat</tag-name>
 		<component>
 			<component-type>summer.faces.RepeatComponent</component-type>
-			<renderer-type>facelets.ui.Repeat</renderer-type>
+			<renderer-type>summer.faces.Repeat</renderer-type>
 		</component>
 	</tag>
 

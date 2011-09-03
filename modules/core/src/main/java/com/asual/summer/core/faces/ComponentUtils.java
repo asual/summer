@@ -324,5 +324,10 @@ public class ComponentUtils {
 		} catch (Exception e) {
 			return false;
 		}
-	} 
+	}
+	
+	static boolean isStyleOrScript(String nodeName) {
+		return "style".equals(nodeName) || "script".equals(nodeName);
+	}
+	
 }

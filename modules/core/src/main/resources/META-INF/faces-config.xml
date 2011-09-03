@@ -23,6 +23,11 @@
 	</component>
 
 	<component>
+		<component-type>summer.faces.OutputComponent</component-type>
+		<component-class>com.asual.summer.core.faces.OutputComponent</component-class>
+	</component>
+
+	<component>
 		<component-type>summer.faces.RepeatComponent</component-type>
 		<component-class>com.asual.summer.core.faces.RepeatComponent</component-class>
 	</component>
@@ -43,18 +48,18 @@
 			<renderer-class>com.asual.summer.core.faces.HeadRenderer</renderer-class>		
 		</renderer>
 		<renderer>
-			<component-family>javax.faces.Output</component-family>
-			<renderer-type>javax.faces.resource.Stylesheet</renderer-type>
-			<renderer-class>com.asual.summer.core.faces.HeadComponentRenderer</renderer-class>		
-		</renderer>
-		<renderer>
 			<component-family>summer.faces.NamingContainer</component-family>
 			<renderer-type>javax.faces.Composite</renderer-type>
 			<renderer-class>com.asual.summer.core.faces.CompositeComponentRenderer</renderer-class>
 		</renderer>
 		<renderer>
 			<component-family>summer.faces.Facelets</component-family>
-			<renderer-type>facelets.ui.Repeat</renderer-type>
+			<renderer-type>summer.faces.Output</renderer-type>
+			<renderer-class>com.asual.summer.core.faces.OutputComponentRenderer</renderer-class>
+		</renderer>
+		<renderer>
+			<component-family>summer.faces.Facelets</component-family>
+			<renderer-type>summer.faces.Repeat</renderer-type>
 			<renderer-class>com.asual.summer.core.faces.RepeatComponentRenderer</renderer-class>
 		</renderer>
 	</render-kit>

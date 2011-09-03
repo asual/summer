@@ -33,6 +33,12 @@ public class FacesResourceProcessorTest {
 				"	\n" + 
 				"	<title>${messages.page.welcome}</title>\n" + 
 				"	\n" + 
+				"	<script>\n" + 
+				"		function getWelcomeKey() {\n" + 
+				"			return \"Welcome Key\";\n" + 
+				"		}\n" + 
+				"	</script>\n" + 
+				"	\n" + 
 				"	<script type=\"text/expression\">\n" + 
 				"		function getWelcomeKey() {\n" + 
 				"			return 'page'.concat('.' + 'welcome');\n" + 

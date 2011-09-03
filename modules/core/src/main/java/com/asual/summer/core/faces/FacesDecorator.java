@@ -29,7 +29,6 @@ import com.asual.summer.core.util.StringUtils;
 import com.sun.faces.facelets.tag.TagAttributeImpl;
 import com.sun.faces.facelets.tag.TagAttributesImpl;
 import com.sun.faces.facelets.tag.jsf.html.HtmlDecorator;
-import com.sun.faces.facelets.tag.jsf.html.HtmlLibrary;
 
 /**
  * 
@@ -178,7 +177,7 @@ public final class FacesDecorator implements TagDecorator {
 		if (StringUtils.isEmpty(namespace) && !HtmlDecorator.XhtmlNamespace.equals(namespace) && !reservedTags.contains(qName)) {
 			String name = qName;
 			if (headTags.contains(qName)) {
-				name = "outputStylesheet";
+				name = "output";
 				tagNameAttr = new TagAttributeImpl(location, namespace, QNAME, QNAME, qName);
 				tagTargetAttr = new TagAttributeImpl(location, namespace, "target", "target", "head");
 			} else if (bodyTags.contains(qName)) {
@@ -227,7 +226,7 @@ public final class FacesDecorator implements TagDecorator {
 			if (tagTargetAttr != null) {
 				attrs.add(tagTargetAttr);
 			}
-			return new Tag(location, headTags.contains(qName) ? HtmlLibrary.Namespace : ("repeat".equals(name) ? STANDARD : COMPOSITE), name, name, 
+			return new Tag(location, headTags.contains(qName) || "repeat".equals(name) ? STANDARD : COMPOSITE, name, name, 
 					new TagAttributesImpl(attrs.toArray(new TagAttribute[] {})));
 		}
 		return tag;

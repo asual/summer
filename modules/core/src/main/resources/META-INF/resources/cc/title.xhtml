@@ -16,14 +16,14 @@
 
 <ui:component
 	xmlns:cs="http://java.sun.com/jsf/composite"
-	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:sc="http://www.asual.com/summer/standard"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 	
 	<cs:interface componentType="summer.faces.CompositeComponent" componentWrapper="true" />
 	
 	<cs:implementation>
 		<meta charset="${properties.app.encoding}" />
-		<h:outputStylesheet qName="title" target="head"><cs:insertChildren /></h:outputStylesheet>
+		<sc:output qName="title" target="head"><cs:insertChildren /></sc:output>
 	</cs:implementation>
 	
 </ui:component>

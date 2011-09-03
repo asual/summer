@@ -34,6 +34,8 @@ import org.jboss.el.lang.ExpressionBuilder;
 
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.util.ScriptUtils;
+import com.asual.summer.core.util.StringUtils;
+import com.sun.faces.facelets.compiler.UIInstructions;
 
 /**
  * 
@@ -41,9 +43,9 @@ import com.asual.summer.core.util.ScriptUtils;
  *
  */
 @ListenerFor(systemEventClass=PostAddToViewEvent.class)
-public class HeadComponentRenderer extends Renderer implements ComponentSystemEventListener {
+public class OutputComponentRenderer extends Renderer implements ComponentSystemEventListener {
 	
-	private static final String COMP_KEY = HeadComponentRenderer.class.getName() + ".COMPOSITE_COMPONENT";
+	private static final String COMP_KEY = OutputComponentRenderer.class.getName() + ".COMPOSITE_COMPONENT";
 	
 	private static final List<String> ATTRIBUTES = Arrays.asList(new String[] {
 		"charset",
@@ -111,9 +113,18 @@ public class HeadComponentRenderer extends Renderer implements ComponentSystemEv
 	
 	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
 		if (!isScriptExpression(component)) {
-            for (UIComponent kid : component.getChildren()) {
-                kid.encodeAll(context);
-            }			
+			Map<String, Object> attrs = component.getAttributes();
+			String qName = (String) attrs.get(FacesDecorator.QNAME);
+			String escape = ComponentUtils.getAttrValue((Component) component, "dataEscape");
+			if (((ComponentUtils.isStyleOrScript(qName) && (StringUtils.isEmpty(escape) || !Boolean.valueOf(escape))) || 
+					(!ComponentUtils.isStyleOrScript(qName) && !StringUtils.isEmpty(escape) && !Boolean.valueOf(escape))) &&
+					component.getChildCount() == 1 && component.getChildren().get(0) instanceof UIInstructions) {
+				context.getResponseWriter().write(ComponentUtils.getValue(component));
+			} else {
+	            for (UIComponent kid : component.getChildren()) {
+	                kid.encodeAll(context);
+	            }
+			}
 		} else {
 			List<UIComponent> children = component.getChildren();
 			ScriptUtils.define(children.get(0).toString().replaceAll("\\\n|\\\t", "").trim());
@@ -133,7 +144,7 @@ public class HeadComponentRenderer extends Renderer implements ComponentSystemEv
 		if (!isScriptExpression(component)) {
 			ResponseWriter writer = context.getResponseWriter();
 			Map<String,Object> attrs = component.getAttributes();		
-			String qName = (String) attrs.get("qName");
+			String qName = (String) attrs.get(FacesDecorator.QNAME);
 			writer.endElement(qName);
 		}
 	}

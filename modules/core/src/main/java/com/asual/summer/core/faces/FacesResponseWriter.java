@@ -59,7 +59,7 @@ public class FacesResponseWriter extends ResponseWriter {
 	);
 	
 	private List<String> noSpace = Arrays.asList(
-		"p", "div", "h1", "h2", "h3", "h4", "h5", "h6", "br", "hr"
+		"p", "li", "div", "h1", "h2", "h3", "h4", "h5", "h6", "br", "hr"
 	);
 	
 	private List<String> sameLine = Arrays.asList(
@@ -140,10 +140,6 @@ public class FacesResponseWriter extends ResponseWriter {
 		return autoClose.contains(nodeName);
 	}
 	
-	private boolean isStyleOrScript(String nodeName) {
-		return "style".equals(nodeName) || "script".equals(nodeName);
-	}
-	
     public void startDocument() throws IOException {
     }
     
@@ -219,19 +215,21 @@ public class FacesResponseWriter extends ResponseWriter {
         writer.write(c);
     }
     
-    public void write(String str) throws IOException {
-        closeStartIfNecessary(true);
-        writer.write(str);
-    }
-    
     public void write(char[] cbuf, int off, int len) throws IOException {
         closeStartIfNecessary(true);
         writer.write(cbuf, off, len);
     }
     
+    public void write(String str) throws IOException {
+        closeStartIfNecessary(true);
+        ensureTextBufferCapacity(str);
+        textWriter.write(str);
+    }
+    
     public void write(String str, int off, int len) throws IOException {
         closeStartIfNecessary(true);
-        writer.write(str, off, len);
+        ensureTextBufferCapacity(len);
+        textWriter.write(str, off, len);
     }
     
     public void writeAttribute(String name, Object value, String componentPropertyName) throws IOException {
@@ -284,7 +282,7 @@ public class FacesResponseWriter extends ResponseWriter {
     public void writeText(Object text, String componentPropertyName) throws IOException {    	
         closeStartIfNecessary(true);
         String textStr = text.toString();
-        if (!isStyleOrScript(name) && textWriter.getBuffer().length() == 0) {
+        if (!ComponentUtils.isStyleOrScript(name) && textWriter.getBuffer().length() == 0) {
         	//textStr = StringUtils.trimLeadingWhitespace(textStr);
         }
         ensureTextBufferCapacity(textStr);
@@ -296,11 +294,14 @@ public class FacesResponseWriter extends ResponseWriter {
         HtmlUtils.writeText(writer, escapeUnicode, escapeIso, buffer, text, off, len);
     }
     
-    private void ensureTextBufferCapacity(String source) {
-        int len = source.length();
+    private void ensureTextBufferCapacity(int len) {
         if (textBuffer.length < len) {
             textBuffer = new char[len * 2];
         }
+    }
+    
+    private void ensureTextBufferCapacity(String source) {
+    	ensureTextBufferCapacity(source.length());
     }
     
     private void closeStartIfNecessary(boolean hasChildren) throws IOException {
@@ -321,8 +322,8 @@ public class FacesResponseWriter extends ResponseWriter {
         if (StringUtils.hasText(textStr)) {
             
             textStr = textStr.replaceAll("\t", INDENT);
-                        
-			if (isStyleOrScript(name)) {
+            
+			if (ComponentUtils.isStyleOrScript(name)) {
 				
 				String[] lines = textStr.split("\n");
 				int l = 100;
