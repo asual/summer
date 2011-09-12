@@ -18,7 +18,7 @@
 	</parent>
 
 	<properties>
-		<gae.version>1.5.1</gae.version>
+		<gae.version>1.5.3</gae.version>
 	</properties>
 
 	<repositories>
@@ -26,20 +26,12 @@
 			<id>org.datanucleus.maven2</id>
 			<url>http://www.datanucleus.org/downloads/maven2</url>
 		</repository>
-		<repository>
-			<id>gae-plugin</id>
-			<url>http://maven-gae-plugin.googlecode.com/svn/repository</url>
-		</repository>
 	</repositories>
 	
 	<pluginRepositories>
 		<pluginRepository>
 			<id>org.datanucleus.maven2</id>
 			<url>http://www.datanucleus.org/downloads/maven2</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>com.googlecode.maven-gae-plugin</id>
-			<url>http://maven-gae-plugin.googlecode.com/svn/repository</url>
 		</pluginRepository>
 	</pluginRepositories>
 	
@@ -94,10 +86,14 @@
 			<artifactId>jstl-api</artifactId>
 			<version>1.2</version>
 			<exclusions>
-				<exclusion>
-					<groupId>javax.servlet</groupId>
-					<artifactId>servlet-api</artifactId>
-				</exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet.jsp</groupId>
+                    <artifactId>jsp-api</artifactId>
+                </exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -109,6 +105,10 @@
 					<groupId>javax.servlet</groupId>
 					<artifactId>servlet-api</artifactId>
 				</exclusion>
+                <exclusion>
+                    <groupId>javax.servlet.jsp</groupId>
+                    <artifactId>jsp-api</artifactId>
+                </exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -286,7 +286,7 @@
 			<plugin>
 				<groupId>net.kindleit</groupId>
 				<artifactId>maven-gae-plugin</artifactId>
-				<version>0.8.4</version>
+				<version>0.9.1</version>
 				<configuration>
 					<jvmFlags>
 						<jvmFlag>-Xdebug</jvmFlag>
