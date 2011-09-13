@@ -158,7 +158,7 @@ public class BundleDescriptorMojo extends AbstractMojo {
 		byte[] buffer = new byte[8192];
 		int read = 0;
 		for (int i = 0, n = files.length; i < n; i++) {
-			String name = files[i].getPath().substring(base.getPath().length() + 1);
+			String name = files[i].getPath().replace(File.separatorChar, '/').substring(base.getPath().length() + 1);
 			if (files[i].isDirectory()) {
 				if (!name.endsWith("/")) {
 					name = name + "/";
