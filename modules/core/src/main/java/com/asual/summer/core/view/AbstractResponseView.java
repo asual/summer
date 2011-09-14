@@ -54,10 +54,10 @@ public abstract class AbstractResponseView extends AbstractView implements Respo
 	}
 	
 	protected String getFilename(HttpServletRequest request) {
-		String requestUri = urlPathHelper.getRequestUri(request);
+		String requestUri = urlPathHelper.getLookupPathForRequest(request);
 		String filename = WebUtils.extractFullFilenameFromUrlPath(requestUri);
 		String extension = StringUtils.getFilenameExtension(filename);
-		return filename.replaceFirst("\\." + extension + "$", ".") + getExtension();		
+		return filename.replaceFirst("\\." + extension + "$", "") + "." + getExtension();
 	}
 	
 }
