@@ -137,7 +137,7 @@
 		
 		return this.each(function() {
 			
-			if (!($.browser.msie && $.browser.version < 7)) {
+			if (!($.browser.msie && $.browser.version < 8)) {
 	
 				var elem = $(this);
 				
