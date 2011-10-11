@@ -31,7 +31,7 @@ public class MapUtils {
 	public static <K,V> List<K> getKeysFromValue(Map<K,V> m, V value) {
 		List<K> list = new ArrayList<K>();
 		for (K o : m.keySet()){
-			if(m.get(o).equals(value)) {
+			if (m.get(o).equals(value)) {
 				list.add(o);
 			}
 		}
