@@ -55,7 +55,7 @@ public class AjaxViewContextImpl extends PartialViewContextImpl {
 			try {
 				ResponseWriter writer = FacesContext.getCurrentInstance().getResponseWriter();
 				writer.startDocument();
-				writer.write("<!DOCTYPE html>\n");
+				writer.write("<!DOCTYPE html>\n".toCharArray());
 				writer.startElement("html", null);
 				writer.startElement("title", null);
 				writer.write("Ajax Response");
