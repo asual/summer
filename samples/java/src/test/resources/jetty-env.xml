@@ -5,4 +5,12 @@
 		<Arg>jsf/ProjectStage</Arg>
 		<Arg type="java.lang.String">Development</Arg>
 	</New>
+	<New class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>resource/Cache</Arg>
+		<Arg type="java.lang.Boolean">false</Arg>
+	</New>
+	<New class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>resource/Compress</Arg>
+		<Arg type="java.lang.Boolean">false</Arg>
+	</New>	
 </Configure>
