@@ -11,6 +11,6 @@
 		p:location="/js/jquery.atmosphere.js" p:pack="summer" p:order="-2147483646" />
 		
 	<bean class="com.asual.summer.core.resource.ScriptResource" 
-		p:location="/js/summer-atmosphere.js" p:pack="summer" p:order="-2147483645" />
+		p:location="/js/summer-atmosphere.js" p:pack="summer" p:order="-2147483644" />
 
 </beans>
