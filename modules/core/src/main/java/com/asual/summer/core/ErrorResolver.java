@@ -84,11 +84,11 @@ public class ErrorResolver implements HandlerExceptionResolver {
 				errors.put(fe.getField(), error);
 			}
 
-	        for (ObjectError oe : (List<ObjectError>) be.getGlobalErrors()) {
-	        	Map<String, Object> error = new HashMap<String, Object>();
-	        	Object[] args = oe.getArguments();
-				String key = "global." + oe.getCodes()[2];
-	        	String message = ResourceUtils.getMessage(key, args);
+			for (ObjectError oe : (List<ObjectError>) be.getGlobalErrors()) {
+				Map<String, Object> error = new HashMap<String, Object>();
+				Object[] args = oe.getArguments();
+				String key = "global" + (oe.getCodes() != null ? "." + oe.getCodes()[2] : "");
+				String message = ResourceUtils.getMessage(key, args);
 				if (message == null) {
 					if (key.split("\\.").length > 3) {
 						message = ResourceUtils.getMessage(key.substring(0, 
@@ -101,12 +101,12 @@ public class ErrorResolver implements HandlerExceptionResolver {
 					if (message == null) {
 						message = oe.getDefaultMessage();
 					}
-				}
+				}				
 				error.put("message",  message != null ? message : "Error (" + key + ")");
-	        	error.put("value", oe.getObjectName());
-	        	errors.put(oe.getObjectName(), error);
-	        }
-	        
+				error.put("value", oe.getObjectName());
+				errors.put(oe.getObjectName(), error);
+			}
+			
 			String form = (String) RequestUtils.getParameter("_form");
 			if (form != null) {
 				if (request.getAttribute(ERRORS) == null) {
