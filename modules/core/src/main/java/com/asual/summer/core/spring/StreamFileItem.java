@@ -17,6 +17,7 @@ package com.asual.summer.core.spring;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -80,6 +81,15 @@ public class StreamFileItem implements FileItem {
 	}
 	
 	public void write(File file) throws Exception {
+		FileOutputStream fout = null;
+		try {
+			fout = new FileOutputStream(file);
+			fout.write(get());
+		} finally {
+			if (fout != null) {
+				fout.close();
+			}
+		}
 	}
 	
 	public void delete() {
