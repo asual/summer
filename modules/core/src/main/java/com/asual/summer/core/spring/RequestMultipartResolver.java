@@ -32,8 +32,8 @@ public class RequestMultipartResolver extends CommonsMultipartResolver {
 	
 	public MultipartHttpServletRequest resolveMultipart(final HttpServletRequest request) throws MultipartException {
 		MultipartParsingResult parsingResult = parseRequest(request);
-		return new DefaultMultipartRequest(
-				request, parsingResult.getMultipartFiles(), parsingResult.getMultipartParameters());
+		return new DefaultMultipartRequest(request, parsingResult.getMultipartFiles(), 
+				parsingResult.getMultipartParameters(), parsingResult.getMultipartParameterContentTypes());
 	}
 	
 	protected FileUpload prepareFileUpload(String encoding) {
