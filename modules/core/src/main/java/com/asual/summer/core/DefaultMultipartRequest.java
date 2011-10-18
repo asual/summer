@@ -29,8 +29,9 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
  */
 public class DefaultMultipartRequest extends DefaultMultipartHttpServletRequest {
 	
-	public DefaultMultipartRequest(HttpServletRequest request, MultiValueMap<String, MultipartFile> mpFiles, Map<String, String[]> mpParams) {
-		super(request, mpFiles, mpParams);
+	public DefaultMultipartRequest(HttpServletRequest request, MultiValueMap<String, MultipartFile> mpFiles,
+			Map<String, String[]> mpParams, Map<String, String> mpParamContentTypes) {
+		super(request, mpFiles, mpParams, mpParamContentTypes);
 		Map<String, String[]> multipartParameters = super.getMultipartParameters();
 		for (String key : multipartParameters.keySet()) {
 			for (int i = 0; i < multipartParameters.get(key).length; i++) {
@@ -61,11 +62,6 @@ public class DefaultMultipartRequest extends DefaultMultipartHttpServletRequest 
 	
 	public String getMethod() {
 		return RequestFilter.getMethod(getRequest(), super.getMethod(), getParameterMap());
-	}
-	
-	protected Map<String, String[]> getMultipartParameters() {
-		Map<String, String[]> multipartParameters = super.getMultipartParameters();
-		return multipartParameters;
 	}
 	
 }
