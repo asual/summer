@@ -38,16 +38,9 @@ import com.asual.summer.core.util.ResourceUtils;
  */
 public class HeadPackRenderer extends HeadRenderer {
    
-	private String version;
-	private List<String> styles = new ArrayList<String>();
-	private List<String> scripts = new ArrayList<String>();
-	private String dataPack;
-	
 	protected void encodeHeadResources(FacesContext context, UIComponent component) throws IOException {
 		
 		if (context.isProjectStage(ProjectStage.Production)) {
-			
-			version = (String) ResourceUtils.getProperty("app.version");
 			
 			ResponseWriter writer = context.getResponseWriter();
 			UIViewRoot viewRoot = context.getViewRoot();
@@ -75,8 +68,12 @@ public class HeadPackRenderer extends HeadRenderer {
 				c.encodeAll(context);
 			}
 			
-			dataPack = null;
+			String version = (String) ResourceUtils.getProperty("app.version");
+			String dataPack = null;
 
+			List<String> styles = new ArrayList<String>();
+			List<String> scripts = new ArrayList<String>();
+			
 			sortByPack(styleComponents);
 			for (UIComponent c : styleComponents) {
 				
@@ -88,18 +85,18 @@ public class HeadPackRenderer extends HeadRenderer {
 					if (href != null) {
 						preEncodeAll(context, c);
 						if (dataPack != null && !dataPack.equals(pkg)) {
-							combineStyles(writer, component, dataPack);
+							combineStyles(writer, component, styles, dataPack, version);
 						}
 						dataPack = pkg;
 						styles.add(href);
 					} else {
-						combineStyles(writer, component, dataPack);
+						combineStyles(writer, component, styles, dataPack, version);
 						preEncodeAll(context, c);
 						postEncodeAll(context, c);
 					}
 				}
 			}
-			combineStyles(writer, component, dataPack);
+			combineStyles(writer, component, styles, dataPack, version);
 			
 			dataPack = null;
 			
@@ -114,18 +111,18 @@ public class HeadPackRenderer extends HeadRenderer {
 					if (src != null) {
 						preEncodeAll(context, c);
 						if (dataPack != null && !dataPack.equals(pkg)) {
-							combineScripts(writer, component, dataPack);
+							combineScripts(writer, component, scripts, dataPack, version);
 						}
 						dataPack = pkg;
 						scripts.add(src);
 					} else {
-						combineScripts(writer, component, dataPack);
+						combineScripts(writer, component, scripts, dataPack, version);
 						preEncodeAll(context, c);
 						postEncodeAll(context, c);
 					}
 				}
 			}
-			combineScripts(writer, component, dataPack);
+			combineScripts(writer, component, scripts, dataPack, version);
 			
 		} else {
 			
@@ -177,7 +174,7 @@ public class HeadPackRenderer extends HeadRenderer {
 		writer.endElement("script");
 	}
 	
-	private void combineStyles(ResponseWriter writer, UIComponent component, String name) throws IOException {
+	private void combineStyles(ResponseWriter writer, UIComponent component, List<String> styles, String name, String version) throws IOException {
 		String type = "css";
 		List<String> pack = new ArrayList<String>();
 		for (String href : styles) {
@@ -197,7 +194,7 @@ public class HeadPackRenderer extends HeadRenderer {
 		styles.clear();
 	}
 	
-	private void combineScripts(ResponseWriter writer, UIComponent component, String name) throws IOException {
+	private void combineScripts(ResponseWriter writer, UIComponent component, List<String> scripts, String name, String version) throws IOException {
 		String type = "js";
 		List<String> pack = new ArrayList<String>();
 		for (String src : scripts) {
