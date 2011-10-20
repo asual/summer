@@ -213,6 +213,58 @@
 	</dependencies>
 	
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.asual.summer</groupId>
+										<artifactId>summer-bundle</artifactId>
+										<versionRange>[${project.version},)</versionRange>
+										<goals>
+											<goal>descriptor</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.asual.summer</groupId>
+										<artifactId>summer-bundle</artifactId>
+										<versionRange>[${project.version},)</versionRange>
+										<goals>
+											<goal>resources</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>				
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -257,6 +309,7 @@
 				<configuration>
 					<api>JPA</api>
 					<enhancerName>ASM</enhancerName>
+					<fork>false</fork>
 					<log4jConfiguration>${basedir}/src/test/resources/META-INF/log4j.xml</log4jConfiguration>
 					<mappingIncludes>**/domain/*.class</mappingIncludes>
 					<persistenceUnitName>transactions-optional</persistenceUnitName>

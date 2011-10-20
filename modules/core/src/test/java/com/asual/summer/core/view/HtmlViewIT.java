@@ -45,7 +45,7 @@ public class HtmlViewIT {
 				"        <h1><a href=\"http://www.asual.com/summer/?module=core&amp;test=true\">Summer - The HTML5 Library for Java and Scala</a></h1>\n" + 
 				"        <p>© 2010-2011 Asual DZZD</p>\n" + 
 				"    </body>\n" + 
-				"</html>\n", content);
+				"</html>\n", content.replaceAll(System.getProperty("line.separator"), "\n"));
 	}
 	
 }

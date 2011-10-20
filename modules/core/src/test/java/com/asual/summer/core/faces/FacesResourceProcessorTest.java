@@ -49,7 +49,7 @@ public class FacesResourceProcessorTest {
 				"	\n" + 
 				"	<p>&#169; 2010-2011 Asual DZZD</p>\n" + 
 				"	\n" + 
-				"</html>", new String(bytes, encoding));
+				"</html>", new String(bytes, encoding).replaceAll(System.getProperty("line.separator"), "\n"));
 	}
 
 }
