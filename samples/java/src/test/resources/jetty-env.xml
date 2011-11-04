@@ -12,5 +12,5 @@
 	<New class="org.eclipse.jetty.plus.jndi.EnvEntry">
 		<Arg>resource/Compress</Arg>
 		<Arg type="java.lang.Boolean">false</Arg>
-	</New>	
+	</New>
 </Configure>

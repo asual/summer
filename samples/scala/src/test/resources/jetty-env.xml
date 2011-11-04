@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
-    <New class="org.eclipse.jetty.plus.jndi.EnvEntry">
-        <Arg>jsf/ProjectStage</Arg>
-        <Arg type="java.lang.String">Development</Arg>
-    </New>
+	<New class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>jsf/ProjectStage</Arg>
+		<Arg type="java.lang.String">Development</Arg>
+	</New>
 	<New class="org.eclipse.jetty.plus.jndi.EnvEntry">
 		<Arg>resource/Cache</Arg>
 		<Arg type="java.lang.Boolean">false</Arg>
@@ -12,5 +12,5 @@
 	<New class="org.eclipse.jetty.plus.jndi.EnvEntry">
 		<Arg>resource/Compress</Arg>
 		<Arg type="java.lang.Boolean">false</Arg>
-	</New>    
+	</New>
 </Configure>
