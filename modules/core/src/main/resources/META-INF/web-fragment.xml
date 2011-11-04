@@ -19,6 +19,11 @@
 		<param-name>javax.faces.FACELETS_DECORATORS</param-name> 
 		<param-value>com.asual.summer.core.faces.FacesDecorator</param-value>
 	</context-param>
+	
+	<context-param>
+		<param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+		<param-value>-1</param-value>
+	</context-param>
 
 	<context-param>
 		<param-name>javax.faces.FACELETS_RESOURCE_RESOLVER</param-name> 
