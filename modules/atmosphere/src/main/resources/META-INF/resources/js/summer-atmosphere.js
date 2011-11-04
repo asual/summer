@@ -19,13 +19,16 @@
 			var el = $(this);
 			setTimeout(function() {
 				$.atmosphere.subscribe(
-					location.protocol + '//' + location.host + $.summer.contextPath + '/websocket/' + el.attr('data-websocket'), function callback(response) {
-					if (response.status == 200 && response.responseBody && response.state != 'connected' && response.state != 'closed') {
-						el.html(response.responseBody);
-					}
-				}, $.atmosphere.request = {
-					logLevel: 'none'
-				});
+					location.protocol + '//' + location.host + $.summer.contextPath + 
+						'/websocket/' + el.attr('data-websocket'), 
+					function callback(response) {
+						if (response.status == 200 && response.responseBody && 
+								response.state != 'connected' && response.state != 'closed') {
+							el.html(response.responseBody);
+						}
+					}, $.atmosphere.request = {
+							logLevel: 'none'
+					});
 			}, 200);
 		});
 		
