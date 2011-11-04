@@ -16,10 +16,6 @@
 		<artifactId>summer-plugins</artifactId>
 		<version>1.0.0.M3</version>
 	</parent>
-	
-	<properties>
-		<maven.version>3.0.1</maven.version>
-	</properties>
 		
 	<dependencies>
 		<dependency>

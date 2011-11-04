@@ -75,7 +75,6 @@ public class BundleDescriptorMojo extends AbstractMojo {
 	 */
 	private String finalName;
 	
-	@SuppressWarnings("unchecked")
 	public void execute() throws MojoExecutionException {
 
 		try {
