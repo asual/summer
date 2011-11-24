@@ -57,7 +57,7 @@ class TechnologyController {
 	@RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.GET))
 	@ResponseViews(Array(classOf[JsonView], classOf[XmlView]))
 	def view(@PathVariable("value") value:String):ModelAndView = {
-		var technology:Technology = Technology.find(value)
+		var technology = Technology.find(value)
 		if (technology == null) {
 			throw new ViewNotFoundException
 		}
@@ -72,7 +72,7 @@ class TechnologyController {
 	
 	@RequestMapping(value=Array("/{value}"), method=Array(RequestMethod.DELETE))
 	def remove(@PathVariable("value") value:String):ModelAndView = {
-		var technology:Technology = Technology.find(value)
+		var technology = Technology.find(value)
 		if (technology != null) {
 			technology.remove
 		}
@@ -81,25 +81,25 @@ class TechnologyController {
 	
 	@RequestMapping(Array("/add"))
 	def add:ModelAndView = {
-		var model:ModelMap = new ModelMap
+		var model = new ModelMap
 		model.addAllAttributes(Arrays.asList(new Technology, License.list, Status.list))
 		return new ModelAndView("/add", model)
 	}
 	
 	@RequestMapping(Array("/{value}/edit"))
 	def edit(@PathVariable("value") value:String):ModelAndView = {
-		var technology:Technology = Technology.find(value)
+		var technology = Technology.find(value)
 		if (technology == null) {
 			throw new ViewNotFoundException
 		}
-		var model:ModelMap = new ModelMap
+		var model = new ModelMap
 		model.addAllAttributes(Arrays.asList(technology, License.list, Status.list))
 		return new ModelAndView("/edit", model)
 	}
 	
 	@RequestMapping(Array("/image/{value}"))
 	def image(@PathVariable("value") value:String, response:HttpServletResponse) {
-		var image:Image = Technology.findImage(value)
+		var image = Technology.findImage(value)
 		if (image != null) {
 			response.setContentLength(image.getBytes.length)
 			response.setContentType(image.contentType)

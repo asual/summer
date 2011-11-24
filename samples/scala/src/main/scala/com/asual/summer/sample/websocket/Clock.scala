@@ -21,8 +21,10 @@ import java.util._
 
 import javax.ws.rs._
 
-import org.atmosphere.cpr.Broadcaster
-import org.atmosphere.jersey._
+import org.atmosphere.annotation.Suspend
+import org.atmosphere.cpr.BroadcasterFactory
+import org.atmosphere.jersey.Broadcastable
+import org.atmosphere.jersey.JerseyBroadcaster
 
 /**
  * 
@@ -33,24 +35,22 @@ import org.atmosphere.jersey._
 @Singleton
 class Clock {
   
-	var date:Date = new Date()
-	var timer:Timer = new Timer()
-	var topic:Broadcaster = new JerseyBroadcaster("clock")
-	var dateFormat:SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)")
+	var date = new Date()
+	var timer = new Timer()
+	var topic = BroadcasterFactory.getDefault().get(classOf[JerseyBroadcaster], "clock")
+	var dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)")
  
 	timer.schedule(new TimerTask() {
 		def run = {
 			date.setTime(System.currentTimeMillis())
 			topic.broadcast(dateFormat.format(date))
 		}
-	}, new Date(), 1000)
+	}, date, 1000)
 	
 	@GET
-	def subscribe():SuspendResponse[String] = {
-		return new SuspendResponse.SuspendResponseBuilder[String]()
-			.broadcaster(topic)
-			.outputComments(true)
-			.build()
+	@Suspend(resumeOnBroadcast = true)
+	def subscribe():Broadcastable = {
+		return new Broadcastable(topic)
 	}
 
 }

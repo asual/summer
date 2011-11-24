@@ -10,9 +10,9 @@
 		<h1>${messages.page.technology.add}</h1>
 		
 		<fieldset data-legend="General information:">
-			<input type="text" value="${technology.name}" size="48" data-label="Name:" />
-			<input type="text" value="${technology.homepage}" size="48" data-label="Homepage:" />
-			<input type="text" value="${technology.version}" size="16" data-label="Version:" />
+			<input type="text" value="${technology.name}" size="48" data-label="Name:">
+			<input type="text" value="${technology.homepage}" size="48" data-label="Homepage:">
+			<input type="text" value="${technology.version}" size="16" data-label="Version:">
 		</fieldset>
 		
 		<fieldset data-legend="Description:">
@@ -21,13 +21,13 @@
 		
 		<fieldset data-legend="Image:">
 			<img src="/technology/image/${technology.value}" alt="${technology.name}" width="128" height="128" 
-				data-rendered="${not empty technology and not empty technology.value and not empty technology.image}" />
-			<input id="image" type="file" data-error="true" />
+				data-rendered="${not empty technology and not empty technology.value and not empty technology.image}">
+			<input id="image" type="file" data-error="true">
 		</fieldset>
 		
 		<fieldset data-legend="Licenses:">
 			<div data-repeat="${licenseList}" data-value="${technology.licenses}">
-				<input type="checkbox" value="${var.value}" data-label="${var.name}" />
+				<input type="checkbox" value="${var.value}" data-label="${var.name}">
 			</div>
 		</fieldset>
 
@@ -40,7 +40,7 @@
 		
 		<fieldset data-legend="Required:">
 			<div data-repeat="${'true,false'.split(',')}" data-value="${empty technology ? true : technology.required}">
-				<input type="radio" value="${var}" data-label="${var ? 'Yes' : 'No'}" />
+				<input type="radio" value="${var}" data-label="${var ? 'Yes' : 'No'}">
 			</div>
 		</fieldset>
 		

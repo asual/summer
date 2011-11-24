@@ -8,6 +8,6 @@
 		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 		
 	<bean class="com.asual.summer.core.resource.ScriptResource" 
-		p:location="/js/jquery-1.6.4.min.js" p:pack="summer" p:order="-2147483647" />
+		p:location="/js/jquery-1.7.1.min.js" p:pack="summer" p:order="-2147483647" />
 
 </beans>

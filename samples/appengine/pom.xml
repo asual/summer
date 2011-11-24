@@ -18,22 +18,8 @@
 	</parent>
 
 	<properties>
-		<gae.version>1.5.3</gae.version>
+		<gae.version>1.6.0</gae.version>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>org.datanucleus.maven2</id>
-			<url>http://www.datanucleus.org/downloads/maven2</url>
-		</repository>
-	</repositories>
-	
-	<pluginRepositories>
-		<pluginRepository>
-			<id>org.datanucleus.maven2</id>
-			<url>http://www.datanucleus.org/downloads/maven2</url>
-		</pluginRepository>
-	</pluginRepositories>
 	
 	<dependencies>
 		<dependency>
@@ -213,58 +199,6 @@
 	</dependencies>
 	
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.asual.summer</groupId>
-										<artifactId>summer-bundle</artifactId>
-										<versionRange>[${project.version},)</versionRange>
-										<goals>
-											<goal>descriptor</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.asual.summer</groupId>
-										<artifactId>summer-bundle</artifactId>
-										<versionRange>[${project.version},)</versionRange>
-										<goals>
-											<goal>resources</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>				
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -330,8 +264,8 @@
 				<executions>
 					<execution>
 						<goals>
-							<goal>descriptor</goal>
 							<goal>resources</goal>
+							<goal>descriptor</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -339,7 +273,7 @@
 			<plugin>
 				<groupId>net.kindleit</groupId>
 				<artifactId>maven-gae-plugin</artifactId>
-				<version>0.9.1</version>
+				<version>0.9.2</version>
 				<configuration>
 					<jvmFlags>
 						<jvmFlag>-Xdebug</jvmFlag>

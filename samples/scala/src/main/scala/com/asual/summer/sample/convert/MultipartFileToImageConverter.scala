@@ -32,9 +32,9 @@ import org.springframework.web.multipart.MultipartFile
 @Named
 class MultipartFileToImageConverter extends Converter[MultipartFile, Technology.Image] {
 
-	private val logger:Log = LogFactory.getLog(getClass())
+	private val logger = LogFactory.getLog(getClass())
 	
-	var mimeTypes:List[String] = new ArrayList[String]()
+	var mimeTypes = new ArrayList[String]()
 	
 	mimeTypes.add("image/gif")
 	mimeTypes.add("image/jpeg")
@@ -46,7 +46,8 @@ class MultipartFileToImageConverter extends Converter[MultipartFile, Technology.
 			try {
 				return new Technology.Image(source)
 			} catch {
-				case e: Exception => logger.error(e.getMessage(), e)
+				case e:Exception => 
+				  logger.error(e.getMessage(), e)
 			}
 		}
 		return null

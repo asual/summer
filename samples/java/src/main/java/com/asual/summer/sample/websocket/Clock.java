@@ -22,9 +22,11 @@ import java.util.TimerTask;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
+import org.atmosphere.annotation.Suspend;
 import org.atmosphere.cpr.Broadcaster;
+import org.atmosphere.cpr.BroadcasterFactory;
+import org.atmosphere.jersey.Broadcastable;
 import org.atmosphere.jersey.JerseyBroadcaster;
-import org.atmosphere.jersey.SuspendResponse;
 
 import com.sun.jersey.spi.resource.Singleton;
 
@@ -36,12 +38,12 @@ import com.sun.jersey.spi.resource.Singleton;
 @Path("/clock")
 @Singleton
 public class Clock {
-  
-	private Date date = new Date();
-	private Timer timer = new Timer();
-	private Broadcaster topic = new JerseyBroadcaster("clock");
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)");
- 
+	
+    private Date date = new Date();
+    private Timer timer = new Timer();
+    private Broadcaster topic = BroadcasterFactory.getDefault().get(JerseyBroadcaster.class, "clock");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)");
+    
 	public Clock() {
 		timer.schedule(new TimerTask() {
 			public void run() {
@@ -52,11 +54,9 @@ public class Clock {
 	}
 	
 	@GET
-	public SuspendResponse<String> subscribe() {
-		return new SuspendResponse.SuspendResponseBuilder<String>()
-			.broadcaster(topic)
-			.outputComments(true)
-			.build();
+    @Suspend(resumeOnBroadcast = true)
+	public Broadcastable subscribe() {
+		return new Broadcastable(topic);
 	}
 
 }

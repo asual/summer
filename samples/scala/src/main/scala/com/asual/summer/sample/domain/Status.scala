@@ -36,11 +36,9 @@ import scala.reflect.BeanProperty
 @Entity
 @Table
 @SerialVersionUID(1L)
-@serializable
-class Status {
+class Status extends Serializable {
 
 	@PersistenceContext
-	@BeanProperty
 	@transient
 	var entityManager:EntityManager = _
 	
@@ -65,7 +63,7 @@ class Status {
 	}
 	
 	override def equals(other:Any) = other match {
-		case that: Status => 
+		case that:Status => 
 			(that canEqual this) && (this.value == that.value)
 		case _ => 
 			false
@@ -82,7 +80,7 @@ class Status {
 	
 	@Transactional
 	def merge:Status = {
-		var merged:Status = entityManager.merge(this)
+		var merged = entityManager.merge(this)
 		entityManager.flush
 		return merged
 	}
@@ -92,7 +90,7 @@ class Status {
 		if (entityManager.contains(this)) {
 			entityManager.remove(this)
 		} else {
-			var attached:Status = 
+			var attached = 
 				entityManager.find(this.getClass(), this.id).asInstanceOf[Status]
 			entityManager.remove(attached)
 		}
@@ -107,7 +105,7 @@ class Status {
 object Status {
 
 	def entityManager:EntityManager = {
-		var em:EntityManager = new Status().entityManager
+		var em = new Status().entityManager
 		if (em == null) {
 			throw new IllegalStateException("Entity manager has not been injected.")
 		}

@@ -244,7 +244,7 @@ public class ComponentUtils {
 			
 			if ("checkbox".equals(type) || "radio".equals(type)) {
 				if (isMatch(component) && ComponentUtils.getAttrValue(component, "checked") == null) {
-					attrs.put("checked", "checked");
+					attrs.put("checked", true);
 				}
 			}
 			
@@ -260,7 +260,7 @@ public class ComponentUtils {
 		} else if ("option".equals(name)) {
 			
 			if (isMatch(component) && ComponentUtils.getAttrValue(component, "selected") == null) {
-				attrs.put("selected", "selected");
+				attrs.put("selected", true);
 			}
 		}
 		
@@ -278,13 +278,12 @@ public class ComponentUtils {
 			UIComponent.VIEW_LOCATION_KEY, Pattern.CASE_INSENSITIVE).matcher(key).matches();
 	}
 	
-	static String contextAttribute(String name, Object value) {
+	static Object contextAttribute(String name, Object value) {
 		if (value != null && "data-ajax-url".equalsIgnoreCase(name) || 
 				"href".equalsIgnoreCase(name) || "src".equalsIgnoreCase(name)) {
 			return RequestUtils.contextRelative(value.toString(), true);
-		} else {
-			return value.toString();
 		}
+		return value;
 	}
 	
 	static void writeAttribute(ResponseWriter writer, String name, Object value) throws IOException {
@@ -301,7 +300,7 @@ public class ComponentUtils {
 			return values.get(0);
 		}
 		return null;
-	}	
+	}
 	
 	static boolean isMatch(Component component) {
 		try {

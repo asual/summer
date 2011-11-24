@@ -30,14 +30,14 @@ import org.springframework.core.convert.converter.Converter
 @Named
 class StringToStatusConverter extends Converter[String, Status] {
 	
-	private val logger:Log = LogFactory.getLog(getClass())
+	private val logger = LogFactory.getLog(getClass())
 
 	def convert(source:String):Status = {
 		if (!StringUtils.isEmpty(source)) {
 			try {
 				return Status.find(source)
 			} catch {
-				case e: Exception => 
+				case e:Exception => 
 					logger.error(e.getMessage(), e)
 			}
 		}

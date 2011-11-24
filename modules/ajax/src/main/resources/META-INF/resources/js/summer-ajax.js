@@ -113,7 +113,7 @@
 								regions.trigger('error', [xhr, status, error]);
 							},
 							success: function(data, status, xhr) {
-								var elements = $(innerShiv(data, false));
+								var elements = $(data);
 								if (elements.size() > 0) {
 									regions.each(function(i) {
 										var obj = $(this),

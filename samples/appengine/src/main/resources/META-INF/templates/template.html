@@ -3,7 +3,7 @@
 	
 	<head>
 		<title>Default Template</title>
-		<link href="/css/summer-sample.css" rel="stylesheet" />
+		<link href="/css/summer-sample.css" rel="stylesheet">
 		<script src="/js/summer-sample.js" data-pack="summer"></script>
 	</head>
 	
@@ -15,12 +15,15 @@
 			${template.body}
 		</section>
 		<footer>
+			<!--  
+			<p class="clock">WebSocket Clock: <span data-websocket="clock">subscribing...</span></p>
+			-->
 			<p class="copyright">&copy; 2010-2011 Asual DZZD</p>
 			<p class="build" data-rendered="${not empty resourceUtils.getManifestAttribute('Build-Timestamp')}">
-				Build Timestamp: ${resourceUtils.getManifestAttribute('Build-Timestamp')}<br />
+				Build Timestamp: ${resourceUtils.getManifestAttribute('Build-Timestamp')}<br>
 				Build Revision: ${resourceUtils.getManifestAttribute('Build-Revision')}
 			</p>
-			<p><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine" /></p>
+			<p><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine"></p>
 		</footer>
 	</body>
 		

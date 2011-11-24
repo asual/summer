@@ -9,7 +9,7 @@
 
 		<p class="image">
 			<img src="${not empty technology.image ? '/technology/image/'.concat(technology.value) : '/img/img.png'}" 
-				alt="${technology.name}" width="128" height="128" />
+				alt="${technology.name}" width="128" height="128">
 		</p>
 		
 		<h1>${technology.name}</h1>
@@ -17,8 +17,8 @@
 		<p>${technology.description}</p>
 		
 		<p>
-			Version: <span>${technology.version}</span><br />
-			Homepage: <a href="${technology.homepage}">${technology.homepage}</a><br />
+			Version: <span>${technology.version}</span><br>
+			Homepage: <a href="${technology.homepage}">${technology.homepage}</a><br>
 			License: <span data-repeat="${technology.licenses}" data-empty="-">${var.name.concat(varStatus.last ? '' : ', ')}</span>
 		</p>
 	

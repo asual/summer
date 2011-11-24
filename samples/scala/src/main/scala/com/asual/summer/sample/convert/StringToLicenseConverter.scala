@@ -30,14 +30,14 @@ import org.springframework.core.convert.converter.Converter
 @Named
 class StringToLicenseConverter extends Converter[String, License] {
 	
-	private val logger:Log = LogFactory.getLog(getClass())
+	private val logger = LogFactory.getLog(getClass())
 
 	def convert(source:String):License = {
 		if (!StringUtils.isEmpty(source)) {
 			try {
 				return License.find(source)
 			} catch {
-				case e: Exception => 
+				case e:Exception => 
 					logger.error(e.getMessage(), e)
 			}
 		}

@@ -41,11 +41,9 @@ import scala.reflect.BeanProperty
 @Entity
 @Table
 @SerialVersionUID(1L)
-@serializable
-class Technology {
+class Technology extends Serializable {
 	
 	@PersistenceContext
-	@BeanProperty
 	@transient 
 	var entityManager:EntityManager = _
 
@@ -132,7 +130,7 @@ class Technology {
 	}
 	
 	override def equals(other:Any) = other match {
-		case that: Technology => 
+		case that:Technology => 
 			(that canEqual this) && (this.value == that.value)
 		case _ => 
 			false
@@ -149,7 +147,7 @@ class Technology {
 	
 	@Transactional
 	def merge:Technology = {
-		var merged:Technology = entityManager.merge(this)
+		var merged = entityManager.merge(this)
 		entityManager.flush
 		return merged
 	}
@@ -159,7 +157,7 @@ class Technology {
 		if (entityManager.contains(this)) {
 			entityManager.remove(this)
 		} else {
-			var attached:Technology = entityManager.find(this.getClass(), this.id).asInstanceOf[Technology]
+			var attached = entityManager.find(this.getClass(), this.id).asInstanceOf[Technology]
 			entityManager.remove(attached)
 		}
 	}
@@ -174,7 +172,7 @@ class Technology {
 object Technology {
 	
 	def entityManager:EntityManager = {
-		var em:EntityManager = new Technology().entityManager
+		var em = new Technology().entityManager
 		if (em == null) {
 			throw new IllegalStateException("Entity manager has not been injected.")
 		}
@@ -182,7 +180,7 @@ object Technology {
 	}
 	
 	def find(value:String):Technology = {
-		var technologies:List[Technology] = 
+		var technologies = 
 			entityManager.createQuery("select o from Technology o where o.value = ?1")
 				.setParameter(1, value).getResultList.asInstanceOf[List[Technology]]
 		if (technologies.size() != 0) {
@@ -214,8 +212,7 @@ object Technology {
 	}
 	
 	@SerialVersionUID(1L)
-	@serializable
-	class Image(file:MultipartFile) {
+	class Image(file:MultipartFile) extends Serializable {
 	
 		@BeanProperty
 		var value:String = _

@@ -32,12 +32,6 @@
 			<groupId>org.atmosphere</groupId>
 			<artifactId>atmosphere-jersey</artifactId>
 			<version>0.8.0-RC3</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.atmosphere</groupId>
-					<artifactId>atmosphere-ping</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 	

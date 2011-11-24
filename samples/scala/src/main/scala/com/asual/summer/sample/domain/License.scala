@@ -36,11 +36,9 @@ import scala.reflect.BeanProperty
 @Entity
 @Table
 @SerialVersionUID(1L)
-@serializable
-class License {
+class License extends Serializable {
 
 	@PersistenceContext
-	@BeanProperty
 	@transient 
 	var entityManager:EntityManager = _
 	
@@ -65,7 +63,7 @@ class License {
 	}
 	
 	override def equals(other:Any) = other match {
-		case that: License => 
+		case that:License => 
 			(that canEqual this) && (this.value == that.value)
 		case _ => 
 			false
@@ -80,7 +78,7 @@ class License {
 	
 	@Transactional
 	def merge:License = {
-		var merged:License = entityManager.merge(this)
+		var merged = entityManager.merge(this)
 		entityManager.flush
 		return merged
 	}
@@ -90,7 +88,7 @@ class License {
 		if (entityManager.contains(this)) {
 			entityManager.remove(this)
 		} else {
-			var attached:License = 
+			var attached = 
 				entityManager.find(this.getClass(), this.id).asInstanceOf[License]
 			entityManager.remove(attached)
 		}
@@ -105,7 +103,7 @@ class License {
 object License {
 	
 	def entityManager:EntityManager = {
-		var em:EntityManager = new License().entityManager
+		var em = new License().entityManager
 		if (em == null) {
 			throw new IllegalStateException("Entity manager has not been injected.")
 		}

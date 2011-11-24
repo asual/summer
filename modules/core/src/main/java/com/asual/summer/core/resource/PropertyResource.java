@@ -42,7 +42,9 @@ import org.springframework.util.ResourceUtils;
 public class PropertyResource extends LocationResource implements BeanFactoryPostProcessor {
 
 	private ExtendedPropertyPlaceholderConfigurer eppc;
+	private static String stringArraySeparator;
 	private final Log logger = LogFactory.getLog(getClass());
+	private final static String ARRAY_SEPARATOR_KEY = "app.stringArraySeparator";
 	
 	public PropertyResource() {
 		setOrder(Ordered.HIGHEST_PRECEDENCE);
@@ -55,11 +57,11 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 	}
 	
 	public String getStringArraySeparator() {
-		return eppc.getStringArraySeparator();
+		return stringArraySeparator;
 	}
 
 	public void setStringArraySeparator(String stringArraySeparator) {
-		eppc.setStringArraySeparator(stringArraySeparator);
+		PropertyResource.stringArraySeparator = stringArraySeparator;
 	}
 	
 	public void setProperties(Properties properties) {
@@ -145,7 +147,6 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 	private class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
 		private Properties properties;
-		private String stringArraySeparator;
 		
 		protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties properties) throws BeansException {
 			this.properties = properties;
@@ -155,12 +156,11 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 		public Object getProperty(String key) {
 			String value = super.resolvePlaceholder(key, properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
 			if (value != null) {
-				String separator = stringArraySeparator;
-				if (separator == null) {
-					separator = (String) super.resolvePlaceholder("app.stringArraySeparator", properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
+				if (stringArraySeparator == null) {
+					stringArraySeparator = (String) super.resolvePlaceholder(ARRAY_SEPARATOR_KEY, properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
 				}
-				if (separator != null && value.indexOf(separator) != -1) {
-					String[] arr = value.split(separator);
+				if (stringArraySeparator != null && value.indexOf(stringArraySeparator) != -1 && !value.equals(stringArraySeparator)) {
+					String[] arr = value.split(stringArraySeparator);
 					for (int i = 0; i < arr.length; i++) {
 						arr[i] = arr[i].trim();
 					}
@@ -170,14 +170,6 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 				}
 			}
 			return null;
-		}
-		
-		public String getStringArraySeparator() {
-			return stringArraySeparator;
-		}
-
-		public void setStringArraySeparator(String stringArraySeparator) {
-			this.stringArraySeparator = stringArraySeparator;
 		}
 		
 	}
