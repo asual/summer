@@ -11,7 +11,7 @@
 	<groupId>com.asual.summer</groupId>
 	<url>http://www.asual.com/summer</url>
 	<packaging>pom</packaging>
-	<version>1.0.0.M3</version>
+	<version>1.0.0.RC1-SNAPSHOT</version>
 	<modelVersion>4.0.0</modelVersion>
 	
 	<organization>
@@ -26,6 +26,12 @@
 		</license>
 	</licenses>
 	
+	<scm>
+		<connection>scm:git:git@github.com/asual/summer.git</connection>
+		<url>scm:git:git@github.com/asual/summer.git</url>
+		<developerConnection>scm:git:git@github.com/asual/summer.git</developerConnection>
+	</scm>
+		
 	<distributionManagement>
 		<repository>
 			<id>com.asual.repositories.releases</id>
@@ -38,7 +44,7 @@
 			<url>http://www.asual.com/maven/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-
+	
 	<properties>
 		<project.build.properties>build.properties</project.build.properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -135,6 +141,20 @@
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-compiler-plugin</artifactId>
+										<versionRange>[2.3.2,)</versionRange>
+										<goals>
+											<goal>compile</goal>
+											<goal>testCompile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
 										<artifactId>maven-war-plugin</artifactId>
 										<versionRange>[2.1.1,)</versionRange>
 										<goals>
@@ -221,6 +241,15 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<scmCommentPrefix></scmCommentPrefix>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

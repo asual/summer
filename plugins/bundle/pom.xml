@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>com.asual.summer</groupId>
 		<artifactId>summer-plugins</artifactId>
-		<version>1.0.0.M3</version>
+		<version>1.0.0.RC1-SNAPSHOT</version>
 	</parent>
 		
 	<dependencies>
