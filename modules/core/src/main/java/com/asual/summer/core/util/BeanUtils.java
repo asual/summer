@@ -58,15 +58,6 @@ public class BeanUtils implements BeanFactoryPostProcessor {
 	public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
 		return beanFactory.getBeansOfType(clazz);
 	}
-	
-	public static <T> T getBeansOfType(ConfigurableListableBeanFactory beanFactory, Class<T> clazz) {
-		Map<String, T> beans = beanFactory.getBeansOfType(clazz);
-		Iterator<Entry<String, T>> iterator = beans.entrySet().iterator();
-		if (iterator.hasNext()) {
-			return iterator.next().getValue();
-		}
-		return null;
-	}
 
 	public static String[] getBeanNames(Class<?> clazz) {
 		return beanFactory.getBeanNamesForType(clazz);
