@@ -13,4 +13,12 @@
 		<Arg>resource/Compress</Arg>
 		<Arg type="java.lang.Boolean">false</Arg>
 	</New>
+	<New class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>less/Cache</Arg>
+		<Arg type="java.lang.Boolean">false</Arg>
+	</New>
+	<New class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>less/Compress</Arg>
+		<Arg type="java.lang.Boolean">false</Arg>
+	</New>
 </Configure>
