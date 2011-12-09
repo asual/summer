@@ -15,9 +15,8 @@
 package com.asual.summer.core.util;
 
 import java.lang.annotation.Annotation;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -25,6 +24,7 @@ import javax.inject.Named;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.core.OrderComparator;
 
 /**
  * 
@@ -38,19 +38,15 @@ public class BeanUtils implements BeanFactoryPostProcessor {
 	private static ConfigurableListableBeanFactory beanFactory;
 	
 	public static <T> T getBeanOfType(Class<T> clazz) {
-		Map<String, T> beans = getBeansOfType(clazz);
-		Iterator<Entry<String, T>> iterator = beans.entrySet().iterator();
-		if (iterator.hasNext()) {
-			return iterator.next().getValue();
-		}
-		return null;
+		return getBeanOfType(beanFactory, clazz);
 	}
 	
 	public static <T> T getBeanOfType(ConfigurableListableBeanFactory beanFactory, Class<T> clazz) {
 		Map<String, T> beans = beanFactory.getBeansOfType(clazz);
-		Iterator<Entry<String, T>> iterator = beans.entrySet().iterator();
-		if (iterator.hasNext()) {
-			return iterator.next().getValue();
+		ArrayList<T> values = new ArrayList<T>(beans.values());
+		if (values.size() != 0) {
+			OrderComparator.sort(values);
+			return values.get(0);
 		}
 		return null;
 	}
