@@ -18,12 +18,14 @@ import static com.sun.faces.config.WebConfiguration.BooleanWebContextInitParamet
 
 import java.io.Writer;
 
+import javax.faces.application.ProjectStage;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import com.asual.summer.core.util.ResourceUtils;
 import com.sun.faces.RIConstants;
 import com.sun.faces.config.WebConfiguration;
+import com.sun.faces.config.WebConfiguration.WebContextInitParameter;
 import com.sun.faces.renderkit.RenderKitImpl;
 
 /**
@@ -36,8 +38,20 @@ public class FacesRenderKitImpl extends RenderKitImpl {
 	private WebConfiguration webConfig;
 
 	public FacesRenderKitImpl() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		webConfig = WebConfiguration.getInstance(context.getExternalContext());
+		webConfig = WebConfiguration.getInstance();
+		String value = webConfig.getEnvironmentEntry(WebConfiguration.WebEnvironmentEntry.ProjectStage);
+		if (value == null) {
+			value = webConfig.getOptionValue(WebContextInitParameter.JavaxFacesProjectStage);
+		}
+		try {
+			if (value != null) {
+				if (ProjectStage.valueOf(value).equals(ProjectStage.Development)) {
+					webConfig.overrideContextInitParameter(WebContextInitParameter.FaceletsDefaultRefreshPeriod, 
+							WebContextInitParameter.FaceletsDefaultRefreshPeriod.getDefaultValue());
+				}
+			}
+		} catch (IllegalArgumentException e) {
+		}
 	}
 	
 	public ResponseWriter createResponseWriter(Writer writer,
