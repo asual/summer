@@ -22,16 +22,6 @@
 	
 	<repositories>
 		<repository>
-			<id>org.springframework.maven.release</id>
-			<name>Spring Framework Release Repository</name>
-			<url>http://maven.springframework.org/release</url>
-		</repository>
-		<repository>
-			<id>org.springframework.maven.milestone</id>
-			<name>Spring Framework Milestone Repository</name>
-			<url>http://maven.springframework.org/milestone</url>
-		</repository>
-		<repository>
 			<id>com.asual.repositories.public</id>
 			<name>Asual Public Repository</name>
 			<url>http://www.asual.com/maven/content/groups/public</url>
@@ -52,7 +42,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.1</version>
+			<version>1.6.4</version>
 		</dependency>
         <dependency>
             <groupId>javax.servlet.jsp.jstl</groupId>
@@ -82,7 +72,7 @@
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>8.0.4.v20111024</version>
+				<version>8.1.0.RC1</version>
 				<configuration>
 					<webAppConfig>
 						<jettyEnvXml>${dollar}{basedir}/src/test/resources/jetty-env.xml</jettyEnvXml>
@@ -90,9 +80,9 @@
 				</configuration>
 				<dependencies>
 					<dependency>
-						<groupId>org.mortbay.jetty</groupId>
-						<artifactId>servlet-api</artifactId>
-						<version>3.0.20100224</version>
+						<groupId>javax.servlet</groupId>
+						<artifactId>javax.servlet-api</artifactId>
+						<version>3.0.1</version>
 					</dependency>
 				</dependencies>
 			</plugin>
