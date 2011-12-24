@@ -32,14 +32,12 @@
     	<div class="list" data-rendered="${empty requestUtils.getParameter('view')}">
             <div data-repeat="${technologyList}" data-empty="None.">
                 <h2><a href="/technology/${var.value}">${var.name}</a></h2>
-                <p class="details">
-                    Version: 
-                    <span>${var.version}</span>
-                    Licenses: 
-                    <span data-repeat="${var.licenses}" data-var="licenseVar" data-var-status="licenseVarStatus" data-empty="-">
-                        ${licenseVar.name.concat(licenseVarStatus.last ? '' : ', ')}
-                    </span>
-                </p>
+				<p class="details">
+					Version: <span>${var.version}</span>
+					Licenses: <span data-repeat="${var.licenses}" 
+						data-empty="-" data-var="license" 
+						data-var-status="licenseVs">${license.name.concat(licenseVs.last ? '' : ', ')}</span>
+				</p>
                 <p data-rendered="${not empty var.description}">${var.description}</p>
             </div>
         </div>
