@@ -19,6 +19,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.faces.FacesException;
@@ -45,44 +46,29 @@ public class FacesResponseWriter extends ResponseWriter {
     private boolean escapeIso = true;
     private boolean isPartial;
     private boolean scriptInAttributes;
-    private boolean hasChildren;
     
     private char[] buffer = new char[1028];
     private char[] textBuffer = new char[128];
     private char[] charHolder = new char[1];
     private StringWriter textWriter = new StringWriter();
 	
-	private String name;
+	private int depth = 0;
+	private String[] nodeDepth = new String[100];
+	private boolean[] nodeDepthContent = new boolean[100];
 	
-	private List<String> autoClose = Arrays.asList(
-		"meta", "img", "link", "input", "br", "hr"
-	);
+	private static String INDENT = "    ";
+	private boolean start = false;
+	private String previous;
 	
-	private List<String> noSpace = Arrays.asList(
-		"p", "li", "div", "h1", "h2", "h3", "h4", "h5", "h6", "br", "hr"
-	);
-	
-	private List<String> sameLine = Arrays.asList(
-		"p", "li", "em", "strong", "title", "a", "option", "pre", 
-		"textarea", "span", "sub", "sup", "small", "label", 
-		"button", "h1", "h2", "h3", "h4", "h5", "h6", "legend"
-	);
-	
-	private List<String> sameLineNoContent = Arrays.asList(
-		"pre", "script", "textarea"
+	private List<String> block = Arrays.asList(
+		"html", "head", "meta", "link", "title", "script", "body", "header", "footer", "section", 
+		"div", "h1", "h2", "h3", "h4", "h5", "h6", "p", "dl", "dt", "dd", "ol", "ul", "li", "hr",
+		"form", "fieldset", "legend", "label", "input", "select", "option", "textarea", "button"
 	);
 	
 	private List<String> pre = Arrays.asList(
-		"pre", "script", "style", "textarea"
+		"pre", "textarea"
 	);
-	
-	private int depth = 0;
-	private boolean start = false;
-	private boolean end = false;
-	
-	private String[] nodeDepth = new String[100];
-	
-	private static String INDENT = "    ";
 	
     public FacesResponseWriter(Writer writer, String contentType, String encoding,
     		boolean scriptInAttributes, boolean isPartial) throws FacesException {
@@ -97,7 +83,7 @@ public class FacesResponseWriter extends ResponseWriter {
         escapeUnicode = !HtmlUtils.isUTFencoding(charsetName);
         escapeIso = !HtmlUtils.isISO8859_1encoding(charsetName) && !HtmlUtils.isUTFencoding(charsetName);
     }
-
+    
     public String getContentType() {
         return contentType;
     }
@@ -111,34 +97,18 @@ public class FacesResponseWriter extends ResponseWriter {
         }
     }
     
+    public String getCharacterEncoding() {
+        return encoding;
+    }
+    
     public void close() throws IOException {
-        closeStartIfNecessary(false);
+        closeStartIfNecessary();
         writer.close();
     }
     
     public void flush() throws IOException {
-        closeStartIfNecessary(false);
+        closeStartIfNecessary();
     }
-    
-	private boolean isNoSpace(String nodeName) {
-		return noSpace.contains(nodeName);
-	}
-	
-	private boolean isSameLine(String nodeName) {
-		return sameLine.contains(nodeName);
-	}
-	
-	private boolean isPre(String nodeName) {
-		return pre.contains(nodeName);
-	}
-	
-	private boolean isSameLineNoContent(String nodeName) {
-		return sameLineNoContent.contains(nodeName);
-	}
-	
-	private boolean isAutoClose(String nodeName) {
-		return autoClose.contains(nodeName);
-	}
 	
     public void startDocument() throws IOException {
     }
@@ -148,102 +118,114 @@ public class FacesResponseWriter extends ResponseWriter {
     }
     
     public void startElement(String name, UIComponent componentForElement) throws IOException {
-        closeStartIfNecessary(false);
-    	printTextIfNecessary(true);
+    	
+        closeStartIfNecessary();
         
-		this.name = name;
+        boolean indent = textWriter.toString().isEmpty();
+        
+    	printTextIfNecessary(false);
 		
-		if (!isSameLine(getParent())) {
-			writer.write(getIndent(depth));
-		}
-        writer.write('<');
+    	if (block.contains(name)|| (indent && previous != null && block.contains(previous))) {
+    		if (!"html".equals(name)) {
+    			writer.write('\n');
+    		}
+    		writer.write(getIndent(depth));
+    	}
+    	writer.write('<');
         writer.write(name);
         closeStart = true;
+        previous = name;
         
-        nodeDepth[depth] = name;
-        depth++;
+		depth++;
+		nodeDepth[depth] = name;
+		nodeDepthContent[depth] = false;
     }
     
     public void endElement(String name) throws IOException {
     	
-    	depth--;
+    	boolean emptyNode = HtmlUtils.isEmptyElement(name);
     	
-        if (closeStart) {
-            boolean isEmptyElement = HtmlUtils.isEmptyElement(name);
-            if (isEmptyElement) {
-                writer.write(">");
-                writer.write('\n');
-                closeStart = false;
-                return;
+		start = start || closeStart;
+		
+        if (emptyNode) {
+        	
+            if (closeStart) {
+	            writer.write('>');
+	            closeStart = false;
             }
-            writer.write('>');
-            closeStart = false;
+            
+        } else {
+    	
+	        if (closeStart) {
+	        	writer.write('>');
+	            closeStart = false;
+	        }
+	        
+	    	printTextIfNecessary(true);
+	    	
+			if (block.contains(name) && !pre.contains(name) &&
+				(!ComponentUtils.isStyleOrScript(name) || nodeDepthContent[depth])) {
+				writer.write('\n');
+				writer.write(getIndent(depth - 1));
+			}
+	        writer.write("</" + name + ">");
+	        previous = name;
         }
         
-        if (!isAutoClose(name)) {
-        	
-	    	printTextIfNecessary(false);
-	    	
-			if (!isSameLine(name)) {
-				if (!isSameLine(getParent())) {
-					if (!(isSameLineNoContent(name) && !hasChildren)) {
-				        writer.write(getIndent(depth));
-					}
-			        writer.write("</" + name + ">\n");
-				} else {
-			        writer.write(getIndent(depth) + "</" + name + ">\n");
-				}
-			} else if (!isSameLine(getParent())) {
-		        writer.write("</" + name + ">\n");
-			} else {
-		        writer.write("</" + name + ">");
+		nodeDepth[depth + 1] = null;
+        depth--;
+    }
+    
+    private void printTextIfNecessary(boolean end) throws IOException {
+        String textStr = textWriter.toString();
+        if (StringUtils.hasText(textStr)) {
+            String name = nodeDepth[depth];
+            textStr = textStr.replaceAll("\t", INDENT);
+			if (ComponentUtils.isStyleOrScript(name)) {
+				textStr = Pattern.compile("^\\s{" + calculateIndent(textStr) + "}", 
+						Pattern.MULTILINE).matcher(textStr).replaceAll(getIndent(depth)).trim();
 			}
+			if (block.contains(name) && !pre.contains(name)) {
+				Matcher m = Pattern.compile("^( *\\n)+.*", Pattern.DOTALL).matcher(textStr);
+				if (m.matches()) {
+					textStr = m.replaceFirst("$1") + getIndent(depth) + StringUtils.trimLeadingWhitespace(textStr);
+				} else if (start) {
+					textStr = "\n" + getIndent(depth) + StringUtils.trimLeadingWhitespace(textStr);
+				}
+				m = Pattern.compile(".*(\\n)+ *$", Pattern.DOTALL).matcher(textStr);
+				if (m.matches()) {
+					textStr = StringUtils.trimTrailingWhitespace(textStr) + m.replaceFirst("$1") + getIndent(depth);
+				}
+			}
+			if (end) {
+				textStr = StringUtils.trimTrailingWhitespace(textStr);
+			}
+			writer.write(textStr);
+	        textWriter.getBuffer().setLength(0);
+	        start = false;
+	        
+	        nodeDepth[depth + 1] = null;
+	        for (int i = 0; i < depth + 1; i++) {
+	        	nodeDepthContent[i] = true;
+	        }
         }
     }
     
-    public String getCharacterEncoding() {
-        return encoding;
-    }
-    
-    public void write(char[] cbuf) throws IOException {
-        closeStartIfNecessary(true);
-        writer.write(cbuf);
-    }
-    
-    public void write(int c) throws IOException {
-        closeStartIfNecessary(true);
-        writer.write(c);
-    }
-    
-    public void write(char[] cbuf, int off, int len) throws IOException {
-        closeStartIfNecessary(true);
-        writer.write(cbuf, off, len);
-    }
-    
-    public void write(String str) throws IOException {
-        closeStartIfNecessary(true);
-        ensureTextBufferCapacity(str);
-        textWriter.write(str);
-    }
-    
-    public void write(String str, int off, int len) throws IOException {
-        closeStartIfNecessary(true);
-        ensureTextBufferCapacity(len);
-        textWriter.write(str, off, len);
+    private void closeStartIfNecessary() throws IOException {
+    	start = start || closeStart;
+        if (closeStart) {
+        	writer.write('>');
+            closeStart = false;
+        }
     }
     
     public void writeAttribute(String name, Object value, String componentPropertyName) throws IOException {
-    	
-        if (value == null) {
-            return;
-        }
-        
         if (value instanceof Boolean) {
             if (Boolean.TRUE.equals(value)) {
             	writer.write(' ');
             	writer.write(name);
             }
-        } else {
+        } else if (value != null) {
         	writer.write(' ');
         	writer.write(name);
         	writer.write('=');
@@ -261,37 +243,80 @@ public class FacesResponseWriter extends ResponseWriter {
     	writeAttribute(name, value, componentPropertyName);
     }
     
-    public void writeComment(Object comment) throws IOException {
-        closeStartIfNecessary(true);
-        writer.write("<!--");
-        writer.write(comment.toString());
-        writer.write("-->");
+    public void write(char[] cbuf) throws IOException {
+        closeStartIfNecessary();
+        writer.write(cbuf);
+    }
+    
+    public void write(int c) throws IOException {
+        closeStartIfNecessary();
+        writer.write(c);
+    }
+    
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        closeStartIfNecessary();
+        writer.write(cbuf, off, len);
+    }
+    
+    public void write(String str) throws IOException {
+        ensureTextBufferCapacity(str);
+        textWriter.write(str);
+        closeStartIfNecessary();
+    }
+    
+    public void write(String str, int off, int len) throws IOException {
+        ensureTextBufferCapacity(len);
+        textWriter.write(str, off, len);
+        closeStartIfNecessary();
     }
     
     public void writeText(char text) throws IOException {
-        closeStartIfNecessary(true);
+        closeStartIfNecessary();
         charHolder[0] = text;
         HtmlUtils.writeText(writer, escapeUnicode, escapeIso, buffer, charHolder);
     }
     
     public void writeText(char text[]) throws IOException {
-        closeStartIfNecessary(true);
+        closeStartIfNecessary();
         HtmlUtils.writeText(writer, escapeUnicode, escapeIso, buffer, text);
     }
     
     public void writeText(Object text, String componentPropertyName) throws IOException {    	
-        closeStartIfNecessary(true);
         String textStr = text.toString();
-        if (!ComponentUtils.isStyleOrScript(name) && textWriter.getBuffer().length() == 0) {
-        	//textStr = StringUtils.trimLeadingWhitespace(textStr);
-        }
         ensureTextBufferCapacity(textStr);
         HtmlUtils.writeText(textWriter, escapeUnicode, escapeIso, buffer, textStr, textBuffer);
+        closeStartIfNecessary();
     }
     
     public void writeText(char text[], int off, int len) throws IOException {
-        closeStartIfNecessary(true);
+        closeStartIfNecessary();
         HtmlUtils.writeText(writer, escapeUnicode, escapeIso, buffer, text, off, len);
+    }
+    
+    public void writeComment(Object comment) throws IOException {
+        closeStartIfNecessary();
+        writer.write("<!--");
+        writer.write(comment.toString());
+        writer.write("-->");
+    }
+    
+    private int calculateIndent(String textStr) {
+		int indent = 1000;
+		String[] lines = textStr.split("\n|\r\n");
+		for (String line : lines) {
+			if (StringUtils.hasText(line)) {
+				indent = Math.min(indent, line.length() - StringUtils.trimLeadingWhitespace(line).length());
+			}
+		}
+		return indent;
+    }
+	
+    private String getIndent(int depth) throws IOException {
+    	StringBuilder sb = new StringBuilder();
+    	for (int i = 0; i < depth; i++) {
+    		sb.append(INDENT);
+    	}
+    	return sb.toString();
     }
     
     private void ensureTextBufferCapacity(int len) {
@@ -304,66 +329,4 @@ public class FacesResponseWriter extends ResponseWriter {
     	ensureTextBufferCapacity(source.length());
     }
     
-    private void closeStartIfNecessary(boolean hasChildren) throws IOException {
-    	this.hasChildren = hasChildren;
-        if (closeStart) {
-        	writer.write('>');
-			if (!isSameLine(name) && !isSameLine(name) && !(isSameLineNoContent(name) && !hasChildren)) {
-				writer.write('\n');
-			}
-            closeStart = false;
-        }
-    }
-    
-    private void printTextIfNecessary(boolean start) throws IOException {
-    	
-        String textStr = textWriter.toString();
-        
-        if (StringUtils.hasText(textStr)) {
-            
-            textStr = textStr.replaceAll("\t", INDENT);
-            
-			if (ComponentUtils.isStyleOrScript(name)) {
-				
-				String[] lines = textStr.split("\n");
-				int l = 100;
-				
-				for (String line : lines) {
-					if (StringUtils.hasText(line)) {
-						int i = line.length() - StringUtils.trimLeadingWhitespace(line).length();
-						if (i < l) l = i;
-					}
-				}
-				
-				textStr = Pattern.compile("^\\s{" + l + "}", 
-						Pattern.MULTILINE).matcher(textStr).replaceAll(getIndent(depth + 1)).trim();
-				
-			} else {
-				
-				if (!isPre(name) && !textStr.startsWith("&lt;!--")) {
-					textStr = textStr.replaceAll("\\n+", "").replaceAll("\\s+", " ").replaceAll("^ <", "<");
-				}
-			}
-			
-			if (isSameLine(name)) {
-		        writer.write(textStr);
-			} else {
-		        writer.write(getIndent(depth + 1) + textStr + "\n");
-			}
-			
-	        textWriter.getBuffer().setLength(0);
-        }    	
-    }
-	
-    private String getIndent(int depth) throws IOException {
-    	StringBuilder sb = new StringBuilder();
-    	for (int i = 0; i < depth; i++) {
-    		sb.append(INDENT);
-    	}
-    	return sb.toString();
-    }
-    
-    private String getParent() {
-    	return (depth != 0 ? nodeDepth[depth - 1] : null);    	
-    }
 }

@@ -27,7 +27,9 @@ public class HtmlViewIT {
 				"<html>\n" + 
 				"    <head>\n" + 
 				"        <meta charset=\"UTF-8\">\n" + 
-				"        <title>Summer - The HTML5 Library for Java and Scala</title>\n" + 
+				"        <title>\n" + 
+				"            Summer - The HTML5 Library for Java and Scala\n" + 
+				"        </title>\n" + 
 				"        <link href=\"/css/summer-core.css\" rel=\"stylesheet\">\n" + 
 				"        <script src=\"/js/summer-core.js\"></script>\n" + 
 				"        <script>\n" + 
@@ -42,10 +44,14 @@ public class HtmlViewIT {
 				"        </script>\n" + 
 				"    </head>\n" + 
 				"    <body>\n" + 
-				"        <h1><a href=\"http://www.asual.com/summer/?module=core&amp;test=true\">Summer - The HTML5 Library for Java and Scala</a></h1>\n" + 
-				"        <p>© 2010-2011 Asual DZZD</p>\n" + 
+				"        <h1>\n"+ 
+				"            <a href=\"http://www.asual.com/summer/?module=core&amp;test=true\">Summer - The HTML5 Library for Java and Scala</a>\n" + 
+				"        </h1>\n" + 
+				"        <p>\n" + 
+				"            © 2010-2011 Asual DZZD\n" + 
+				"        </p>\n" + 
 				"    </body>\n" + 
-				"</html>\n", content.replaceAll(System.getProperty("line.separator"), "\n"));
+				"</html>", content.replaceAll(System.getProperty("line.separator"), "\n"));
 	}
 	
 }
