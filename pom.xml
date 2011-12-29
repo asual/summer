@@ -56,7 +56,7 @@
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)</maven.build.timestamp.format>
 		<aspectj.version>1.6.9</aspectj.version>
 		<jetty.version>8.1.0.RC1</jetty.version>
-		<jsf.version>2.1.3</jsf.version>
+		<jsf.version>2.1.6</jsf.version>
 		<maven.version>3.0.3</maven.version>
 		<servlet.version>3.0.1</servlet.version>
 		<slf4j.version>1.6.4</slf4j.version>
