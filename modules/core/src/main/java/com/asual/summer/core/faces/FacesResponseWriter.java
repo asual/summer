@@ -38,14 +38,16 @@ import com.sun.faces.util.HtmlUtils;
 public class FacesResponseWriter extends ResponseWriter {
 
     private String contentType;
-    private String encoding = null;
-    private Writer writer = null;
+    private String encoding;
+	private String previous;
+    private Writer writer;
 
     private boolean closeStart;
     private boolean escapeUnicode = true;
     private boolean escapeIso = true;
     private boolean isPartial;
     private boolean scriptInAttributes;
+	private boolean start;
     
     private char[] buffer = new char[1028];
     private char[] textBuffer = new char[128];
@@ -57,13 +59,12 @@ public class FacesResponseWriter extends ResponseWriter {
 	private boolean[] nodeDepthContent = new boolean[100];
 	
 	private static String INDENT = "    ";
-	private boolean start = false;
-	private String previous;
 	
 	private List<String> block = Arrays.asList(
-		"html", "head", "meta", "link", "title", "script", "body", "header", "footer", "section", 
-		"div", "h1", "h2", "h3", "h4", "h5", "h6", "p", "dl", "dt", "dd", "ol", "ul", "li", "hr",
-		"form", "fieldset", "legend", "label", "input", "select", "option", "textarea", "button"
+		"html", "head", "meta", "link", "title", "script", "body", "header", 
+		"footer", "section", "div", "h1", "h2", "h3", "h4", "h5", "h6", "p", 
+		"dl", "dt", "dd", "ol", "ul", "li", "hr", "form", "fieldset", "legend", 
+		"label", "input", "select", "option", "textarea", "button"
 	);
 	
 	private List<String> pre = Arrays.asList(
