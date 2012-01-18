@@ -32,12 +32,12 @@
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-ajax</artifactId>
-			<version>1.0.0.RC1-SNAPSHOT</version>
+			<version>1.0.0.RC1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.asual.summer</groupId>
 			<artifactId>summer-core</artifactId>
-			<version>1.0.0.RC1-SNAPSHOT</version>
+			<version>1.0.0.RC1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -52,6 +52,10 @@
                 <exclusion>
                     <groupId>javax.servlet</groupId>
                     <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet.jsp</groupId>
+                    <artifactId>jsp-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
