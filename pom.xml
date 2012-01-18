@@ -6,8 +6,8 @@
 		http://maven.apache.org/POM/4.0.0 
 		http://maven.apache.org/maven-v4_0_0.xsd">
 		
-	<name>Summer Parent</name>
-	<artifactId>summer-parent</artifactId>
+	<name>Summer</name>
+	<artifactId>summer</artifactId>
 	<groupId>com.asual.summer</groupId>
 	<url>http://www.asual.com/summer</url>
 	<packaging>pom</packaging>
