@@ -33,13 +33,13 @@ In order to use Summer you need the following records to your Maven 3 POM file:
         <dependency>
             <groupId>com.asual.summer</groupId>
             <artifactId>summer-core</artifactId>
-            <version>1.0.0.M3</version>
+            <version>1.0.0.RC1</version>
         </dependency>
     </dependencies>
 
 ## Changes
 
-### 07/28/2011 - 1.0.0.M3
+### 01/19/2012 - 1.0.0.RC1
 
 * New LessPack module for resource optimization and less.js support.
 * New Beauty module for enahnced look and feel of form components.
