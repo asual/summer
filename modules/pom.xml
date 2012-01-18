@@ -13,7 +13,7 @@
 	
 	<parent>
 		<groupId>com.asual.summer</groupId>
-		<artifactId>summer-parent</artifactId>
+		<artifactId>summer</artifactId>
 		<version>1.0.0.RC1-SNAPSHOT</version>
 	</parent>
 	
