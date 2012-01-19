@@ -26,12 +26,12 @@
 		</license>
 	</licenses>
 	
-	<scm>
-		<connection>scm:git:git@github.com/asual/summer.git</connection>
-		<url>scm:git:git@github.com/asual/summer.git</url>
-		<developerConnection>scm:git:git@github.com/asual/summer.git</developerConnection>
-	</scm>
-		
+    <scm>
+		<url>http://github.com/asual/summer</url>
+		<connection>scm:git:git://github.com:asual/summer.git</connection>
+		<developerConnection>scm:git:git@github.com:asual/summer.git</developerConnection>
+    </scm>
+    
 	<distributionManagement>
 		<repository>
 			<id>com.asual.repositories.releases</id>
