@@ -13,7 +13,7 @@
 	</parent>
 
 	<properties>
-		<gae.version>1.6.0</gae.version>
+		<gae.version>1.6.1.1</gae.version>
 	</properties>
 	
 	<dependencies>
