@@ -13,7 +13,7 @@
 	</parent>
 
 	<properties>
-		<gae.version>1.6.1.1</gae.version>
+		<appversion.version>1.6.4.1</appversion.version>
 	</properties>
 	
 	<dependencies>
@@ -125,23 +125,23 @@
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<version>${gae.version}</version>
+			<version>${appversion.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-labs</artifactId>
-			<version>${gae.version}</version>
+			<version>${appversion.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-stubs</artifactId>
-			<version>${gae.version}</version>
+			<version>${appversion.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-testing</artifactId>
-			<version>${gae.version}</version>
+			<version>${appversion.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
