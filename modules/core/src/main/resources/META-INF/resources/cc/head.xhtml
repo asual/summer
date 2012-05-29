@@ -25,6 +25,7 @@
 	<cs:implementation>
 	
 		<h:head>
+			<cs:insertChildren />
 			<link href="/favicon.ico" type="image/x-icon" rel="icon" 
 				data-rendered="${resourceUtils.exists('META-INF/resources/favicon.ico')}" />
 			<c:forEach var="item" items="${resourceUtils.getStyles()}">
@@ -42,7 +43,6 @@
 					<script src="${source}" data-pack="${item.pack}"></script>
 				</c:forEach>
 			</c:forEach>
-			<cs:insertChildren />
 		</h:head></cs:implementation>
 	
 </ui:component>
