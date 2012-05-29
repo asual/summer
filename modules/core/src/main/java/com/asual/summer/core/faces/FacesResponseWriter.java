@@ -61,9 +61,9 @@ public class FacesResponseWriter extends ResponseWriter {
 	private static String INDENT = "    ";
 	
 	private List<String> block = Arrays.asList(
-		"html", "head", "meta", "link", "title", "script", "body", "header", 
-		"footer", "section", "div", "h1", "h2", "h3", "h4", "h5", "h6", "p", 
-		"dl", "dt", "dd", "ol", "ul", "li", "hr", "form", "fieldset", "legend", 
+		"html", "head", "meta", "link", "title", "script", "style", "body", 
+		"header", "footer", "section", "div", "h1", "h2", "h3", "h4", "h5", "h6", 
+		"p", "dl", "dt", "dd", "ol", "ul", "li", "hr", "form", "fieldset", "legend", 
 		"label", "input", "select", "option", "textarea", "button"
 	);
 	
