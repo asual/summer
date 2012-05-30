@@ -14,6 +14,7 @@
 	
 	<modules>
 		<module>appengine</module>
+		<module>bootstrap</module>
 		<module>java</module>
 		<module>scala</module>
 	</modules>
