@@ -371,25 +371,6 @@
 				</plugins>
 			</build>
 		</profile>
-		<profile>
-			<id>oneJar</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>com.asual.summer</groupId>
-						<artifactId>summer-onejar</artifactId>
-						<version>${project.version}</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>onejar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 	</profiles>
 	
 	<modules>
