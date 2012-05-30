@@ -77,6 +77,7 @@
 				<entry key="/css/**/*" value-ref="resourceHttpRequestHandler" />
 				<entry key="/font/**/*" value-ref="resourceHttpRequestHandler" />
 				<entry key="/img/**/*" value-ref="resourceHttpRequestHandler" />
+				<entry key="/ico/**/*" value-ref="resourceHttpRequestHandler" />
 				<entry key="/js/**/*" value-ref="resourceHttpRequestHandler" />
 				<entry key="/res/**/*" value-ref="resourceHttpRequestHandler" />
 				<entry key="/favicon.ico" value-ref="resourceHttpRequestHandler" />

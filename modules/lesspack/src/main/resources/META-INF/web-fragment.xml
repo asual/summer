@@ -38,7 +38,12 @@
 	
 	<servlet-mapping>
 		<servlet-name>resource</servlet-name>
-		<url-pattern>/robots.txt</url-pattern>
+		<url-pattern>/font/*</url-pattern>
+	</servlet-mapping>
+		
+	<servlet-mapping>
+		<servlet-name>resource</servlet-name>
+		<url-pattern>/ico/*</url-pattern>
 	</servlet-mapping>
 		
 	<servlet-mapping>
@@ -48,7 +53,7 @@
 	
 	<servlet-mapping>
 		<servlet-name>resource</servlet-name>
-		<url-pattern>/font/*</url-pattern>
+		<url-pattern>/js/*</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
@@ -58,12 +63,17 @@
 	
 	<servlet-mapping>
 		<servlet-name>resource</servlet-name>
-		<url-pattern>/js/*</url-pattern>
+		<url-pattern>/robots.txt</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
 		<servlet-name>less</servlet-name>
 		<url-pattern>/css/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>less</servlet-name>
+		<url-pattern>/less/*</url-pattern>
 	</servlet-mapping>
 
 </web-fragment>
