@@ -133,7 +133,7 @@ public class RequestUtils implements ApplicationContextAware {
 		return ("GET".equalsIgnoreCase(method) || "POST".equalsIgnoreCase(method));
 	}
 	
-	public static boolean isMozilla() {
+	public static boolean isGecko() {
 		String userAgent = getUserAgent();
 		if (userAgent != null) {
 			return Pattern.compile("Mozilla").matcher(userAgent).find() && !Pattern.compile("compatible|WebKit").matcher(userAgent).find();
@@ -141,7 +141,7 @@ public class RequestUtils implements ApplicationContextAware {
 		return false;
 	}
 	
-	public static boolean isMSIE() {
+	public static boolean isTrident() {
 		String userAgent = getUserAgent();
 		if (userAgent != null) {
 			return Pattern.compile("MSIE").matcher(userAgent).find() && !Pattern.compile("Opera").matcher(userAgent).find();
@@ -149,7 +149,7 @@ public class RequestUtils implements ApplicationContextAware {
 		return false;
 	}
 	
-	public static boolean isOpera() {
+	public static boolean isPresto() {
 		String userAgent = getUserAgent();
 		if (userAgent != null) {
 			return Pattern.compile("Opera").matcher(userAgent).find();
@@ -165,29 +165,17 @@ public class RequestUtils implements ApplicationContextAware {
 		return false;
 	}
 	
-	public static boolean isMobile() {
-		String userAgent = getUserAgent();
-		if (userAgent != null) {
-			return Pattern.compile(" Mobile/").matcher(userAgent).find();
-		}
-		return false;
-	}
-
-	public static String getClient() {
-		List<String> data = new ArrayList<String>();
-		if (isMozilla()) {
-			data.add("mozilla");
-		} else if (isMSIE()) {
-			data.add("msie");
-		} else if (isOpera()) {
-			data.add("opera");
+	public static String getEngine() {
+		if (isGecko()) {
+			return "gecko";
+		} else if (isTrident()) {
+			return "trident";
+		} else if (isPresto()) {
+			return "presto";
 		} else if (isWebKit()) {
-			data.add("webkit");
+			return "webkit";
 		}
-		if (isMobile()) {
-			data.add("mobile");
-		}
-		return StringUtils.join(data, " ");
+		return null;
 	}
 	
 	public static void setAttribute(String name, Object value) {

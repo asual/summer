@@ -26,11 +26,13 @@
 	</cs:interface>
 	
 	<cs:implementation>
-		<f:view contentType="text/html;charset=UTF-8" locale="${request.locale}"><html data-client="${requestUtils.getClient()}">
-			<ui:decorate template="/META-INF/templates/${empty cc.attrs.dataTemplate ? 'template' : cc.attrs.dataTemplate}.html">
+		<f:view contentType="text/html;charset=UTF-8" locale="${request.locale}">
+			${empty requestUtils.getEngine() ? '' : mapUtils.put(cc.attrs, 'data-engine', requestUtils.getEngine())}${cc.renderer.beginElement(cc, 'html')}<ui:decorate 
+				template="/META-INF/templates/${empty cc.attrs.dataTemplate ? 'template' : cc.attrs.dataTemplate}.html">
 				<ui:param name="template" value="${cc.getTemplateParams()}" />
 				<cs:insertChildren />${''}
-			</ui:decorate></html>
+			</ui:decorate>
+			${cc.renderer.endElement(cc, 'html')}
 		</f:view>
 	</cs:implementation>
 	

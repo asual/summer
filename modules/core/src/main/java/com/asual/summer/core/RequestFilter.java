@@ -124,7 +124,7 @@ public class RequestFilter extends OncePerRequestFilter {
 				defaultRequest.setCharacterEncoding((String) ResourceUtils.getProperty("app.encoding"));
 			}
 			
-			if (RequestUtils.isMSIE()) {
+			if (RequestUtils.isTrident()) {
 				response.setHeader("X-UA-Compatible", "IE=Edge,chrome=1");
 			}
 			
