@@ -63,6 +63,11 @@
 	
 	<servlet-mapping>
 		<servlet-name>resource</servlet-name>
+		<url-pattern>/humans.txt</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>resource</servlet-name>
 		<url-pattern>/robots.txt</url-pattern>
 	</servlet-mapping>
 	
