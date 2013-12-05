@@ -30,15 +30,13 @@ public class HtmlViewIT {
 				"        <title>\n" + 
 				"            Summer - The HTML5 Library for Java and Scala\n" + 
 				"        </title>\n" + 
-				"        <link href=\"/css/summer-core.css\" rel=\"stylesheet\">\n" + 
-				"        <script src=\"/js/summer-core.js\"></script>\n" + 
 				"        <script>\n" + 
 				"            function getWelcomeKey() {\n" + 
 				"                return \"Welcome Key\";\n" + 
 				"            }\n" + 
 				"        </script>\n" + 
 				"        <script>\n" + 
-				"            $.summer = {\n" + 
+				"            summer = {\n" + 
 				"                contextPath: ''\n" + 
 				"            };\n" + 
 				"        </script>\n" + 

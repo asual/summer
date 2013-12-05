@@ -14,8 +14,10 @@
 
 package com.asual.summer.core.util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,6 +53,9 @@ public class ResourceUtils {
 	private static List<PropertyResource> properties = null;
 	private static List<StyleResource> styles = null;
 	private static List<ScriptResource> scripts = null;
+	
+	/** Constant for the file URL protocol.*/
+    private static final String PROTOCOL_FILE = "file";
 	
 	public static String getMessage(String key) {
 		return getMessage(key, new Object[] {}, LocaleContextHolder.getLocale());
@@ -208,5 +213,25 @@ public class ResourceUtils {
 		
 		return null;
 	}
+	
+	/**
+     * Tries to convert the specified URL to a file object. If this fails,
+     * <b>null</b> is returned.
+     *
+     * @param url the URL
+     * @return the resulting file object
+     */
+    @SuppressWarnings("deprecation")
+	public static File fileFromURL(URL url)
+    {
+        if (PROTOCOL_FILE.equals(url.getProtocol()))
+        {
+            return new File(URLDecoder.decode(url.getPath()));
+        }
+        else
+        {
+            return null;
+        }
+    }
 	
 }

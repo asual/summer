@@ -19,6 +19,7 @@ import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,15 +136,37 @@ public class StringUtils {
 	}
 	
 	public static String decorate(String str, Map<String, String> values) {
+		return decorate(str, values, false);
+	}
+	
+	public static String decorate(String str, Map<String, String> values, boolean preserve) {
 		Matcher m = Pattern.compile("\\$\\{[^}]*\\}").matcher(str);
 		while (m.find()) {
 			String key = m.group().replaceAll("^\\$\\{|\\}$", "");
 			String value = values.get(key);
 			if (value == null) {
-				value = "";
+				if(preserve){
+					continue;
+				}
+				else{
+					value = "";
+				}
 			}
 			str = str.replaceAll("\\$\\{" + key + "\\}", 
-					value.replaceAll("\\\\", "\\\\\\\\").replaceAll("\"", "\\\\\""));
+					Matcher.quoteReplacement(value));
+		}
+		return str;
+	}
+	
+	public static String decorate(String str, Properties values){
+		Matcher m = Pattern.compile("\\$\\{[^}]*\\}").matcher(str);
+		while (m.find()) {
+			String key = m.group().replaceAll("^\\$\\{|\\}$", "");
+			Object value = values.get(key);
+			if (value != null) {
+				str = str.replaceAll("\\$\\{" + key + "\\}", 
+						Matcher.quoteReplacement(value.toString()));
+			}
 		}
 		return str;
 	}

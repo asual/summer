@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://maven.apache.org/POM/4.0.0    http://maven.apache.org/maven-v4_0_0.xsd">
-		
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<name>Summer</name>
 	<artifactId>summer</artifactId>
 	<groupId>com.asual.summer</groupId>
 	<url>http://www.asual.com/summer</url>
 	<packaging>pom</packaging>
-	<version>1.0.0.R2-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<organization>
 		<name>Asual DZZD</name>
 	</organization>
@@ -20,13 +20,13 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	
+
 	<scm>
 		<url>http://github.com/asual/summer</url>
 		<connection>scm:git:git://github.com:asual/summer.git</connection>
 		<developerConnection>scm:git:git@github.com:asual/summer.git</developerConnection>
 	</scm>
-    
+
 	<distributionManagement>
 		<repository>
 			<id>com.asual.repositories.releases</id>
@@ -39,11 +39,11 @@
 			<url>http://www.asual.com/maven/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<prerequisites>
 		<maven>3.0.3</maven>
 	</prerequisites>
-	
+
 	<properties>
 		<project.build.properties>build.properties</project.build.properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -59,7 +59,7 @@
 		<spring.version>3.1.1.RELEASE</spring.version>
 		<tomcat.version>2.0-beta-1</tomcat.version>
 	</properties>
-	
+
 	<repositories>
 		<repository>
 			<id>com.asual.repositories.public</id>
@@ -67,7 +67,7 @@
 			<url>http://www.asual.com/maven/content/groups/public</url>
 		</repository>
 	</repositories>
-	
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>com.asual.repositories.public</id>
@@ -108,7 +108,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -118,7 +118,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -244,140 +244,13 @@
 		</plugins>
 	</build>
 	
-	<profiles>
-		<profile>
-			<id>manifestEntries</id>
-			<activation>
-				<property>
-					<name>git.executable</name>
-				</property>
-			</activation>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-jar-plugin</artifactId>
-							<version>2.3.2</version>
-							<configuration>
-								<archive>
-									<manifestEntries>
-										<Build-Date>${maven.build.timestamp}</Build-Date>
-										<Build-Revision>${maven.build.revision}</Build-Revision>
-									</manifestEntries>
-								</archive>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-war-plugin</artifactId>
-							<version>2.1.1</version>
-							<configuration>
-								<archive>
-									<manifestEntries>
-										<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-										<Build-Revision>${maven.build.revision}</Build-Revision>
-									</manifestEntries>
-								</archive>
-							</configuration>
-							<executions>
-								<execution>
-									<phase>compile</phase>
-									<goals>
-										<goal>manifest</goal>
-									</goals>
-									<configuration>
-										<warSourceDirectory>${project.build.directory}/classes</warSourceDirectory>
-										<archive>
-											<manifestEntries>
-												<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
-												<Build-Revision>${maven.build.revision}</Build-Revision>
-											</manifestEntries>
-										</archive>
-									</configuration>
-								</execution>
-							</executions>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-antrun-plugin</artifactId>
-							<version>1.7</version>
-							<configuration>
-								<archive>
-									<manifestEntries>
-										<Build-Date>${maven.build.timestamp}</Build-Date>
-										<Build-Revision>${maven.build.revision}</Build-Revision>
-									</manifestEntries>
-								</archive>
-							</configuration>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.7</version>
-						<executions>
-							<execution>
-								<phase>compile</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<target>
-										<exec executable="${git.executable}" outputproperty="revision" dir="${basedir}">
-											<arg value="rev-parse" />
-											<arg value="HEAD" />
-										</exec>
-										<echo message="maven.build.revision=${revision}" file="${project.build.directory}/${project.build.properties}" />
-									</target>
-								</configuration>
-							</execution>
-						</executions>
-						<dependencies>
-							<dependency>
-								<groupId>ant-contrib</groupId>
-								<artifactId>ant-contrib</artifactId>
-								<version>1.0b3</version>
-								<exclusions>
-									<exclusion>
-										<groupId>ant</groupId>
-										<artifactId>ant</artifactId>
-									</exclusion>
-								</exclusions>
-							</dependency>
-						</dependencies>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>properties-maven-plugin</artifactId>
-						<version>1.0-alpha-2</version>
-						<executions>
-							<execution>
-								<phase>compile</phase>
-								<goals>
-									<goal>read-project-properties</goal>
-								</goals>
-								<configuration>
-									<files>
-										<file>${project.build.directory}/${project.build.properties}</file>
-									</files>
-									<quiet>true</quiet>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	
+
+
 	<modules>
 		<module>archetypes</module>
 		<module>modules</module>
 		<module>plugins</module>
 		<module>samples</module>
 	</modules>
-	
+
 </project>

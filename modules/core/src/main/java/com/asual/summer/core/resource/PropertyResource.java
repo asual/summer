@@ -33,6 +33,8 @@ import org.springframework.core.io.ResourceEditor;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
 
+import com.asual.summer.core.util.StringUtils;
+
 /**
  * 
  * @author Rostislav Hristov
@@ -45,6 +47,7 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 	private static String stringArraySeparator;
 	private final Log logger = LogFactory.getLog(getClass());
 	private final static String ARRAY_SEPARATOR_KEY = "app.stringArraySeparator";
+	private boolean useWildcardLocation = false;
 	
 	public PropertyResource() {
 		setOrder(Ordered.HIGHEST_PRECEDENCE);
@@ -92,7 +95,7 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 	public void setWildcardLocations(String[] locations) {
 		
 		super.setLocations(locations);
-		
+		useWildcardLocation = true;
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		List<Resource[]> resourceLocations = new ArrayList<Resource[]>();
 		
@@ -143,6 +146,16 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 			ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		eppc.postProcessBeanFactory(beanFactory);
 	}
+	
+	protected void reloadPropertyPlaceholderConfigurer(){
+		eppc = new ExtendedPropertyPlaceholderConfigurer();
+		if(!useWildcardLocation){
+			setLocations(super.getLocations());
+		}
+		else{
+			setWildcardLocations(super.getLocations());
+		}
+	}
 
 	private class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
@@ -154,6 +167,7 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 		}	
 
 		public Object getProperty(String key) {
+			
 			String value = super.resolvePlaceholder(key, properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
 			if (value != null) {
 				if (stringArraySeparator == null) {
@@ -162,11 +176,11 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 				if (stringArraySeparator != null && value.indexOf(stringArraySeparator) != -1 && !value.equals(stringArraySeparator)) {
 					String[] arr = value.split(stringArraySeparator);
 					for (int i = 0; i < arr.length; i++) {
-						arr[i] = arr[i].trim();
+						arr[i] = StringUtils.decorate(arr[i].trim(),System.getProperties());
 					}
 					return arr;
 				} else {
-					return value.trim();
+					return StringUtils.decorate(value.trim(),System.getProperties());
 				}
 			}
 			return null;

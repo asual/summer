@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.view.AbstractResponseView;
+import com.asual.summer.core.view.StringView;
 
 /**
  * 
@@ -32,10 +33,10 @@ import com.asual.summer.core.view.AbstractResponseView;
  *
  */
 @Controller
-public class ErrorController {
+public class ErrorController { 
 	
 	@RequestMapping("/error")
-	@ResponseViews(AbstractResponseView.class)
+	@ResponseViews({AbstractResponseView.class, StringView.class})
 	public ModelAndView error() {
 		
 		Throwable error = RequestUtils.getError();

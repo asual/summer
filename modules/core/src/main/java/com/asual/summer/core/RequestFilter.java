@@ -17,7 +17,6 @@ package com.asual.summer.core;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -46,6 +45,8 @@ public class RequestFilter extends OncePerRequestFilter {
 	
 	private static final Log logger = LogFactory.getLog(RequestFilter.class);
 	private static final ThreadLocal<HttpServletRequest> requestHolder = new NamedThreadLocal<HttpServletRequest>("request");
+	
+	private final static String methodAttribute = "_method";
 	
 	private MultipartResolver multipartResolver = null;
 	
@@ -88,8 +89,8 @@ public class RequestFilter extends OncePerRequestFilter {
 		return result;			
 	}
 	
-	static String getMethod(HttpServletRequest request, String requestMethod, Map<String, String[]> map) {
-		String method = map.get("_method") != null ? map.get("_method")[0] : null;
+	static String getMethod(HttpServletRequest request, String requestMethod) {
+		String method = request.getParameter(methodAttribute);
 		if ("POST".equalsIgnoreCase(requestMethod) && !StringUtils.isEmpty(method)) {
 			return method.toUpperCase(Locale.ENGLISH);
 		}
