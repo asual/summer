@@ -39,6 +39,11 @@ In order to use Summer you need the following records to your Maven 3 POM file:
 
 ## Changes
 
+### 14/04/2014 - 1.1.4
+
+* Migrated to Spring MVC 3.2.8.RELEASE
+* Support for conditional content negotiation based on URI extensions
+
 ### 01/19/2012 - 1.0.0.RC1
 
 * New LessPack module for resource optimization and less.js support.
