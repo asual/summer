@@ -6,12 +6,8 @@
 	<groupId>com.asual.summer</groupId>
 	<url>http://www.asual.com/summer</url>
 	<packaging>pom</packaging>
-	<version>1.1.4-ONTO-SNAPSHOT</version>
+	<version>1.1.4-SNAPSHOT</version>
 	<modelVersion>4.0.0</modelVersion>
-
-	<organization>
-		<name>Ontotext AD</name>
-	</organization>
 
 	<licenses>
 		<license>
@@ -20,25 +16,6 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
-	<scm>
-		<url>https://svn.ontotext.com/svn/forest/summer/trunk</url>
-		<connection>scm:svn:https://svn.ontotext.com/svn/forest/summer/trunk</connection>
-		<developerConnection>scm:svn:https://svn.ontotext.com/svn/forest/summer/trunk</developerConnection>
-	</scm>
-
-	<distributionManagement>
-		<repository>
-			<id>internal</id>
-			<name>Ontotext Internal Repository</name>
-			<url>http://maven.ontotext.com/archiva/repository/internal</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>Ontotext Snapshots Repository</name>
-			<url>http://maven.ontotext.com/archiva/repository/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<prerequisites>
 		<maven>3.0.3</maven>
