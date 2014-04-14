@@ -14,17 +14,19 @@
 
 package com.asual.summer.core.spring;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.http.MediaType;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.accept.ContentNegotiationManager;
+import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.AbstractView;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 
 import com.asual.summer.core.ViewNotFoundException;
@@ -36,27 +38,17 @@ import com.asual.summer.core.ViewNotFoundException;
  */
 public class ViewResolverConfiguration extends ContentNegotiatingViewResolver {
 	
+	private Log logger = LogFactory.getLog(ViewResolverConfiguration.class);
+	
+	private ContentNegotiationManager contentNegotiationManager;
+	
 	private List<ViewResolver> viewResolvers;
-	private ConcurrentMap<String, String> mediaTypes = new ConcurrentHashMap<String, String>();
-	private String parameterName = "format";
-	private boolean favorPathExtension = true;
-	private boolean favorParameter = false;
-	private boolean ignoreAcceptHeader = false;
 	
-	public List<MediaType> getMediaTypes(HttpServletRequest request) {
-		return super.getMediaTypes(request);
+	public void setContentNegotiationManager(ContentNegotiationManager contentNegotiationManager){
+		this.contentNegotiationManager = contentNegotiationManager;
+		super.setContentNegotiationManager(contentNegotiationManager);
 	}
 	
-	public void setMediaTypes(Map<String, String> mediaTypes) {
-		this.mediaTypes.putAll(mediaTypes);
-		super.setMediaTypes(mediaTypes);
-		super.setDefaultContentType(MediaType.parseMediaType(mediaTypes.values().iterator().next()));
-	}
-	
-	public MediaType getMediaTypeFromFilename(String filename) {
-		return super.getMediaTypeFromFilename(filename);
-	}
-
 	public List<ViewResolver> getViewResolvers() {
 		return viewResolvers;
 	}
@@ -74,40 +66,25 @@ public class ViewResolverConfiguration extends ContentNegotiatingViewResolver {
 		return view;
 	}
 	
-	public boolean getFavorPathExtension() {
-		return favorPathExtension;
+	public AbstractView handleViews(Collection<AbstractView> views,
+			NativeWebRequest request) {
+		List<MediaType> requestedMediaTypes;
+		try {
+			requestedMediaTypes = contentNegotiationManager.resolveMediaTypes(request);
+			for(MediaType requestedMediaType : requestedMediaTypes){
+				for (AbstractView view : views) {
+					MediaType producableMediaType = MediaType.parseMediaType(view.getContentType());
+					if(requestedMediaType.isCompatibleWith(producableMediaType) && !requestedMediaType.isWildcardType() && requestedMediaType.getQualityValue() > 0.9){
+						return view;
+					}
+				}
+				
+			}
+		} catch (HttpMediaTypeNotAcceptableException e) {
+			logger.debug(e.getMessage(), e);
+		}
+		return null;
 	}
 	
-	public void setFavorPathExtension(boolean favorPathExtension) {
-		super.setFavorPathExtension(favorPathExtension);
-		this.favorPathExtension = favorPathExtension;
-	}
-
-	public boolean getFavorParameter() {
-		return favorParameter;
-	}
-
-	public void setFavorParameter(boolean favorParameter) {
-		super.setFavorParameter(favorParameter);
-		this.favorParameter = favorParameter;
-	}
-
-	public String getParameterName() {
-		return parameterName;
-	}
-	
-	public void setParameterName(String parameterName) {
-		super.setParameterName(parameterName);
-		this.parameterName = parameterName;
-	}
-
-	public boolean getIgnoreAcceptHeader() {
-		return ignoreAcceptHeader;
-	}
-	
-	public void setIgnoreAcceptHeader(boolean ignoreAcceptHeader) {
-		super.setIgnoreAcceptHeader(ignoreAcceptHeader);
-		this.ignoreAcceptHeader = ignoreAcceptHeader;
-	}
 
 }

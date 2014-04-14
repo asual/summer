@@ -6,11 +6,11 @@
 	<groupId>com.asual.summer</groupId>
 	<url>http://www.asual.com/summer</url>
 	<packaging>pom</packaging>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.4-ONTO-SNAPSHOT</version>
 	<modelVersion>4.0.0</modelVersion>
 
 	<organization>
-		<name>Asual DZZD</name>
+		<name>Ontotext AD</name>
 	</organization>
 
 	<licenses>
@@ -22,21 +22,21 @@
 	</licenses>
 
 	<scm>
-		<url>http://github.com/asual/summer</url>
-		<connection>scm:git:git://github.com:asual/summer.git</connection>
-		<developerConnection>scm:git:git@github.com:asual/summer.git</developerConnection>
+		<url>https://svn.ontotext.com/svn/forest/summer/trunk</url>
+		<connection>scm:svn:https://svn.ontotext.com/svn/forest/summer/trunk</connection>
+		<developerConnection>scm:svn:https://svn.ontotext.com/svn/forest/summer/trunk</developerConnection>
 	</scm>
 
 	<distributionManagement>
 		<repository>
-			<id>com.asual.repositories.releases</id>
-			<name>Asual Releases Repository</name>
-			<url>http://www.asual.com/maven/content/repositories/releases</url>
+			<id>internal</id>
+			<name>Ontotext Internal Repository</name>
+			<url>http://maven.ontotext.com/archiva/repository/internal</url>
 		</repository>
 		<snapshotRepository>
-			<id>com.asual.repositories.snapshots</id>
-			<name>Asual Snapshots Repository</name>
-			<url>http://www.asual.com/maven/content/repositories/snapshots</url>
+			<id>snapshots</id>
+			<name>Ontotext Snapshots Repository</name>
+			<url>http://maven.ontotext.com/archiva/repository/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -48,15 +48,14 @@
 		<project.build.properties>build.properties</project.build.properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss Z (EEE, dd MMM yyyy)</maven.build.timestamp.format>
 		<aspectj.version>1.6.9</aspectj.version>
-		<jetty.version>8.1.5.v20120716</jetty.version>
+		<jetty.version>8.1.3.v20120416</jetty.version>
 		<jsf.version>2.1.7</jsf.version>
 		<junit.version>4.10</junit.version>
 		<maven.version>3.0.3</maven.version>
 		<servlet.version>3.0.1</servlet.version>
 		<slf4j.version>1.6.4</slf4j.version>
-		<spring.version>3.1.1.RELEASE</spring.version>
+		<spring.version>3.2.8.RELEASE</spring.version>
 		<tomcat.version>2.0-beta-1</tomcat.version>
 	</properties>
 
@@ -109,117 +108,22 @@
 		</dependency>
 	</dependencies>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.eclipse.m2e</groupId>
-				<artifactId>lifecycle-mapping</artifactId>
-				<version>1.0.0</version>			
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+	<!-- <dependencyManagement> <dependencies> <dependency> <groupId>org.eclipse.m2e</groupId> 
+		<artifactId>lifecycle-mapping</artifactId> <version>1.0.0</version> </dependency> 
+		</dependencies> </dependencyManagement> -->
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-compiler-plugin</artifactId>
-										<versionRange>[2.3.2,)</versionRange>
-										<goals>
-											<goal>compile</goal>
-											<goal>testCompile</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-war-plugin</artifactId>
-										<versionRange>[2.1.1,)</versionRange>
-										<goals>
-											<goal>manifest</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-antrun-plugin</artifactId>
-										<versionRange>[1.7,)</versionRange>
-										<goals>
-											<goal>run</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.codehaus.mojo</groupId>
-										<artifactId>properties-maven-plugin</artifactId>
-										<versionRange>[1.0-alpha-2,)</versionRange>
-										<goals>
-											<goal>read-project-properties</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.asual.summer</groupId>
-										<artifactId>summer-bundle</artifactId>
-										<versionRange>[${project.version},)</versionRange>
-										<goals>
-											<goal>resources</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-eclipse-plugin</artifactId>
-					<version>2.8</version>
-					<configuration>
-						<downloadSources>true</downloadSources>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
-					<configuration>
-						<encoding>${project.build.sourceEncoding}</encoding>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -237,14 +141,109 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.2.2</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.google.code.maven-scm-provider-svnjava</groupId>
+						<artifactId>maven-scm-provider-svnjava</artifactId>
+						<version>2.0.5</version>
+					</dependency>
+					<dependency>
+						<groupId>org.tmatesoft.svnkit</groupId>
+						<artifactId>svnkit</artifactId>
+						<version>1.7.4-v1</version>
+					</dependency>
+				</dependencies>
 				<configuration>
+					<providerImplementations>
+						<svn>javasvn</svn>
+					</providerImplementations>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<goals>deploy</goals>
+					<tagBase>https://svn.ontotext.com/svn/forest/summer/tags</tagBase>
+					<tagNameFormat>summer-@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Build-Date>${maven.build.timestamp}</Build-Date>
+							<Build-Revision>${maven.build.revision}</Build-Revision>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+							<Build-Revision>${maven.build.revision}</Build-Revision>
+						</manifestEntries>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+						<configuration>
+							<warSourceDirectory>${project.build.directory}/classes</warSourceDirectory>
+							<archive>
+								<manifestEntries>
+									<Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+									<Build-Revision>${maven.build.revision}</Build-Revision>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<!-- We need the buildNumber property in the process-resources phase 
+							so it must be generated before that phase -->
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>com.google.code.maven-scm-provider-svnjava</groupId>
+						<artifactId>maven-scm-provider-svnjava</artifactId>
+						<version>2.0.5</version>
+					</dependency>
+					<dependency>
+						<groupId>org.tmatesoft.svnkit</groupId>
+						<artifactId>svnkit</artifactId>
+						<version>1.7.4-v1</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<providerImplementations>
+						<svn>javasvn</svn>
+					</providerImplementations>
+					<useLastCommittedRevision>true</useLastCommittedRevision>
+					<timestampFormat>{0,date,yyyy-MM-dd HH:mm:ss}</timestampFormat>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	
-
 
 	<modules>
 		<module>archetypes</module>
@@ -253,4 +252,5 @@
 		<module>samples</module>
 	</modules>
 
+	<description>This is a fork of the original summer project.</description>
 </project>

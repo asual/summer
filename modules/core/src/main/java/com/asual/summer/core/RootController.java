@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class RootController {
 	
-	@RequestMapping("/")
-	public void root() {}
+	@RequestMapping("/**")
+	public void root() { System.out.println("Root...");}
 
 }

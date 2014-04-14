@@ -33,9 +33,6 @@
 		</property>
 	</bean>
 
-	<bean id="annotationModelAndViewResolver"
-		class="com.asual.summer.core.spring.AnnotationModelAndViewResolver" />
-
 	<bean id="conversionDiscoveryFactoryBean"
 		class="com.asual.summer.core.spring.ConversionDiscoveryFactoryBean" />
 
@@ -67,6 +64,9 @@
 		<property name="customHandlerMethodReturnValueHandler">
 			<bean class="com.asual.summer.core.spring.AnnotationHandlerMethodReturnValueHandler"/>
 		</property>
+		<property name="contentNegotiationManager">
+			<ref bean="contentNegotiationManager"/>
+		</property>
 		<!-- <property name="customModelAndViewResolver" ref="annotationModelAndViewResolver" 
 			/> -->
 		<!-- <property name="modelAndViewResolvers">
@@ -82,11 +82,16 @@
 		<property name="customModelAndViewResolver" ref="annotationModelAndViewResolver" />
 	</bean> -->
 
-	<bean
-		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-		<property name="defaultHandler">
-			<bean class="com.asual.summer.core.RootController" />
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+		<property name="contentNegotiationManager">
+			<ref bean="contentNegotiationManager"/>
 		</property>
+		<property name="useRegisteredSuffixPatternMatch">
+			<value>true</value>
+		</property>
+		<!-- <property name="defaultHandler">
+			<bean class="com.asual.summer.core.RootController" />
+		</property> -->
 	</bean>
 
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"
@@ -119,13 +124,12 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="contentNegotiationManager" class="com.asual.summer.core.spring.ExtendedContentNegotiationManagerFactoryBean" />
 
 	<bean id="viewResolverConfiguration" class="com.asual.summer.core.spring.ViewResolverConfiguration">
-		<property name="favorParameter" value="true" />
-		<property name="mediaTypes">
-			<map>
-				<entry key="html" value="text/html" />
-			</map>
+		<property name="contentNegotiationManager">
+			<ref bean="contentNegotiationManager"/>
 		</property>
 		<property name="viewResolvers">
 			<list>

@@ -131,7 +131,8 @@ public class RequestFilter extends OncePerRequestFilter {
 			
 			filterChain.doFilter(requestHolder.get(), response);
 			logger.debug("The request for '" + defaultRequest.getRequestURI() + "' took " + (System.currentTimeMillis() - time) + "ms.");
-		
+		} catch(Exception e){
+			logger.error(e.getMessage(), e);
 		} finally {
 		
 			if (multipartResolver != null && defaultRequest instanceof MultipartHttpServletRequest) {
@@ -158,7 +159,12 @@ public class RequestFilter extends OncePerRequestFilter {
 				multipartResolver = requestMultipartResolver;
 			} catch (ClassNotFoundException e) {
 			}
-		}
+		} 
+	}
+	
+	@Override
+	protected boolean shouldNotFilterErrorDispatch() {
+		return false; 
 	}
 	
 	public static HttpServletRequest getRequest() {

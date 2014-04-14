@@ -17,11 +17,8 @@ package com.asual.summer.sample.web;
 import java.io.IOException;
 import java.util.Arrays;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,13 +26,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.asual.summer.core.ResponseViews;
 import com.asual.summer.core.ViewNotFoundException;
-import com.asual.summer.core.util.ResourceUtils;
 import com.asual.summer.core.view.AbstractResponseView;
 import com.asual.summer.json.JsonView;
 import com.asual.summer.sample.domain.License;
@@ -43,7 +38,6 @@ import com.asual.summer.sample.domain.Status;
 import com.asual.summer.sample.domain.Technology;
 import com.asual.summer.sample.domain.Technology.Image;
 import com.asual.summer.xml.XmlView;
-import com.octo.captcha.service.image.ImageCaptchaService;
 
 /**
  * 
@@ -54,9 +48,6 @@ import com.octo.captcha.service.image.ImageCaptchaService;
 @RequestMapping("/technology")
 public class TechnologyController {
 	
-	@Inject
-	private ImageCaptchaService captchaService;
-	
 	@RequestMapping(method=RequestMethod.GET)
 	@ResponseViews(AbstractResponseView.class)
 	public ModelAndView list() {
@@ -64,12 +55,7 @@ public class TechnologyController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ModelAndView persist(@Valid @ModelAttribute Technology technology,
-			HttpServletRequest req, @RequestParam(value="captcha", required=true) String captcha,
-			@RequestParam(value="hash", required=true) String hash) {
-		if (!captchaService.validateResponseForID(hash, captcha)) {
-			throw new ValidationException(ResourceUtils.getMessage("validation.Captcha"));
-		}
+	public ModelAndView persist(@Valid @ModelAttribute Technology technology) {
 		technology.merge();
 		return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
 	}
@@ -85,12 +71,7 @@ public class TechnologyController {
 	}
 	
 	@RequestMapping(value="/{value}", method=RequestMethod.PUT)
-	public ModelAndView merge(@Valid @ModelAttribute Technology technology,
-			HttpServletRequest req, @RequestParam(value="captcha", required=true) String captcha,
-			@RequestParam(value="hash", required=true) String hash) {
-		if (!captchaService.validateResponseForID(hash, captcha)) {
-			throw new ValidationException(ResourceUtils.getMessage("validation.Captcha"));
-		}
+	public ModelAndView merge(@Valid @ModelAttribute Technology technology) {
 		technology.merge();
 		return new ModelAndView(new RedirectView("/technology/" + technology.getValue(), true));
 	}
