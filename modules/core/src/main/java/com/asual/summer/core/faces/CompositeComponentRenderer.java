@@ -15,6 +15,7 @@
 package com.asual.summer.core.faces;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +58,8 @@ public class CompositeComponentRenderer extends Renderer {
 			}
 			
 			for (String key : attrs.keySet()) {
-				if (ComponentUtils.shouldWriteAttribute((Component) component, key) && attrs.get(key) != null) {
+				Object value = attrs.get(key);
+				if (ComponentUtils.shouldWriteAttribute((Component) component, key) && (value != null) && (!(value instanceof Collection) || (!((Collection<?>) value).isEmpty()))) {
 					ComponentUtils.writeAttribute(writer, key, attrs.get(key));
 				}
 			}
