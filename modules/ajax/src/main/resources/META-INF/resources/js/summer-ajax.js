@@ -85,12 +85,12 @@
 						url = o.attr('data-ajax-url');
 					}
 					
-					url = url.replace(/(^|&)_ajax=[^&]*(&|$)/, '');
+					url = url.replace(/(^|&)_ajax=[^&]*/, '');
 					
 					if (disabled != 'true') {
 						$.ajax({
 							url: url,
-							type: re.test(method) ? method : 'post',
+							type: re.test(method) ? method : 'get',
 							data: params + (data ? '&' + data : ''),
 							dataType: 'html',
 							beforeSend: function(xhr, settings) {

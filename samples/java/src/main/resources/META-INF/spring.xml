@@ -35,6 +35,4 @@
 		<jdbc:script location="classpath:META-INF/data/import.sql" />
 	</jdbc:embedded-database>
 	
-	<import resource="captcha.xml" />
-	
 </beans>

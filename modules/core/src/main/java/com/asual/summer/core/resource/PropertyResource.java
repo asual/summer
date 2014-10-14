@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +25,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceEditor;
@@ -39,59 +37,59 @@ import org.springframework.util.ResourceUtils;
  * @author Rostislav Georgiev
  *
  */
-public class PropertyResource extends LocationResource implements BeanFactoryPostProcessor {
+public class PropertyResource extends AbstractResource implements BeanFactoryPostProcessor {
 
 	private ExtendedPropertyPlaceholderConfigurer eppc;
-	private static String stringArraySeparator;
 	private final Log logger = LogFactory.getLog(getClass());
-	private final static String ARRAY_SEPARATOR_KEY = "app.stringArraySeparator";
+	private Resource[] resources;
 	
 	public PropertyResource() {
 		setOrder(Ordered.HIGHEST_PRECEDENCE);
-		eppc = new ExtendedPropertyPlaceholderConfigurer();
-		eppc.setOrder(getOrder());
+		eppc = ExtendedPropertyPlaceholderConfigurer.get(this);
 	}
 
 	public Object getProperty(String key) {
 		return eppc.getProperty(key);
 	}
 	
-	public String getStringArraySeparator() {
-		return stringArraySeparator;
-	}
-
-	public void setStringArraySeparator(String stringArraySeparator) {
-		PropertyResource.stringArraySeparator = stringArraySeparator;
-	}
-	
-	public void setProperties(Properties properties) {
+	/*public void setProperties(Properties properties) {
 		eppc.setProperties(properties);
-	}
+	}*/
 
+	/*
 	public void setPropertiesArray(Properties[] propertiesArray) {
 		eppc.setPropertiesArray(propertiesArray);
-	}
+	}*/
 	
 	public void setIgnoreResourceNotFound(boolean ignoreResourceNotFound) {
 		eppc.setIgnoreResourceNotFound(ignoreResourceNotFound);
 	}
 	
+	public void setLocation(String location) {
+		ResourceEditor editor = (ResourceEditor) BeanUtils.findEditorByConvention(Resource.class);
+		this.resources = new Resource[] {locationStringToResource(location, editor)};
+	}
+	
 	public void setLocations(String[] locations) {
-		
-		super.setLocations(locations);
 		
 		ResourceEditor editor = (ResourceEditor) BeanUtils.findEditorByConvention(Resource.class);
 		Resource[] resources = new Resource[locations.length];
 		for (int i = 0; i < locations.length; i++) {
-			editor.setAsText(locations[i]);
-			resources[i] = (Resource) editor.getValue();
+			resources[i] = locationStringToResource(locations[i], editor);
 		}
-		eppc.setLocations(resources);
+		this.resources = resources;
+	}
+	
+	public void setLocations(List<String> locations){
+		setLocations(locations.toArray(new String[locations.size()]));
+	}
+	
+	private Resource locationStringToResource(String location, ResourceEditor editor){
+		editor.setAsText(location);
+		return (Resource) editor.getValue();
 	}
 	
 	public void setWildcardLocations(String[] locations) {
-		
-		super.setLocations(locations);
 		
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		List<Resource[]> resourceLocations = new ArrayList<Resource[]>();
@@ -136,42 +134,25 @@ public class PropertyResource extends LocationResource implements BeanFactoryPos
 		fileResources.addAll(jarResources);
 		Collections.reverse(fileResources);
 		
-		eppc.setLocations(fileResources.toArray(new Resource[fileResources.size()]));
+		this.resources = fileResources.toArray(new Resource[fileResources.size()]);
 	}
 	
 	public void postProcessBeanFactory(
 			ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		eppc.postProcessBeanFactory(beanFactory);
 	}
-
-	private class ExtendedPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
-
-		private Properties properties;
-		
-		protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties properties) throws BeansException {
-			this.properties = properties;
-			super.processProperties(beanFactoryToProcess, properties);
-		}	
-
-		public Object getProperty(String key) {
-			String value = super.resolvePlaceholder(key, properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
-			if (value != null) {
-				if (stringArraySeparator == null) {
-					stringArraySeparator = (String) super.resolvePlaceholder(ARRAY_SEPARATOR_KEY, properties, PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_OVERRIDE);
-				}
-				if (stringArraySeparator != null && value.indexOf(stringArraySeparator) != -1 && !value.equals(stringArraySeparator)) {
-					String[] arr = value.split(stringArraySeparator);
-					for (int i = 0; i < arr.length; i++) {
-						arr[i] = arr[i].trim();
-					}
-					return arr;
-				} else {
-					return value.trim();
-				}
-			}
-			return null;
-		}
-		
+	
+	protected void reloadPropertyPlaceholderConfigurer(){
+		eppc.updateLocations();
 	}
+
+	/**
+	 * @return the locations
+	 */
+	public Resource[] getResources() {
+		return resources;
+	}
+
+	
 
 }

@@ -12,23 +12,35 @@
  * limitations under the License.
  */
 
-package com.asual.summer.core.spring;
+package com.asual.summer.core.faces;
 
-import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
-import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.render.Renderer;
 
 /**
  * 
  * @author Rostislav Hristov
  *
  */
-public class ExtendedAnnotationMethodHandlerAdapter extends AnnotationMethodHandlerAdapter {
-
-	protected ServletRequestDataBinder createBinder(HttpServletRequest request, 
-			Object target, String objectName) throws Exception {
-		return new ExtendedServletRequestDataBinder(target, objectName);
+public class BodyRenderer extends Renderer {
+	
+	public void decode(FacesContext context, UIComponent component) {
 	}
 
+	public void encodeChildren(FacesContext context, UIComponent component)
+		throws IOException {
+	}
+
+
+    public void encodeBegin(FacesContext context,
+			    UIComponent component)
+        throws IOException {
+		if (null == context || null == component) {
+		    throw new NullPointerException();
+		}
+    }
+	
 }

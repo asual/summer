@@ -18,35 +18,45 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.springframework.stereotype.Controller;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.asual.summer.core.util.RequestUtils;
 import com.asual.summer.core.view.AbstractResponseView;
+import com.asual.summer.core.view.StringView;
 
 /**
  * 
  * @author Rostislav Hristov
  *
  */
-@Controller
-public class ErrorController {
+@ControllerAdvice
+public class ErrorController { 
 	
-	@RequestMapping("/error")
-	@ResponseViews(AbstractResponseView.class)
-	public ModelAndView error() {
+	private Log logger = LogFactory.getLog(ErrorController.class);
+	
+	@ResponseViews({AbstractResponseView.class, StringView.class})
+	public ModelAndView error(Exception ex) {
 		
-		Throwable error = RequestUtils.getError();
 		Writer stringWriter = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(stringWriter);
-		error.printStackTrace(printWriter);
+		ex.printStackTrace(printWriter);
 		
 		ModelMap model = new ModelMap();
-		model.addAttribute("error", RequestUtils.getError());
+		model.addAttribute("error", ex);
 		model.addAttribute("stackTrace", stringWriter.toString());
 		return new ModelAndView("/error", model);
 	}
+	
+	@ExceptionHandler(Exception.class)
+	public ModelAndView handleException(Exception ex) {
+		logger.info("Catching: " + ex.getClass().getSimpleName());
+		logger.error(ex.getMessage(), ex);
+		return error(ex);
+	}
+
 
 }

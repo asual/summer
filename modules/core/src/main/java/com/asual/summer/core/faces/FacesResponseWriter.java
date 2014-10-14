@@ -58,7 +58,7 @@ public class FacesResponseWriter extends ResponseWriter {
 	private String[] nodeDepth = new String[100];
 	private boolean[] nodeDepthContent = new boolean[100];
 	
-	private static String INDENT = "    ";
+	private String INDENT = "    ";
 	
 	private List<String> block = Arrays.asList(
 		"html", "head", "meta", "link", "title", "script", "style", "body", 
@@ -283,10 +283,12 @@ public class FacesResponseWriter extends ResponseWriter {
     }
     
     public void writeText(Object text, String componentPropertyName) throws IOException {    	
-        String textStr = text.toString();
-        ensureTextBufferCapacity(textStr);
-        HtmlUtils.writeText(textWriter, escapeUnicode, escapeIso, buffer, textStr, textBuffer);
-        closeStartIfNecessary();
+        if(!textWriter.toString().equals("<!DOCTYPE html>\n")){
+	    	String textStr = text.toString();
+	        ensureTextBufferCapacity(textStr);
+	        HtmlUtils.writeText(textWriter, escapeUnicode, escapeIso, buffer, textStr, textBuffer);
+	        closeStartIfNecessary();
+        }
     }
     
     public void writeText(char text[], int off, int len) throws IOException {

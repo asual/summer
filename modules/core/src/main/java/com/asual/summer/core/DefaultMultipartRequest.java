@@ -61,7 +61,7 @@ public class DefaultMultipartRequest extends DefaultMultipartHttpServletRequest 
 	}
 	
 	public String getMethod() {
-		return RequestFilter.getMethod(getRequest(), super.getMethod(), getParameterMap());
+		return RequestFilter.getMethod(getRequest(), super.getMethod());
 	}
 	
 }

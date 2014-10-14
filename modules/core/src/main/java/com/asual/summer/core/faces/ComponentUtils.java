@@ -50,7 +50,7 @@ import com.sun.faces.facelets.tag.jsf.ComponentSupport;
  */
 public class ComponentUtils {
 	
-	final static String ATTRIBUTES = "^-?\\d.*$|idx|varAttr|com.sun.faces.facelets.APPLIED";
+	final static String ATTRIBUTES = "^-?\\d.*$|idx|varAttr|com.sun.faces.facelets.APPLIED|javax.faces.retargetablehandlers";
 	
 	static Object getConfig(Component component, String name) {
 		BeanInfo info = (BeanInfo) component.getAttributes().get(UIComponent.BEANINFO_KEY);

@@ -49,7 +49,7 @@ public class DefaultRequest extends HttpServletRequestWrapper {
 	}
 	
 	public String getMethod() {
-		return RequestFilter.getMethod(getRequest(), super.getMethod(), getParameterMap());
+		return RequestFilter.getMethod(getRequest(), super.getMethod());
 	}
 	
 }

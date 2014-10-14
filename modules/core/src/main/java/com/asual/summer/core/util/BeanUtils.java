@@ -72,4 +72,8 @@ public class BeanUtils implements BeanFactoryPostProcessor {
 		BeanUtils.beanFactory = beanFactory;
 	}
 	
+	public static ConfigurableListableBeanFactory getBeanFactory(){
+		return beanFactory;
+	}
+	
 }

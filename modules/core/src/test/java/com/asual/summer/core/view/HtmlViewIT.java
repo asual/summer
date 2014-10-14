@@ -22,23 +22,20 @@ public class HtmlViewIT {
 		HttpResponse response = client.execute(request);
 		HttpEntity entity = response.getEntity();
 		String content = EntityUtils.toString(entity);
-		assertEquals(
-				"<!DOCTYPE html>\n" + 
+		String expectedContent = "<!DOCTYPE html>\n" + 
 				"<html>\n" + 
 				"    <head>\n" + 
 				"        <meta charset=\"UTF-8\">\n" + 
 				"        <title>\n" + 
 				"            Summer - The HTML5 Library for Java and Scala\n" + 
 				"        </title>\n" + 
-				"        <link href=\"/css/summer-core.css\" rel=\"stylesheet\">\n" + 
-				"        <script src=\"/js/summer-core.js\"></script>\n" + 
 				"        <script>\n" + 
 				"            function getWelcomeKey() {\n" + 
 				"                return \"Welcome Key\";\n" + 
 				"            }\n" + 
 				"        </script>\n" + 
 				"        <script>\n" + 
-				"            $.summer = {\n" + 
+				"            summer = {\n" + 
 				"                contextPath: ''\n" + 
 				"            };\n" + 
 				"        </script>\n" + 
@@ -51,7 +48,8 @@ public class HtmlViewIT {
 				"            © 2010-2011 Asual DZZD\n" + 
 				"        </p>\n" + 
 				"    </body>\n" + 
-				"</html>", content.replaceAll(System.getProperty("line.separator"), "\n"));
+				"</html>";
+		assertEquals(expectedContent, content.replaceAll(System.getProperty("line.separator"), "\n"));
 	}
 	
 }
