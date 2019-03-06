@@ -47,7 +47,7 @@ In order to use Summer you need the following records to your Maven 3 POM file:
 ### 01/19/2012 - 1.0.0.RC1
 
 * New LessPack module for resource optimization and less.js support.
-* New Beauty module for enahnced look and feel of form components.
+* New Beauty module for enhanced look and feel of form components.
 * New Bundle plugin for Servlet 2.5 compatibility.
 * New OneJar plugin for packaging applications as executable JAR files.
 * New AppEngine sample.
